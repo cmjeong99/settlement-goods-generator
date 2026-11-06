@@ -1,0 +1,170 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { Decimal } from '../public/calculation/decimal.js';
+import { evaluateFormula, referencedColumns } from '../public/calculation/expression.js';
+import { calculateSettings, verifyCalculation } from '../public/calculation/verify.js';
+import { analyze } from '../public/analyzer.js';
+import { EXAMPLES } from '../public/examples.js';
+import { PRODUCT_EXAMPLES } from '../public/product-examples.js';
+
+const result = (sql) => analyze(sql).results[0];
+const evaluate = (sql, rows) =>
+  evaluateFormula(result(`SELECT ${sql} AS CPFEE`).formulas.fee, rows).map(
+    (value) => value?.toString() ?? null,
+  );
+
+test('소수 금액을 이진 부동소수점 오차 없이 계산하고 음수 단수 처리를 구분한다', () => {
+  assert.equal(Decimal.parse('0.29').mul('100').round('SIGNED_DOWN').toString(), '29');
+  for (const [method, expected] of [
+    ['DOWN', '-148'],
+    ['SIGNED_DOWN', '-149'],
+    ['CEILING', '-148'],
+    ['HALF_UP', '-149'],
+    ['HALF_DOWN', '-148'],
+  ])
+    assert.equal(Decimal.parse('-148.5').round(method).toString(), expected);
+  assert.equal(Decimal.parse('105').round('HALF_UP', '10').toString(), '110');
+  assert.equal(Decimal.parse('1.005').round('HALF_UP', '0.01').toString(), '1.01');
+  assert.throws(() => Decimal.parse('Infinity'));
+  assert.throws(() => Decimal.parse('1e100000'));
+});
+
+for (const [amount, fee, vat, payout] of [
+  ['-9900', '148', '14', '-10062'],
+  ['-55000', '825', '82', '-55907'],
+  ['9900', '148', '14', '9738'],
+]) {
+  test(`오픈뱅킹 ${amount}원 원문·설정·기대값을 대조한다`, () => {
+    const r = result(EXAMPLES['오픈뱅킹 정률']);
+    const verified = verifyCalculation(r, [{ AMT: amount, CPRATE: '0.015' }], {
+      amountColumn: 'AMT',
+      feeValue: '0.015',
+      expected: { fee, vat, payout },
+    });
+    assert.deepEqual(verified.errors, []);
+    for (const comparison of verified.comparisons) {
+      assert.equal(comparison.settingsMatch, true);
+      assert.equal(comparison.expectedMatch, true);
+    }
+  });
+}
+
+test('오픈뱅킹 정액은 취소에도 양수 수수료를 부과하고 DB 건수 설정으로 비교한다', () => {
+  const product = PRODUCT_EXAMPLES.find((product) => product.code === 'OPENBANKING-FIXED');
+  const fields = Object.fromEntries(
+    Object.entries(product.expected).map(([key, value]) => [
+      key,
+      { status: value === null ? 'unknown' : 'known', value },
+    ]),
+  );
+  const verified = verifyCalculation(
+    result(EXAMPLES['오픈뱅킹 정액']),
+    [{ AMT: '-9900', AUTHRATE: '100' }],
+    { fields, amountColumn: 'AMT', feeValue: '100', countPerRow: '1' },
+  );
+  assert.deepEqual(
+    verified.comparisons.map((row) => row.sql),
+    ['100', '10', '-10010'],
+  );
+  assert.ok(verified.comparisons.every((row) => row.settingsMatch === true));
+});
+
+test('건별 단수 처리 후 합산과 합산 후 단수 처리는 서로 다른 결과를 낸다', () => {
+  const rows = [
+    { AMT: '99', CPRATE: '0.015' },
+    { AMT: '99', CPRATE: '0.015' },
+  ];
+  assert.deepEqual(evaluate('SUM(FLOOR(AMT*CPRATE))', rows), ['2']);
+  assert.deepEqual(evaluate('FLOOR(SUM(AMT)*CPRATE)', rows), ['2']);
+  assert.deepEqual(evaluate('SUM(ROUND(AMT*CPRATE,0))', rows), ['2']);
+  assert.deepEqual(evaluate('ROUND(SUM(AMT)*CPRATE,0)', rows), ['3']);
+  assert.throws(
+    () => evaluate('SUM(AMT)*CPRATE', [...rows.slice(0, 1), { AMT: '99', CPRATE: '0.02' }]),
+    /행마다 달라/,
+  );
+});
+
+test('반올림·ROUND 세 번째 인수·명시적 정수 나눗셈·소수 나눗셈을 구분한다', () => {
+  assert.deepEqual(evaluate('ROUND(-1.15,1)', [{}]), ['-1.2']);
+  assert.deepEqual(evaluate('ROUND(-1.15,1,1)', [{}]), ['-1.1']);
+  assert.deepEqual(evaluate('5/2', [{}]), ['2']);
+  assert.deepEqual(evaluate('-5/2', [{}]), ['-2']);
+  assert.deepEqual(evaluate('5/2.0', [{}]), ['2.5']);
+  assert.deepEqual(evaluate('CAST(5 AS INT)/CAST(2 AS INT)', [{}]), ['2']);
+  assert.deepEqual(evaluate('CONVERT(NUMERIC(18,2),1.005)', [{}]), ['1.01']);
+  assert.throws(() => evaluate('1/0', [{}]), /0으로/);
+});
+
+test('CASE·IN·RIGHT·NULL·집계가 포함된 카드와 본인확인 표현식을 계산한다', () => {
+  const card = result(EXAMPLES['카드']);
+  assert.equal(
+    evaluateFormula(card.formulas.vat, [{ AMT: '10400', CPRATE: '0.015' }])[0].toString(),
+    '16',
+  );
+  assert.deepEqual(
+    evaluate("CASE WHEN CNT_TYPE IN ('S','T') THEN CNT*RATE ELSE 0 END", [
+      { CNT_TYPE: 'S', CNT: '3', RATE: '10' },
+    ]),
+    ['30'],
+  );
+  assert.deepEqual(evaluate('ISNULL(AMT_R,AMT)', [{ AMT_R: null, AMT: '-10' }]), ['-10']);
+  assert.deepEqual(evaluate('SUM(AMT)', [{ AMT: null }, { AMT: '10' }]), ['10']);
+  assert.deepEqual(evaluate('SUM(AMT)', [{ AMT: null }]), [null]);
+  assert.deepEqual(evaluate('NULLIF(AMT,0)', [{ AMT: '0' }]), [null]);
+});
+
+test('별칭이 다른 입력과 갱신 전 수수료 참조는 독립된 값으로 취급한다', () => {
+  const r = result('UPDATE A SET CPFEE=FLOOR(A.AMT*A.CPRATE),CPVAT=FLOOR(A.CPFEE*0.1)');
+  assert.deepEqual(referencedColumns(r.formulas), ['A.AMT', 'A.CPFEE', 'A.CPRATE']);
+  assert.equal(
+    evaluateFormula(r.formulas.vat, [
+      { 'A.AMT': '9900', 'A.CPRATE': '0.015', 'A.CPFEE': '100' },
+    ])[0].toString(),
+    '10',
+  );
+  assert.throws(() => evaluateFormula(r.formulas.fee, [{ AMT: '9900', CPRATE: '0.015' }]), /A.AMT/);
+});
+
+test('미확정·특이 계산기·미지원 함수·빠진 입력을 임의 값으로 계산하지 않는다', () => {
+  const r = result('SELECT OTHER(AMT) AS CPFEE,0 AS CPVAT');
+  const output = verifyCalculation(r, [{ AMT: '100' }], { amountColumn: 'AMT', feeValue: '0.015' });
+  assert.equal(output.comparisons[0].sql, '계산 불가');
+  assert.ok(output.errors.some((error) => error.includes('OTHER')));
+  assert.throws(
+    () =>
+      calculateSettings({}, [{ AMT: '10' }], {
+        amountColumn: 'AMT',
+        feeValue: '1',
+        engine: 'CUSTOM',
+      }),
+    /특이 계산기/,
+  );
+  assert.throws(() => evaluate('MISSING+1', [{}]), /입력값/);
+  assert.throws(
+    () =>
+      evaluate(
+        'AMT',
+        [...Array(101)].map(() => ({ AMT: '1' })),
+      ),
+    /100행/,
+  );
+  const nullOutput = verifyCalculation(result('SELECT AMT AS CPFEE,0 AS CPVAT'), [{ AMT: null }], {
+    feeValue: '1',
+  });
+  assert.equal(nullOutput.comparisons[0].sql, 'NULL');
+});
+
+test('BEFORE·AFTER·NONE에 따른 음수 FLOOR 차이를 원문과 대조한다', () => {
+  for (const sql of [
+    'FLOOR(ABS(AMT)*CPRATE)*SIGN(AMT)',
+    'FLOOR(ABS(AMT)*CPRATE*SIGN(AMT))',
+    'FLOOR(ABS(AMT)*CPRATE)',
+  ]) {
+    const r = result(`SELECT ${sql} AS CPFEE,0 AS CPVAT`);
+    const output = verifyCalculation(r, [{ AMT: '-9900', CPRATE: '0.015' }], {
+      amountColumn: 'AMT',
+      feeValue: '0.015',
+    });
+    assert.equal(output.comparisons[0].settingsMatch, true, sql);
+  }
+});

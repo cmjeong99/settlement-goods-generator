@@ -1,0 +1,497 @@
+﻿<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Settlement Formula Studio</title><link rel="icon" href="data:,"><style>:root{font-family:Inter,"Segoe UI","Malgun Gothic",sans-serif;color:#243b38;background:#f5f7f6;font-synthesis:none;--green:#166d5e;--line:#dde5e1;--muted:#788984}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button,select{cursor:pointer}button{border:1px solid #cdd9d3;border-radius:7px;background:#fff;padding:9px 13px;color:#36534c;font-size:12px;font-weight:600;transition:.15s}button:hover{background:#edf5f0;border-color:#7ba99b}button:disabled{opacity:.45;cursor:wait}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid #238773;outline-offset:3px}header{height:76px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 5%}.brand{color:inherit;text-decoration:none;display:flex;gap:13px;align-items:center;font-size:15px}.brand strong{font-weight:700}.mark{display:grid;place-items:center;width:34px;height:34px;background:var(--green);color:#fff;font-size:27px;border-radius:8px;font-family:Georgia,serif}.badge{padding:5px 10px;border-radius:5px;background:#edf4f0;color:#53786c;font-size:11px;border:1px solid #dfeae4;white-space:nowrap}main{max-width:1560px;margin:auto;padding:42px 5% 0}.intro{display:flex;align-items:center;justify-content:space-between;margin-bottom:29px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--green);font-weight:700;margin:0 0 13px}h1{font-size:31px;letter-spacing:-1.3px;font-weight:650;margin:0 0 12px}.subtitle{color:var(--muted);font-size:13px;line-height:1.8;margin:0}.steps{display:flex;gap:20px;font-size:11px;color:#91a098}.steps .active{color:var(--green);font-weight:700}.workspace{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}.panel{background:white;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 3px 10px #173f3003}.panel-head{min-height:63px;padding:16px 21px;border-bottom:1px solid #e9eeeb;display:flex;align-items:center;justify-content:space-between;gap:10px}h2{font-size:14px;margin:0;font-weight:650;display:flex;align-items:center;gap:10px}.step{font-size:10px;font-family:monospace;color:#729284;background:#eff5f1;border:1px solid #e3ece5;border-radius:5px;padding:4px 5px}.tools{display:flex;align-items:center;gap:8px}.text-button{border:0;background:none;color:var(--muted);padding:7px}.tools select{border:1px solid #e0e7e2;background:#fafcfb;border-radius:6px;color:#61756b;font-size:11px;max-width:250px;padding:7px}.editor{display:flex;height:310px;background:#fbfcfb;padding-top:20px;overflow:hidden}#gutter{width:47px;flex-shrink:0;margin:0;color:#abb9b1;text-align:right;padding:0 13px 30px 0;border-right:1px solid #e7ece9;user-select:none;overflow:hidden;font:12px/24px Consolas,monospace}textarea{border:0;resize:none;outline:0;background:transparent;flex:1;min-width:0;padding:0 15px 30px;font:12px/24px Consolas,"Malgun Gothic",monospace;color:#345b52;white-space:pre;tab-size:2}textarea::placeholder{color:#a5b5ab}.editor-footer{border-top:1px solid #e9eeeb;padding:13px 17px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#82988c}.primary{background:var(--green);color:white;border-color:var(--green);min-width:120px;display:flex;gap:22px;justify-content:space-between}.primary:hover{background:#115747;color:white}.mini-label{font:9px monospace;letter-spacing:1.5px;color:#96a89c}.empty-evidence{text-align:center;padding:41px 20px 25px;color:#819389}.empty-symbol{font-size:28px;display:block;font-family:monospace;color:#b4c7bd;margin-bottom:19px}h3{font-size:14px;font-weight:550;color:#567569;margin:0 0 11px}.empty-evidence p{font-size:12px;line-height:1.9;margin:0}.example-note{margin:24px auto 0;background:#f7f9f7;border:1px dashed #dce6de;border-radius:7px;padding:13px;max-width:340px}.example-note code{font-size:10px;color:#6a8879}.example-note p{font-size:10px;margin-top:6px}.result-panel{margin-top:22px}.result-empty{text-align:center;padding:43px 20px;color:#91a298;font-size:12px}.summary-line{padding:22px 22px 17px;display:flex;justify-content:space-between;gap:20px;align-items:center}#summary{margin:0;font-size:16px;color:#245d4b;font-weight:600;line-height:1.7}#known-count{font-size:11px;white-space:nowrap;color:#7a9588}.table-scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}th{font-size:10px;white-space:nowrap;text-align:left;font-weight:500;padding:13px 15px;background:#f4f8f5;color:#778f80;border-top:1px solid #e7eee8;border-bottom:1px solid #e7eee8}th code{display:block;font-size:8px;font-weight:400;margin-top:5px;max-width:125px;overflow:hidden;text-overflow:ellipsis;color:#99aaa0}td{padding:16px 15px;border-bottom:1px solid #edf1ed;white-space:nowrap;color:#375f4c}td button.cell{border:0;padding:3px 0;font:600 11px Consolas,monospace;border-bottom:1px dashed #a0bcad;border-radius:0;background:none}td button.unknown{font-family:inherit;color:#9b8e6f}td button.custom{font-family:inherit;color:#a06f44}td button.ai{color:#6959a0}#notices{margin:0;padding:14px 23px 0 38px;font-size:11px;line-height:1.9;color:#8d7754}#notices:empty{display:none}.result-actions{padding:17px 21px;display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:10px;color:#71927e}.muted{color:#9baaa1}.ai-area{padding:30px 0;display:flex;align-items:center;justify-content:space-between;gap:25px}.ai-area .eyebrow{font-size:9px;margin-bottom:8px}.ai-area h2{font-size:15px}.ai-area p:last-child{font-size:11px;color:#8a9a90;margin-bottom:0}.ai-actions{display:flex;gap:8px;flex-wrap:wrap}.ai-actions input{border:1px solid #d8e2da;border-radius:7px;padding:9px 12px;width:245px;font-size:11px;background:white}#ai-analyze{background:#e7eee9;border-color:#ccdace;color:#356348}#ai-candidates,#names-panel{margin-bottom:20px}#ai-table td{white-space:normal;font-size:11px;line-height:1.7}#ai-table td:first-child{white-space:nowrap}#ai-table td:last-child{max-width:500px}#ai-table button{margin:5px 7px 0 0;font-size:10px}.selected{background:#e7f2e9!important;border-color:#72a38a!important}#names{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px}#names button{display:flex;flex-direction:column;text-align:left;gap:8px;padding:17px}#names code{font-size:11px;color:var(--green)}#names small{font-weight:400;color:#859489;line-height:1.8}#message{font-size:12px;line-height:1.8;color:#886143;margin-top:14px}#message:empty{display:none}#evidence-content{padding:24px;max-height:377px;overflow:auto}#evidence-reason{font-size:12px;color:#778d7f;line-height:1.9}.quote-label{font:10px monospace;color:#829787;margin:16px 0 7px}.quote{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.9 Consolas,"Malgun Gothic",monospace;background:#f4f8f4;border-left:3px solid #84ad94;border-radius:4px;padding:13px;color:#446a51;margin:0}.help{font-size:11px;color:#82938a;margin:10px 0 30px;line-height:1.9}.help summary{cursor:pointer;color:#62826e}.help p{max-width:900px}footer{border-top:1px solid #dfe7e1;padding:21px 0 30px;display:flex;justify-content:space-between;color:#a0aea5;font-size:9px;letter-spacing:.7px}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}[hidden]{display:none!important}@media(max-width:1050px){.workspace{grid-template-columns:1fr}.steps{display:none}.ai-area{align-items:flex-start;flex-direction:column}.evidence-panel .empty-evidence{padding:22px}.empty-symbol{display:none}.result-actions{align-items:flex-start;flex-direction:column}#names{grid-template-columns:1fr}.muted{display:none}}@media(max-width:600px){main{padding:28px 16px 0}header{padding:0 16px}.brand{font-size:12px}h1{font-size:26px}.panel-head{padding:14px 12px}.panel-head .tools{gap:2px}.tools select{max-width:145px}.summary-line{display:block}.ai-actions input{width:100%}footer{gap:20px;line-height:1.6}.subtitle{font-size:12px}}
+ .ai-area{display:none!important}</style></head>
+<body>
+  <header><a class="brand" href="/"><span class="mark">ƒ</span><span>Settlement <strong>Formula Studio</strong></span></a><span class="badge" id="connection">로컬 파서</span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">FORMULA → PRODUCT</p><h1>수식에서 계산설정으로.</h1><p class="subtitle">MSSQL 수수료·VAT 수식을 붙여넣고 계산 기준을 확인하세요.</p></div><div class="steps"><span class="active">01 입력</span><span>02 분석</span><span>03 활용</span></div></div>
+    <div class="workspace">
+      <section class="panel editor-panel" aria-labelledby="input-title">
+        <div class="panel-head"><h2 id="input-title"><span class="step">01</span> 원문 수식</h2><div class="tools"><label class="sr-only" for="example">예제 선택</label><select id="example"><option value="">예제 불러오기</option></select><button id="clear" class="text-button">초기화</button></div></div>
+        <div class="editor"><pre id="gutter" aria-hidden="true">1</pre><textarea id="sql" aria-label="MSSQL 수식 입력" spellcheck="false" placeholder="CPFEE = ROUND(ABS(AMT) * CPRATE, 0)&#10;, CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1)"></textarea></div>
+        <div class="editor-footer"><span id="input-info">CPFEE / CPVAT · RAMT / VAMT</span><button id="analyze" class="primary">수식 분석 <span>→</span></button></div>
+      </section>
+      <section class="panel evidence-panel" aria-labelledby="evidence-title">
+        <div class="panel-head"><h2 id="evidence-title"><span class="step">02</span> 해석 근거</h2><span id="evidence-kind" class="mini-label">SOURCE</span></div>
+        <div id="evidence-empty" class="empty-evidence"><span class="empty-symbol">{ }</span><h3>계산 순서를 그대로 읽습니다</h3><p>결과의 컬럼을 클릭하면<br>근거 수식과 원문 행 번호가 표시됩니다.</p><div class="example-note"><code>ROUND(금액 × 요율, 0) × 0.1</code><p>반올림한 수수료를 사용하므로 <strong>FEE</strong></p></div></div>
+        <div id="evidence-content" hidden><h3 id="evidence-label"></h3><p id="evidence-reason"></p><div id="evidence-quotes"></div></div>
+      </section>
+    </div>
+    <div id="message" role="status" aria-live="polite"></div>
+    <section class="panel result-panel" aria-labelledby="result-title">
+      <div class="panel-head"><h2 id="result-title"><span class="step">03</span> 상품 계산설정</h2><div class="tools"><label class="sr-only" for="blocks">분석 구문 선택</label><select id="blocks" hidden></select><span id="result-source" class="badge">입력 대기</span></div></div>
+      <div id="result-empty" class="result-empty">수식을 분석하면 계산설정 한 행이 여기에 표시됩니다.</div>
+      <div id="result-content" hidden>
+        <div class="summary-line"><p id="summary"></p><span id="known-count"></span></div>
+        <div class="table-scroll"><table id="result-table"><thead></thead><tbody></tbody></table></div>
+        <ul id="notices"></ul>
+        <div class="result-actions"><span>컬럼을 눌러 근거 확인 <span class="muted">· 단위: 원 0 / 십원 10 / 소수 둘째 자리 0.01</span></span><div class="tools"><button id="markdown">Markdown 복사</button><button id="tsv">엑셀용 복사</button></div></div>
+      </div>
+    </section>
+    <section class="ai-area">
+      <div><p class="eyebrow">OPTIONAL · AI ASSIST</p><h2>필요한 순간에만 AI와 함께.</h2><p>보완과 이름 추천은 버튼을 눌렀을 때만 입력 수식을 전송합니다.</p></div>
+      <div class="ai-actions"><button id="ai-analyze">✧ AI로 보완</button><label class="sr-only" for="description">상품명에 사용할 서비스 설명</label><input id="description" maxlength="2000" placeholder="서비스 설명 (선택) · 예: 페이코인"><button id="ai-names">이름 추천</button></div>
+    </section>
+
+
+    <details class="help"><summary>지원 범위와 실행 설정</summary><p>표현식 AST로 계산 순서를 분석합니다. SQL을 실행하거나 DB에 연결하지 않습니다. 수식만으로 확인되지 않는 값은 미확정으로 남깁니다. 여러 구문은 각각 선택해서 확인합니다.</p><p>입력 편집 시 이전 결과를 지웁니다. SQL과 결과는 새로고침 후 보관되지 않습니다.</p></details>
+    <footer><span>SETTLEMENT / FORMULA STUDIO</span><span>원문을 보존하고, 판단의 근거를 남깁니다.</span></footer>
+  </main><script>
+// A bounded T-SQL expression parser. SQL is never executed.
+ class ParseError extends Error {
+  constructor(message, token) { super(message); this.offset = token?.start ?? 0; }
+}
+ function tokenize(source) {
+  const tokens = []; let i = 0;
+  const push = (kind, value, start) => tokens.push({kind, value, start, end: i});
+  while (i < source.length) {
+    const start = i, c = source[i];
+    if (/\s/.test(c)) { i++; continue; }
+    if (source.startsWith('--', i)) { while (i < source.length && source[i] !== '\n') i++; continue; }
+    if (source.startsWith('/*', i)) {
+      i += 2; let level = 1;
+      while (i < source.length && level) {
+        if (source.startsWith('/*', i)) { level++; i += 2; }
+        else if (source.startsWith('*/', i)) { level--; i += 2; } else i++;
+      }
+      if (level) throw new ParseError('닫히지 않은 주석입니다.', {start});
+      continue;
+    }
+    if (c === '[' || c === '"') {
+      const close = c === '[' ? ']' : '"'; i++; let value = '', closed = false;
+      while (i < source.length) {
+        if (source[i] === close) {
+          i++; if (source[i] === close) { value += close; i++; } else { closed = true; break; }
+        } else value += source[i++];
+      }
+      if (!closed) throw new ParseError('닫히지 않은 식별자입니다.', {start});
+      push('id', value.toUpperCase(), start); continue;
+    }
+    if (c === "'") {
+      i++; let value = '', closed = false;
+      while (i < source.length) {
+        if (source[i] === "'") { i++; if (source[i] === "'") { value += "'"; i++; } else { closed = true; break; } }
+        else value += source[i++];
+      }
+      if (!closed) throw new ParseError('닫히지 않은 문자열입니다.', {start});
+      push('string', value, start); continue;
+    }
+    const number = source.slice(i).match(/^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/);
+    if (number) { i += number[0].length; push('number', number[0], start); continue; }
+    const id = source.slice(i).match(/^[@#\p{L}_][@#$\p{L}\p{N}_]*/u);
+    if (id) { i += id[0].length; push('id', id[0].toUpperCase(), start); continue; }
+    const op = source.slice(i).match(/^(?:<=|>=|<>|!=|!<|!>)/);
+    if (op) { i += op[0].length; push('op', op[0], start); continue; }
+    i++; push('op', c, start);
+  }
+  tokens.push({kind:'eof', value:'EOF', start:i, end:i}); return tokens;
+}
+const precedence = {OR:1, AND:2, '=':3, '<>':3, '!=':3, '<':3, '>':3, '<=':3, '>=':3, '+':4, '-':4, '*':5, '/':5, '%':5};
+ class Parser {
+  constructor(tokens, index = 0) { this.tokens = tokens; this.i = index; this.depth = 0; }
+  peek() { return this.tokens[this.i] ?? this.tokens.at(-1); }
+  take() { return this.tokens[this.i++]; }
+  accept(value) { if (this.peek().value === value) return this.take(); return null; }
+  expect(value) { const t = this.take(); if (t?.value !== value) throw new ParseError(`${value} 토큰이 필요합니다.`, t); return t; }
+  expr(min = 0) {
+    if (++this.depth > 120) throw new ParseError('수식 중첩이 너무 깊습니다.', this.peek());
+    let left = this.primary();
+    while ((precedence[this.peek().value] ?? -1) >= min) {
+      const op = this.take().value, right = this.expr(precedence[op] + 1);
+      left = {kind:'binary', op, left, right, start:left.start, end:right.end};
+    }
+    this.depth--; return left;
+  }
+  primary() {
+    const t = this.take(); if (!t) throw new ParseError('수식이 필요합니다.');
+    if (t.value === '+' || t.value === '-') { const arg = this.expr(6); return {kind:'unary', op:t.value, arg, start:t.start, end:arg.end}; }
+    if (t.value === '(') { const node = this.expr(); const end = this.expect(')'); return {...node, start:t.start, end:end.end}; }
+    if (t.kind === 'number' || t.kind === 'string') return {kind:t.kind, value:t.value, start:t.start, end:t.end};
+    if (t.value === 'CASE') {
+      const base = this.peek().value === 'WHEN' ? null : this.expr(); const branches = [];
+      while (this.accept('WHEN')) { const when = this.expr(); this.expect('THEN'); branches.push({when, then:this.expr()}); }
+      const otherwise = this.accept('ELSE') ? this.expr() : null, end = this.expect('END');
+      if (!branches.length) throw new ParseError('CASE WHEN 분기가 없습니다.', t);
+      return {kind:'case', base, branches, otherwise, start:t.start, end:end.end};
+    }
+    if (t.kind !== 'id' || ['EOF','FROM','WHERE','THEN','ELSE','END'].includes(t.value)) throw new ParseError('해석할 수 없는 수식입니다.', t);
+    let name = t.value;
+    while (this.accept('.')) { const next = this.take(); if (next?.kind !== 'id') throw new ParseError('식별자가 필요합니다.', next); name += '.' + next.value; }
+    if (!this.accept('(')) return {kind:'id', name, start:t.start, end:this.tokens[this.i-1].end};
+    const args = []; let type = null;
+    if (name === 'CAST') { args.push(this.expr()); this.expect('AS'); type = this.sqlType(); }
+    else if (name === 'CONVERT') { type = this.sqlType(); this.expect(','); args.push(this.expr()); if (this.accept(',')) args.push(this.expr()); }
+    else if (this.accept('*')) args.push({kind:'star', start:this.tokens[this.i-1].start, end:this.tokens[this.i-1].end});
+    else if (this.peek().value !== ')') { args.push(this.expr()); while (this.accept(',')) args.push(this.expr()); }
+    const end = this.expect(')');
+    const arity={ABS:[1],FLOOR:[1],CEILING:[1],ROUND:[2,3],SUM:[1],COUNT:[1],CAST:[1],CONVERT:[1,2],ISNULL:[2]};
+    if(arity[name] && !arity[name].includes(args.length)) throw new ParseError(`${name} 함수 인수 개수를 확인해 주세요.`,t);
+    return {kind:'call', name, args, type, start:t.start, end:end.end};
+  }
+  sqlType() {
+    const t = this.take(); if (t?.kind !== 'id') throw new ParseError('변환 타입이 필요합니다.', t);
+    let type = t.value;
+    if (this.accept('(')) { type += '('; while (this.peek().value !== ')' && this.peek().kind !== 'eof') type += this.take().value; this.expect(')'); type += ')'; }
+    return type;
+  }
+}
+ const lineAt = (source, offset) => source.slice(0, offset).split('\n').length;
+const outputKind = name => ['CPFEE','RAMT'].includes(name?.split('.').at(-1)) ? 'fee' : ['CPVAT','VAMT'].includes(name?.split('.').at(-1)) ? 'vat' : null;
+ function extract(source) {
+  const ts = tokenize(source), boundaries = []; let level = 0;
+  for (let i=0;i<ts.length-1;i++) {
+    if (ts[i].value === '(') level++;
+    if (ts[i].value === ')') level--;
+    if (level === 0 && ['UPDATE','SELECT'].includes(ts[i].value)) boundaries.push(i);
+  }
+  if (!boundaries.length || boundaries[0] > 0) boundaries.unshift(0);
+  boundaries.push(ts.length-1);
+  const blocks = [];
+  for (let b=0;b<boundaries.length-1;b++) {
+    const begin = boundaries[b], end = boundaries[b+1], local = [...ts.slice(begin,end), {...ts[end], kind:'eof', value:'EOF'}];
+    const formulas = {}, errors = [], used = new Set();
+    // Only inspect the SET/SELECT list, never predicates or assignments in subqueries.
+    let limit=local.length-1, depth=0;
+    const topLevel=new Set();
+    for(let i=0;i<local.length-1;i++) {
+      if(depth===0 && ['FROM','WHERE',';'].includes(local[i].value)){limit=i;break;}
+      if(depth===0)topLevel.add(i);
+      if(local[i].value==='(')depth++;
+      if(local[i].value===')')depth--;
+    }
+    for (let i=0;i<limit;i++) {
+      if(!topLevel.has(i))continue;
+      const k = outputKind(local[i].value);
+      if (k && local[i+1]?.value === '=') {
+        try {
+          const p = new Parser(local,i+2), node = p.expr();
+          if (![',',';','FROM','WHERE','EOF','GO','END','IF','BEGIN'].includes(p.peek().value)) throw new ParseError('수식 뒤의 구문을 확인해 주세요.',p.peek());
+          if (formulas[k]) throw new ParseError('같은 구문에 중복된 결과 컬럼이 있습니다.',local[i]);
+          formulas[k] = node; used.add(i); i = p.i-1;
+        } catch(e) { errors.push({message:e.message, offset:e.offset ?? local[i].start}); }
+      }
+    }
+    // SELECT expressions and bare "expression AS alias" fragments.
+    for (let i=0;i<limit;i++) {
+      if(!topLevel.has(i))continue;
+      if (i !== 0 && ![',','SELECT'].includes(local[i-1].value)) continue;
+      if (used.has(i)) continue;
+      try {
+        const p = new Parser(local,i), node = p.expr(); p.accept('AS'); const alias = p.peek(), k = outputKind(alias.value);
+        if (k && !formulas[k]) { formulas[k] = node; i = p.i; }
+      } catch { /* Unrelated SELECT columns do not invalidate the target formulas. */ }
+    }
+    const startOffset = local[0].start, endOffset = ts[end].start;
+    if (Object.keys(formulas).length || errors.length) blocks.push({id:`block-${b}`, formulas, errors, start:startOffset, end:endOffset, line:lineAt(source,startOffset), sql:source.slice(startOffset,endOffset)});
+  }
+  return blocks;
+}
+ function children(n) {
+  if (!n) return [];
+  if (n.kind === 'binary') return [n.left,n.right];
+  if (n.kind === 'unary') return [n.arg];
+  if (n.kind === 'call') return n.args;
+  if (n.kind === 'case') return [n.base,...n.branches.flatMap(b=>[b.when,b.then]),n.otherwise].filter(Boolean);
+  return [];
+}
+ const walk = (n, predicate) => !!n && (predicate(n) || children(n).some(c=>walk(c,predicate)));
+ function canonical(n) {
+  if (!n) return '';
+  if (n.kind === 'id') return n.name;
+  if (n.kind === 'number') return String(Number(n.value));
+  if (n.kind === 'string') return JSON.stringify(n.value);
+  return JSON.stringify([n.kind,n.op ?? n.name ?? '',n.type ?? '',...children(n).map(canonical)]);
+}
+
+
+ const FIELDS = [
+  ['FRIM_BASE_DVCD', '과금 기준', ['AMOUNT', 'SCOUNT', 'TCOUNT']],
+  ['FEE_TYPE_DVCD', '수수료 타입', ['RATE', 'FIXED']],
+  ['FEE_SMT_CALC_BASE_DVCD', '수수료 기준', ['EACH', 'SUM']],
+  ['FEE_SMT_CALC_MHOD_DVCD', '수수료 방식', ['NONE', 'DOWN', 'HALF_UP', 'CEILING', 'HALF_DOWN', 'SIGNED_DOWN']],
+  ['FEE_SMT_CALC_UNIT_VAL', '수수료 단위', null],
+  ['VAT_DVCD', 'VAT 구분', ['INCLUDED', 'SEPARATED', 'ZERO']],
+  ['VAT_CALC_TRGT_DVCD', 'VAT 대상', ['FEE', 'AMOUNT', 'NONE']],
+  ['VAT_SMT_CALC_BASE_DVCD', 'VAT 기준', ['EACH', 'SUM']],
+  ['VAT_SMT_CALC_MHOD_DVCD', 'VAT 방식', ['NONE', 'DOWN', 'HALF_UP', 'CEILING', 'HALF_DOWN', 'SIGNED_DOWN']],
+  ['VAT_SMT_CALC_UNIT_VAL', 'VAT 단위', null],
+  ['ABS_PROCS_YN', '절대값 처리', ['Y', 'N']],
+  ['SIGN_APLY_LOCT_DVCD', '부호 적용 위치', ['BEFORE', 'AFTER', 'NONE']]
+];
+ const display = cell => cell?.value ?? (cell?.status === 'custom' ? '별도 계산 필요' : cell?.status === 'not-applicable' ? '미적용' : '미확정');
+ function exportRow(result, format = 'markdown', name = null) {
+  const headers = [...(name ? ['SMT_GDS_CD', 'SMT_GDS_NM'] : []), ...FIELDS.map(f => f[0])];
+  const values = [...(name ? [name.code, name.name] : []), ...FIELDS.map(f => display(result.fields[f[0]]))];
+  if (format === 'tsv') return [headers, values].map(r => r.map(v => String(v).replace(/[\t\r\n]/g, ' ')).join('\t')).join('\n');
+  const row = r => `| ${r.map(v => String(v).replace(/\|/g, '\\|').replace(/\r?\n/g, ' ')).join(' | ')} |`;
+  return [row(headers), row(headers.map(() => '---')), row(values)].join('\n');
+}
+
+
+const call = (n,name) => n?.kind === 'call' && n.name === name;
+const num = (n,v) => n?.kind === 'number' && Number(n.value) === v;
+const numeric = n => n?.kind === 'unary' && n.op === '-' ? -numeric(n.arg) : n?.kind === 'number' ? Number(n.value) : NaN;
+const id = (n,re) => n?.kind === 'id' && re.test(n.name.split('.').at(-1));
+const same = (a,b) => !!a && !!b && canonical(a) === canonical(b);
+const has = (n,name) => walk(n,x=>call(x,name));
+const isRate = n => id(n, /^(?:[A-Z_]*RATE|R)$/);
+const isFeeRef = n => id(n,/^(CPFEE|RAMT)$/);
+const roundingNames = ['FLOOR','CEILING','ROUND'];
+const rounding = n => n?.kind === 'call' && roundingNames.includes(n.name);
+function signSource(n) {
+  if(call(n,'SIGN')) return n.args[0];
+  if (n?.kind === 'case' && !n.base && n.branches.length === 1 && numeric(n.branches[0].then) === -1 && num(n.otherwise,1)) {
+    const w=n.branches[0].when;
+    if(w.kind === 'binary' && w.op === '<' && num(w.right,0)) return w.left;
+  }
+  if(n?.kind === 'binary' && n.op === '/' && call(n.right,'ABS') && same(n.left,n.right.args[0])) return n.left;
+  return null;
+}
+function stripSign(n) {
+  if (n?.kind === 'binary' && n.op === '*') {
+    if(signSource(n.right)) return {core:n.left, sign:signSource(n.right), position:'AFTER'};
+    if(signSource(n.left)) return {core:n.right, sign:signSource(n.left), position:'AFTER'};
+  }
+  // SQL precedence: expression * AMT / ABS(AMT)
+  if(n?.kind === 'binary' && n.op === '/' && call(n.right,'ABS') && n.left.kind === 'binary' && n.left.op === '*' && same(n.left.right,n.right.args[0])) return {core:n.left.left, sign:n.left.right, position:'AFTER'};
+  if(rounding(n)) {
+    const inner=stripSign(n.args[0]);
+    if(inner.sign) return {core:{...n,args:[inner.core,...n.args.slice(1)]},sign:inner.sign,position:'BEFORE'};
+  }
+  return {core:n, sign:null, position:null};
+}
+function nonnegative(n) {
+  if(call(n,'ABS') || isRate(n)) return true;
+  if(Number.isFinite(numeric(n))) return numeric(n)>=0;
+  if(n?.kind==='binary' && ['*','/','+'].includes(n.op)) return nonnegative(n.left) && nonnegative(n.right);
+  if(n?.kind==='call' && ['ISNULL','COALESCE'].includes(n.name)) return n.args.every(nonnegative);
+  if(call(n,'COUNT')) return true;
+  if(call(n,'SUM') || call(n,'NULLIF')) return nonnegative(n.args[0]);
+  if(rounding(n)) return nonnegative(n.args[0]);
+  return false;
+}
+function roundInfo(n) {
+  let core=n, base=has(n,'SUM') || has(n,'COUNT') ? 'SUM' : 'EACH';
+  if (call(core,'SUM')) { core=core.args[0]; if(rounding(core)) base='EACH'; }
+  if(!rounding(core)) return {base, method:'NONE',unit:null,input:core};
+  if(core.name === 'ROUND') {
+    const digits=numeric(core.args[1]), truncate=core.args[2] ? numeric(core.args[2]) : 0;
+    if(!Number.isInteger(digits) || Math.abs(digits)>12 || !Number.isFinite(truncate)) return {base,method:null,unit:null,input:core.args[0]};
+    return {base, method:truncate === 0 ? 'HALF_UP' : 'DOWN',unit:digits === 0 ? 0 : 10 ** -digits,input:core.args[0]};
+  }
+  return {base,method:core.name === 'FLOOR' ? 'DOWN' : 'CEILING',unit:0,input:core.args[0]};
+}
+function rateProduct(n) { return walk(n,x=>x.kind === 'binary' && x.op === '*' && (isRate(x.left)||isRate(x.right))); }
+function vatBase(n) {
+  if(n?.kind === 'binary' && n.op === '*') {
+    if(num(n.left,.1)) return n.right;
+    if(num(n.right,.1)) return n.left;
+  }
+  if(n?.kind === 'binary' && n.op === '/' && num(n.right,10)) return n.left;
+  return null;
+}
+const supported = new Set(['ABS','FLOOR','CEILING','ROUND','SUM','COUNT','CAST','CONVERT','ISNULL']);
+ function analyzeBlock(block, source) {
+  const fields = Object.fromEntries(FIELDS.map(([key])=>[key,{value:null,status:'unknown',source:'parser',reason:'수식에서 확인할 수 없습니다.',evidence:[]}]));
+  const notices = block.errors.map(e=>`${lineAt(source,e.offset)}행: ${e.message}`);
+  function put(key,value,node,reason,status='known') {
+    fields[key]={value,status,source:'parser',reason,evidence:node?[{start:node.start,end:node.end,line:lineAt(source,node.start),endLine:lineAt(source,node.end),text:source.slice(node.start,node.end)}]:[]};
+  }
+  function custom(keys,node,reason) { keys.forEach(k=>put(k,null,node,reason,'custom')); notices.push(reason); }
+  const fee = block.formulas.fee, vat=block.formulas.vat;
+  const fs=stripSign(fee), vs=stripSign(vat), f=fs.core, v=vs.core;
+  const feeKeys=['FEE_SMT_CALC_BASE_DVCD','FEE_SMT_CALC_MHOD_DVCD','FEE_SMT_CALC_UNIT_VAL'];
+  const vatKeys=['VAT_CALC_TRGT_DVCD','VAT_SMT_CALC_BASE_DVCD','VAT_SMT_CALC_MHOD_DVCD','VAT_SMT_CALC_UNIT_VAL'];
+  function setRounding(keys,node,original) {
+    const ri=roundInfo(node);
+    // BigDecimal.DOWN truncates toward zero. SQL FLOOR on a signed value does not.
+    const outer=call(node,'SUM')?node.args[0]:node;
+    if(call(outer,'FLOOR') && (!has(outer.args[0],'ABS') || stripSign(original).position==='BEFORE')) ri.method='SIGNED_DOWN';
+    put(keys[0],ri.base,original,ri.base === 'SUM'?'집계액 또는 집계 건수를 계산합니다.':'거래별 계산입니다. 바깥 SUM은 계산된 결과의 합계입니다.');
+    if(ri.method) {
+      put(keys[1],ri.method,original,'가장 바깥 계산 순서의 반올림 함수를 판별했습니다.');
+      if(ri.unit !== null) put(keys[2],ri.unit,original,'GDS 단위: 원 단위 0 / 10원 단위 10 / 소수 둘째 자리 0.01.');
+      else put(keys[2],null,original,'반올림이 없어 계산 단위를 적용하지 않습니다.','not-applicable');
+    }
+    return ri;
+  }
+  if(f) {
+    const ri=setRounding(feeKeys,f,fee);
+    if(rateProduct(f)) { put('FEE_TYPE_DVCD','RATE',fee,'금액과 요율의 곱을 사용합니다.'); put('FRIM_BASE_DVCD','AMOUNT',fee,'요율을 곱하는 금액 기준입니다.'); }
+    else if(walk(f,n=>id(n,/^(AUTHRATE|CPRATE2|COST|BASIC_COST|EXCESS_COST)$/)) || f.kind === 'number') put('FEE_TYPE_DVCD','FIXED',fee,'정액 단가를 사용합니다. 건수 종류는 별도 정보가 필요합니다.');
+    if(has(f,'COUNT')) { put('FEE_TYPE_DVCD','FIXED',fee,'집계 건수에 단가를 적용합니다.'); put('FRIM_BASE_DVCD',null,fee,'COUNT만으로 성공건수와 시도건수를 구분할 수 없습니다.','unknown'); }
+    if(walk(f,n=>n.kind === 'case') || walk(f,n=>n.kind === 'call' && !supported.has(n.name)) || (ri.input && walk(ri.input,rounding))) custom(feeKeys,f,'수수료의 조건부 또는 다단계 계산은 단일 상품 설정으로 확정할 수 없습니다.');
+  }
+  if(v) {
+    const ri=setRounding(vatKeys.slice(1),v,vat);
+    const base=vatBase(ri.input);
+    if(num(v,0)) {
+      put('VAT_DVCD','ZERO',vat,'VAT가 상수 0입니다.'); put('VAT_CALC_TRGT_DVCD','NONE',vat,'VAT 계산 대상이 없습니다.');
+      put('VAT_SMT_CALC_MHOD_DVCD','NONE',vat,'VAT를 계산하지 않습니다.');
+      put('VAT_SMT_CALC_UNIT_VAL',null,vat,'VAT 계산 단위를 적용하지 않습니다.','not-applicable');
+    } else if(base) {
+      put('VAT_DVCD','SEPARATED',vat,'계산 기준액에 10%를 곱한 별도 VAT 식입니다.');
+      if(same(base,f)) put('VAT_CALC_TRGT_DVCD','FEE',vat,'VAT에 사용한 식이 반올림을 포함한 수수료 식과 일치합니다.');
+      else if(walk(base,isFeeRef)) {
+        put('VAT_CALC_TRGT_DVCD',null,vat,'CPFEE/RAMT가 어느 시점에 계산된 값인지 확인이 필요합니다. 같은 UPDATE의 우변은 기존 값입니다.');
+        notices.push('수수료 컬럼 참조의 갱신 순서·조회 원천을 확인해 주세요.');
+      } else if(rateProduct(base) && !walk(base,rounding)) put('VAT_CALC_TRGT_DVCD','AMOUNT',vat,'반올림 전 금액×요율에 VAT율을 적용합니다.');
+    }
+    if(!num(v,0) && (!base || walk(v,n=>n.kind === 'case') || walk(v,n=>n.kind === 'call' && !supported.has(n.name)))) custom(vatKeys,vat,'VAT 차감식·조건식 또는 미지원 함수는 별도 계산이 필요합니다. 원문을 확인해 주세요.');
+  }
+  const formulas=[fee,vat].filter(Boolean);
+  if(formulas.length) {
+    const active=formulas.filter(n=>!num(stripSign(n).core,0));
+    const signs=active.map(stripSign);
+    const unsigned=signs.length>0 && signs.every(x=>!x.sign && nonnegative(x.core));
+    const abs=(active.length?active:formulas).map(n=>has(n,'ABS'));
+    if(unsigned && abs.every(x=>!x) && fields.FEE_TYPE_DVCD.value==='FIXED') put('ABS_PROCS_YN','Y',fee??vat,'정액 단가의 양수 결과를 유지하도록 Y/NONE으로 설정해요. 거래금액은 단가 계산에 사용하지 않아요.');
+    else if(abs.every(Boolean)) put('ABS_PROCS_YN','Y',fee??vat,'입력된 수수료·VAT 식에서 ABS를 사용합니다.');
+    else if(abs.every(x=>!x)) put('ABS_PROCS_YN','N',fee??vat,'입력 식에 ABS가 없습니다.');
+    else custom(['ABS_PROCS_YN'],fee??vat,'수수료와 VAT의 절대값 처리가 달라 공통 설정을 확정하지 않습니다.');
+    if(signs.length && signs.every(x=>x.sign) && new Set(signs.map(x=>x.position)).size === 1 && signs.every(x=>same(x.sign,signs[0].sign))) put('SIGN_APLY_LOCT_DVCD',signs[0].position,fee??vat,'반올림 기준으로 원문 부호 적용 위치를 판별했습니다.');
+    else if(unsigned && fields.ABS_PROCS_YN.value==='Y') put('SIGN_APLY_LOCT_DVCD','NONE',fee??vat,'수수료·부가세를 양수로 계산하고 원래 거래금액의 부호를 다시 붙이지 않아요. 단수 처리는 그대로 적용해요.');
+    if(formulas.some(n=>has(n,'CAST')||has(n,'CONVERT'))) {
+      notices.push('CAST/CONVERT의 타입 변환을 보존했습니다. 원천 타입·변환 시 절사/반올림은 별도 확인이 필요합니다.');
+    }
+  }
+  if(block.errors.length) {
+    for(const key of Object.keys(fields)) put(key,null,null,'불완전하거나 중복된 계산식입니다. 구문 오류를 수정한 뒤 다시 분석해 주세요.','unknown');
+  }
+  const result={id:block.id,line:block.line,sql:block.sql,fields,notices:[...new Set(notices)],formulas:block.formulas};
+  result.summary=summarize(result); return result;
+}
+ function summarize(result) {
+  const val=k=>result.fields[k]?.value;
+  const names={EACH:'건별',SUM:'합산',RATE:'정률',FIXED:'정액',HALF_UP:'반올림',DOWN:'절사',CEILING:'올림',HALF_DOWN:'HALF_DOWN',NONE:'미적용',SIGNED_DOWN:'부호별 절사'};
+  const fee=[names[val('FEE_SMT_CALC_BASE_DVCD')],names[val('FEE_TYPE_DVCD')],names[val('FEE_SMT_CALC_MHOD_DVCD')]].filter(Boolean).join(' ');
+  const vat=val('VAT_DVCD') === 'ZERO' ? 'VAT 0' : `${val('VAT_CALC_TRGT_DVCD') === 'FEE' ? '계산된 수수료' : val('VAT_CALC_TRGT_DVCD') === 'AMOUNT' ? '금액×요율' : '대상 미확정'} 기준 VAT ${names[val('VAT_SMT_CALC_MHOD_DVCD')]??'별도 확인'}`;
+  return [fee||'수수료 미확정',vat].join(' · ');
+}
+ function analyze(source) {
+  if(typeof source !== 'string' || !source.trim()) return {results:[],errors:['수수료·VAT 수식을 입력해 주세요.']};
+  if(source.length>100000) return {results:[],errors:['입력은 100,000자 이하로 나눠 주세요.']};
+  try {
+    const results=extract(source).map(block=>analyzeBlock(block,source));
+    return {results,errors:results.length?[]:['CPFEE/CPVAT 또는 RAMT/VAMT 수식을 찾지 못했습니다. 입력 전체를 AI로 보완할 수 있습니다.']};
+  } catch(e) { return {results:[],errors:[`${lineAt(source,e.offset??0)}행: ${e.message}`]}; }
+}
+
+
+ const EXAMPLES = {
+  '오픈뱅킹 정률': `UPDATE A SET CPFEE=FLOOR(ABS(AMT)*CPRATE), CPVAT=FLOOR(ABS(AMT)*CPRATE*0.1);`,
+  '오픈뱅킹 정액': `UPDATE A SET CPFEE=AUTHRATE, CPVAT=FLOOR(AUTHRATE*0.1);`,
+  '제휴간편결제': `UPDATE A
+SET CPFEE = ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END
+  , CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END
+FROM JUNGSAN.DBO.TB_BILL A
+WHERE SERVICECODE = '12801';`,
+  '페이코인': `, CPFEE = FLOOR(ABS(AMT) * CPRATE) * AMT/ABS(AMT)
+, CPVAT = FLOOR(ABS(AMT) * CPRATE * 0.1) * AMT/ABS(AMT)`,
+  '모바일상품권': `SELECT
+  round(cprate * sum(cast(amt as bigint)), 0) ramt
+, round(round(cprate * sum(cast(amt as bigint)), 0) * 0.1, 0) vamt
+FROM TB_BILL
+GROUP BY CPID, CPRATE;`,
+  '비자사이버소스': `UPDATE A
+SET CPFEE = CEILING(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END
+  , CPVAT = (CEILING(ABS(AMT) * (CPRATE + CPRATE * 0.1)) - CEILING(ABS(AMT) * CPRATE)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END`,
+  '카드': `UPDATE A SET
+CPFEE = FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END
+, CPVAT = ((CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) *
+  CASE WHEN RIGHT((FLOOR(ABS(AMT) * CPRATE)), 1) >= 6 THEN CEILING((ABS(AMT) * CPRATE) * 0.1)
+  ELSE FLOOR((ABS(AMT) * CPRATE) * 0.1) END)`,
+  '여러 계산 구문': `UPDATE A SET CPFEE = FLOOR(AMT * CPRATE), CPVAT = FLOOR(AMT * CPRATE * 0.1)
+WHERE SERVICECODE = '51001';
+
+UPDATE A SET CPFEE = ROUND(AMT * CPRATE, 0), CPVAT = FLOOR(ROUND(AMT * CPRATE, 0) * 0.1)
+WHERE SERVICECODE = '12801';`
+};
+
+
+const $=id=>document.getElementById(id);
+let results=[],index=0,proposal=null,adopted=new Set(),chosenName=null,revision=0,busy=false;
+const make=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el;};
+const message=text=>$('message').textContent=text;
+const base=()=>results[index];
+function merged() {const r=base();if(!r)return null;const fields={...r.fields};for(const key of adopted)if(proposal?.fields[key])fields[key]=proposal.fields[key];return {...r,fields};}
+function resetResults(){revision++;results=[];index=0;proposal=null;adopted.clear();chosenName=null;if($('names-panel'))$('names-panel').hidden=true;$('evidence-content').hidden=true;$('evidence-empty').hidden=false;$('evidence-kind').textContent='SOURCE';render();}
+function syncLines(){const count=$('sql').value.split('\n').length;$('gutter').textContent=Array.from({length:count},(_,i)=>i+1).join('\n');$('input-info').textContent=`${count}행 · ${$('sql').value.length.toLocaleString()}자`;}
+$('sql').addEventListener('input',()=>{resetResults();syncLines();message('');});
+$('description').addEventListener('input',()=>{revision++;if($('names-panel'))$('names-panel').hidden=true;});
+$('sql').addEventListener('scroll',()=>{$('gutter').scrollTop=$('sql').scrollTop;});
+$('sql').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')run();});
+for(const name of Object.keys(EXAMPLES))$('example').append(new Option(name,name));
+$('example').addEventListener('change',()=>{if(!$('example').value)return;$('sql').value=EXAMPLES[$('example').value];resetResults();syncLines();run();});
+$('clear').onclick=()=>{$('sql').value='';$('example').value='';resetResults();syncLines();message('');$('sql').focus();};
+$('analyze').onclick=run;
+function run(){resetResults();const outcome=analyze($('sql').value);results=outcome.results;message(outcome.errors.join(' '));render();}
+$('blocks').onchange=()=>{revision++;index=Number($('blocks').value);proposal=null;adopted.clear();chosenName=null;if($('names-panel'))$('names-panel').hidden=true;$('evidence-content').hidden=true;$('evidence-empty').hidden=false;render();};
+function evidence(key,cell=merged()?.fields[key]) {
+  if(!cell)return;
+  $('evidence-empty').hidden=true;$('evidence-content').hidden=false;$('evidence-label').textContent=FIELDS.find(f=>f[0]===key)[1]+` · ${display(cell)}`;
+  $('evidence-kind').textContent=cell.source==='ai'?'AI 제안':'PARSER';$('evidence-reason').textContent=cell.reason;
+  $('evidence-quotes').replaceChildren();
+  for(const e of cell.evidence??[]) { $('evidence-quotes').append(make('div',`입력 ${e.line}–${e.endLine}행`,'quote-label'),make('pre',e.text,'quote')); }
+}
+function render(){
+  const r=merged();$('result-empty').hidden=!!r;$('result-content').hidden=!r;$('blocks').hidden=results.length<2;
+  $('blocks').replaceChildren(...results.map((r,i)=>new Option(`구문 ${i+1} · ${r.line}행`,i)));$('blocks').value=String(index);
+  $('result-source').textContent=r?(adopted.size?'파서 + AI 선택':'로컬 파싱'):'입력 대기';
+  if($('ai-candidates'))$('ai-candidates').hidden=!proposal;
+  if(!r)return;
+  $('summary').textContent=summarize(r);$('known-count').textContent=`${Object.values(r.fields).filter(c=>c.status==='known').length} / ${FIELDS.length} 확인`;
+  const head=make('tr'), row=make('tr');
+  if(chosenName){for(const [h,v] of [['상품코드',chosenName.code],['상품명',chosenName.name]]){head.append(make('th',h));row.append(make('td',v));}}
+  for(const [key,label] of FIELDS){const th=make('th',label);th.append(make('code',key));head.append(th);const td=make('td'),c=r.fields[key],button=make('button',display(c),'cell '+c.status+(c.source==='ai'?' ai':''));button.onclick=()=>evidence(key);button.title=c.reason;td.append(button);row.append(td);}
+  $('result-table').tHead.replaceChildren(head);$('result-table').tBodies[0].replaceChildren(row);
+  $('notices').replaceChildren(...r.notices.map(n=>make('li',n)));
+  renderProposal();
+}
+function renderProposal(){
+  if(!proposal)return;
+  const rows=[];
+  for(const [key,label] of FIELDS){
+    const p=base().fields[key],a=proposal.fields[key];
+    const tr=make('tr');tr.append(make('td',label),make('td',display(p)),make('td',display(a)));
+    const td=make('td');td.append(make('div',a.reason));
+    const proof=make('button','원문 근거');proof.onclick=()=>evidence(key,a);td.append(proof);
+    if(a.status!=='unknown') {const use=make('button',adopted.has(key)?'파서 값으로 복원':'AI 값 선택',adopted.has(key)?'selected':'');use.onclick=()=>{revision++;if(adopted.has(key))adopted.delete(key);else adopted.add(key);chosenName=null;$('names-panel').hidden=true;render();};td.append(use);}
+    tr.append(td);rows.push(tr);
+  }
+  $('ai-table').tBodies[0].replaceChildren(...rows);
+}
+async function copy(format){const r=merged();if(!r)return;try{await navigator.clipboard.writeText(exportRow(r,format,chosenName));message(format==='tsv'?'엑셀에 붙여넣을 헤더와 한 행을 복사했습니다.':'Markdown 표를 복사했습니다.');}catch{message('클립보드 접근이 차단되었습니다. localhost 주소와 브라우저 권한을 확인해 주세요.');}}
+$('markdown').onclick=()=>copy('markdown');$('tsv').onclick=()=>copy('tsv');
+async function request(path,body){const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});let data;try{data=await response.json();}catch{throw new Error('서버 응답을 읽지 못했습니다.');}if(!response.ok)throw new Error(data.error||'요청에 실패했습니다.');return data;}
+async function ai(kind){
+  if(busy)return;
+  if(!$('sql').value.trim()){message('먼저 수식을 입력해 주세요.');return;}
+  if(!base())run();
+  const before=revision;
+  busy=true;$('ai-analyze').disabled=$('ai-names').disabled=true;message(kind==='names'?'상품명 후보를 생성하고 있습니다…':'AI가 선택한 수식의 해석을 보완하고 있습니다…');
+  try {
+    const r=merged(),sql=r?.sql??$('sql').value;
+    const data=await request(kind==='names'?'/api/suggest-names':'/api/analyze-ai',{sql,description:$('description').value,fields:r?.fields});
+    if(before!==revision)return;
+    if(kind==='names') {
+      if(!r){message('계산설정을 먼저 확인한 뒤 이름을 추천해 주세요.');return;}
+      $('names-panel').hidden=false;$('names').replaceChildren();
+      for(const candidate of data.candidates){const b=make('button');b.append(make('code',candidate.code),make('strong',candidate.name),make('small',candidate.reason));b.onclick=()=>{chosenName=candidate;for(const node of $('names').children)node.classList.remove('selected');b.classList.add('selected');render();};$('names').append(b);}
+      message('이름 후보를 선택하면 복사할 표에 상품코드·상품명이 포함됩니다.');
+    } else {
+      if(!base())results=[{id:'ai-fallback',line:1,sql,fields:Object.fromEntries(FIELDS.map(([k])=>[k,{value:null,status:'unknown',source:'parser',reason:'파서에서 확인하지 못했습니다.',evidence:[]} ])),notices:['파싱되지 않은 입력입니다. AI 제안의 원문 근거를 확인해 주세요.']}];
+      // API evidence is relative to the submitted block. UI uses original input lines.
+      const delta=base().line-1;
+      for(const cell of Object.values(data.fields))for(const e of cell.evidence){e.line+=delta;e.endLine+=delta;}
+      proposal=data;adopted.clear();render();message('AI 제안을 확인하고 필요한 컬럼만 선택해 주세요.');
+    }
+  } catch(e){if(before===revision)message(e.message);}finally{busy=false;$('ai-analyze').disabled=$('ai-names').disabled=false;}
+}
+$('ai-analyze').onclick=()=>ai('analysis');$('ai-names').onclick=()=>{if(!merged()){message('분석 결과를 먼저 확인해 주세요.');return;}ai('names');};
+if($('remove-name'))$('remove-name').onclick=()=>{chosenName=null;for(const b of $('names').children)b.classList.remove('selected');render();};
+syncLines();render();
+
+</script>
+</body></html>

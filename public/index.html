@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>다날 정산 상품 생성기</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#sql">수식 입력으로 바로 가기</a>
+    <header>
+      <a class="brand" href="./">다날 정산 상품 생성기</a>
+      <span class="badge" id="connection">브라우저에서 분석</span>
+    </header>
+    <main>
+      <div class="intro">
+        <div class="intro-copy">
+          <h1>정산 수식을, 상품 설정으로.</h1>
+          <p class="subtitle">수수료·부가세 수식에서 계산설정 코드를 만들어요.</p>
+        </div>
+      </div>
+      <div class="workspace-tabs" role="tablist" aria-label="작업 선택">
+        <button
+          id="product-workspace-tab"
+          role="tab"
+          aria-selected="true"
+          aria-controls="product-workspace"
+        >
+          상품 만들기
+        </button>
+        <button
+          id="calculator-workspace-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="calculator-workspace"
+          tabindex="-1"
+        >
+          정산 계산기
+        </button>
+      </div>
+      <div id="product-workspace" role="tabpanel" aria-labelledby="product-workspace-tab">
+        <ol class="steps" aria-label="작업 순서">
+          <li id="step-input" aria-current="step">
+            <button data-go-step="0"><span>1</span> 수식 입력</button>
+          </li>
+          <li id="step-review">
+            <button data-go-step="1" disabled><span>2</span> 설정 확인</button>
+          </li>
+          <li id="step-verify">
+            <button data-go-step="2" disabled><span>3</span> 간단 검증</button>
+          </li>
+          <li id="step-copy">
+            <button data-go-step="3" disabled><span>4</span> 상품명·복사</button>
+          </li>
+        </ol>
+        <div id="message" role="status" aria-live="polite" aria-atomic="true"></div>
+        <details id="workflow-input" class="panel workflow-card" data-workflow-step="0" open>
+          <summary class="workflow-heading">
+            <h2 id="input-title">1단계 · 수식 입력</h2>
+            <span class="workflow-summary" data-step-summary="0">수식이나 예제를 선택하세요</span>
+          </summary>
+          <div class="workflow-content">
+            <section class="panel editor-panel" aria-labelledby="input-title">
+              <div class="panel-head">
+                <div class="tools">
+                  <label class="sr-only" for="example">예제 선택</label
+                  ><select id="example">
+                    <option value="">예제 선택</option></select
+                  ><button id="clear" class="text-button">입력 지우기</button>
+                </div>
+              </div>
+              <p class="section-hint" id="sql-hint">
+                수수료·부가세 계산식을 붙여 넣거나 예제를 선택하세요.
+              </p>
+              <div class="editor-meta">
+                <span class="editor-language">MSSQL</span
+                ><span>SQL 실행·DB 연결 없이 분석해요.</span>
+              </div>
+              <div class="editor">
+                <pre id="gutter" aria-hidden="true">1</pre>
+                <textarea
+                  id="sql"
+                  aria-label="MSSQL 수식 입력"
+                  aria-describedby="sql-hint"
+                  spellcheck="false"
+                  placeholder="CPFEE = ROUND(ABS(AMT) * CPRATE, 0)&#10;, CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1)"
+                ></textarea>
+              </div>
+              <div class="editor-footer">
+                <div>
+                  <span id="input-info">1행 · 0자</span
+                  ><span class="shortcut">분석 단축키 Ctrl + Enter</span>
+                </div>
+                <button id="analyze" class="primary" aria-describedby="sql-hint" disabled>
+                  수식 분석
+                </button>
+              </div>
+              <details class="advanced-input">
+                <summary>결과 컬럼 지정</summary>
+                <p>
+                  기본값은 수수료 CPFEE / RAMT, 부가세 CPVAT / VAMT예요. 다른 컬럼을 쓸 때만
+                  입력하세요.
+                </p>
+                <div class="column-options">
+                  <label
+                    >수수료 컬럼명<input
+                      id="fee-column"
+                      maxlength="128"
+                      placeholder="예: FEE_AMT"
+                      spellcheck="false" /></label
+                  ><label
+                    >부가세 컬럼명<input
+                      id="vat-column"
+                      maxlength="128"
+                      placeholder="예: VAT_AMT"
+                      spellcheck="false"
+                  /></label>
+                </div>
+              </details>
+            </section>
+          </div>
+        </details>
+        <details id="workflow-review" class="panel workflow-card" data-workflow-step="1">
+          <summary class="workflow-heading" aria-disabled="true">
+            <h2>2단계 · 설정 확인</h2>
+            <span class="workflow-summary" data-step-summary="1">수식을 먼저 분석하세요</span>
+          </summary>
+          <div class="workflow-content">
+            <details id="product-context" class="panel catalog-panel" hidden>
+              <summary id="product-title">선택한 DB 상품</summary>
+              <p id="product-source"></p>
+              <p>
+                DB에 보관된 SP에서 계산 표현식을 발췌했어요. 여러 구문은 각각의 계산 단계예요.
+                조인·거래 필터·앞 단계 결과는 별도로 확인하세요.
+              </p>
+              <ul id="product-references"></ul>
+            </details>
+            <div class="analysis-layout">
+              <section class="panel result-panel" aria-labelledby="result-title">
+                <div class="panel-head">
+                  <h2 id="result-title">상품 계산설정</h2>
+                  <span id="result-source" class="badge">입력 대기</span>
+                </div>
+                <div class="block-picker">
+                  <label for="blocks" id="blocks-label" hidden>확인할 계산 구문</label
+                  ><select id="blocks" hidden></select>
+                </div>
+                <div id="result-empty" class="result-empty">
+                  <p>수식을 분석하면 설정 코드가 여기에 나와요.</p>
+                </div>
+                <div id="result-content" hidden>
+                  <section id="code-details" class="code-output" aria-labelledby="code-title">
+                    <div class="code-heading">
+                      <div>
+                        <h3 id="code-title">설정 코드</h3>
+                        <p>코드값을 누르면 원문과 판단 이유를 볼 수 있어요.</p>
+                      </div>
+                    </div>
+                    <div class="code-notes">
+                      <p class="unit-note"><strong>1원 단위의 설정 코드는 0</strong>이에요.</p>
+                    </div>
+                    <p id="table-scroll-hint" class="table-scroll-hint">
+                      표를 좌우로 밀어 나머지 컬럼을 확인하세요.
+                    </p>
+                    <div
+                      class="table-scroll"
+                      tabindex="0"
+                      role="region"
+                      aria-label="상품 계산설정 코드 표"
+                      aria-describedby="table-scroll-hint"
+                    >
+                      <table id="result-table">
+                        <caption class="sr-only">
+                          상품 계산설정 코드
+                        </caption>
+                        <thead></thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                    <div id="code-proof" hidden></div>
+
+                    <div class="summary-line">
+                      <p id="summary"></p>
+                      <span id="known-count"></span>
+                    </div>
+                    <div id="next-action" class="next-action">
+                      <h3 id="next-title"></h3>
+                      <p id="next-detail"></p>
+                      <div id="attention-fields" class="attention-fields"></div>
+                    </div>
+                  </section>
+                  <details id="explanation-details" class="details-block">
+                    <summary>계산 방식 풀이</summary>
+                    <p class="section-hint">
+                      원문과 판단 이유는 위 표의 코드값을 눌러 확인할 수 있어요.
+                    </p>
+                    <div id="calculation-explanation" class="calculation-prose"></div>
+                  </details>
+                  <details id="product-comparison" class="details-block" hidden>
+                    <summary id="product-comparison-title">DB 상품 설정 대조</summary>
+                    <p>
+                      조회한 DB 설정과 현재 선택한 구문의 분석 결과를 비교해요. 미확정 값과 차이가
+                      있는 값은 자동으로 바꾸지 않아요.
+                    </p>
+                    <div class="table-scroll">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>항목</th>
+                            <th>DB 설정</th>
+                            <th>수식 분석</th>
+                            <th>대조</th>
+                          </tr>
+                        </thead>
+                        <tbody id="product-comparison-rows"></tbody>
+                      </table>
+                    </div>
+                  </details>
+                  <details id="notices-panel" class="details-block" hidden>
+                    <summary id="notices-title">계산 전에 확인할 점</summary>
+                    <ul id="notices"></ul>
+                  </details>
+                </div>
+              </section>
+              <details class="panel evidence-panel" aria-labelledby="evidence-title">
+                <summary class="evidence-heading">
+                  <span id="evidence-title">선택 항목의 원문 근거</span
+                  ><span id="evidence-kind" class="mini-label"></span>
+                </summary>
+                <div id="evidence-empty" class="empty-evidence">
+                  <p>결과에서 항목을 선택하세요.</p>
+                </div>
+                <div id="evidence-content" aria-live="polite" hidden>
+                  <h3 id="evidence-label"></h3>
+                  <p id="evidence-reason"></p>
+                  <div id="evidence-quotes"></div>
+                </div>
+              </details>
+            </div>
+            <section id="ai-area" class="panel ai-area" aria-labelledby="ai-title" hidden>
+              <div>
+                <h2 id="ai-title">AI 검토 <span class="optional-label">선택</span></h2>
+                <p id="ai-privacy">개인정보·업체정보를 지운 뒤 요청하세요.</p>
+                <p id="ai-transfer">
+                  선택한 수식과 분석 근거를 TypeSafe로 보내요. 설정값은 유지돼요.
+                </p>
+                <details class="ai-checklist">
+                  <summary>전송 전 확인사항</summary>
+                  <p>
+                    이름·연락처·계좌번호·업체명·가맹점번호가 있다면 제거하거나 식별할 수 없는 값으로
+                    바꿔 주세요. 정보를 수정했다면 수식을 다시 분석해 주세요.
+                  </p>
+                  <p>개인정보·업체정보는 자동으로 제거하지 않아요.</p>
+                </details>
+                <p id="ai-help" class="action-hint">수식을 먼저 분석해 주세요.</p>
+              </div>
+              <button id="ai-analyze" aria-describedby="ai-privacy ai-transfer ai-help" disabled>
+                AI 검토 요청
+              </button>
+            </section>
+            <section id="ai-candidates" class="panel" aria-labelledby="review-title" hidden>
+              <div class="panel-head">
+                <h2 id="review-title">AI 검토 결과</h2>
+                <span class="badge">설정값 유지</span>
+              </div>
+              <div class="review-intro">
+                <p id="review-summary"></p>
+                <p>
+                  판단 확신도는 AI 스스로 평가한 수치예요.
+                  <strong>정답일 확률은 아니에요.</strong> 원문과 대조해 주세요.
+                </p>
+              </div>
+              <div id="review-list" class="review-list"></div>
+              <details id="review-more" class="details-block" hidden>
+                <summary id="review-more-title">나머지 항목 보기</summary>
+                <div id="review-more-list" class="review-list"></div>
+              </details>
+            </section>
+            <div class="workflow-actions">
+              <button data-go-step="0">수식 수정</button
+              ><button class="primary" data-go-step="2" disabled>간단 검증으로</button>
+            </div>
+          </div>
+        </details>
+        <details id="workflow-verify" class="panel workflow-card" data-workflow-step="2">
+          <summary class="workflow-heading" aria-disabled="true">
+            <h2>3단계 · 간단 검증</h2>
+            <span class="workflow-summary" data-step-summary="2">선택 사항</span>
+          </summary>
+          <div class="workflow-content">
+            <p class="section-hint" id="quick-product">선택한 상품으로 금액 한 건을 확인해요.</p>
+            <form id="quick-form">
+              <div class="quick-fields">
+                <label
+                  >거래금액<input
+                    id="quick-amount"
+                    inputmode="decimal"
+                    placeholder="예: -9900"
+                    maxlength="120"
+                /></label>
+                <label
+                  ><span id="quick-rate-label">요율</span
+                  ><input
+                    id="quick-rate"
+                    inputmode="decimal"
+                    placeholder="예: 1.5%"
+                    maxlength="120"
+                /></label>
+                <label id="quick-count-wrap" hidden
+                  >과금건수<input id="quick-count" inputmode="numeric" value="1" maxlength="120"
+                /></label>
+              </div>
+              <details class="quick-compare">
+                <summary>기존 금액과 비교 (선택)</summary>
+                <div class="quick-fields">
+                  <label
+                    >기존 수수료<input id="quick-fee" inputmode="decimal" maxlength="120"
+                  /></label>
+                  <label
+                    >기존 VAT<input id="quick-vat" inputmode="decimal" maxlength="120"
+                  /></label>
+                  <label
+                    >기존 지급액<input id="quick-payout" inputmode="decimal" maxlength="120"
+                  /></label>
+                </div>
+              </details>
+              <div class="workflow-actions">
+                <button id="quick-run" class="primary" type="submit" disabled>간단 계산</button
+                ><button id="quick-calculator" type="button" disabled>계산기에서 이어서</button>
+              </div>
+            </form>
+            <p id="quick-status" class="action-hint" role="status" aria-live="polite"></p>
+            <div id="quick-results" class="quick-results" hidden></div>
+            <div class="workflow-actions">
+              <button data-go-step="1">설정 다시 보기</button
+              ><button class="primary" data-go-step="3" disabled>상품명·복사로</button>
+            </div>
+          </div>
+        </details>
+        <details id="workflow-copy" class="panel workflow-card" data-workflow-step="3">
+          <summary class="workflow-heading" aria-disabled="true">
+            <h2>4단계 · 상품명·복사</h2>
+            <span class="workflow-summary" data-step-summary="3">이름은 선택 사항</span>
+          </summary>
+          <div class="workflow-content">
+            <section class="panel naming-area">
+              <h3 class="section-hint">상품명 추천 (선택)</h3>
+              <p class="section-hint">
+                계산 방식에 맞는 이름 3개를 만들어요. 외부 전송·API 키 없이 동작해요.
+              </p>
+              <div class="name-actions">
+                <label for="description"
+                  >서비스명 또는 설명 <span class="muted">(선택)</span
+                  ><input id="description" maxlength="2000" placeholder="예: 페이코인" /></label
+                ><button id="ai-names" aria-describedby="name-help" disabled>상품명 추천</button>
+              </div>
+              <p
+                id="name-help"
+                class="action-hint"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                수식을 먼저 분석해 주세요.
+              </p>
+              <section id="names-panel" aria-labelledby="names-title" hidden>
+                <div class="panel-head">
+                  <h2 id="names-title">상품명 선택</h2>
+                  <button id="remove-name" class="text-button">선택 해제</button>
+                </div>
+                <div id="names"></div>
+              </section>
+            </section>
+            <div class="copy-actions">
+              <div id="chosen-name" class="chosen-name" hidden></div>
+              <div class="tools">
+                <button id="tsv" class="primary" aria-describedby="copy-hint" disabled>
+                  엑셀용 복사</button
+                ><button id="markdown" aria-describedby="copy-hint" disabled>Markdown 복사</button>
+              </div>
+              <p id="copy-hint" class="copy-hint">분석 결과가 나오면 복사할 수 있어요.</p>
+            </div>
+            <div class="workflow-actions">
+              <button data-go-step="2">간단 검증으로 돌아가기</button>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div
+        id="calculator-workspace"
+        role="tabpanel"
+        aria-labelledby="calculator-workspace-tab"
+        hidden
+      >
+        <section
+          id="calculation-test"
+          class="panel verification-panel"
+          aria-labelledby="calculation-title"
+        >
+          <div class="panel-head">
+            <h2 id="calculation-title">정산 계산기</h2>
+            <span class="badge">건별·합산·CSV 대조</span>
+          </div>
+          <p class="section-hint">
+            상품을 고르고 거래를 입력하세요. 상품 만들기와 별도로 계산하며, 탭별 입력과 결과를
+            유지해요.
+          </p>
+          <div class="verification-tabs" role="tablist" aria-label="검증 방식">
+            <button
+              id="verification-row-tab"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="verification-row-panel"
+            >
+              건별 검증
+            </button>
+            <button
+              id="verification-sum-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="verification-sum-panel"
+              tabindex="-1"
+            >
+              합산 검증
+            </button>
+          </div>
+          <div
+            id="verification-row-panel"
+            role="tabpanel"
+            aria-labelledby="verification-row-tab"
+          ></div>
+          <div
+            id="verification-sum-panel"
+            role="tabpanel"
+            aria-labelledby="verification-sum-tab"
+            hidden
+          ></div>
+          <template id="verification-form">
+            <div class="verification-controls">
+              <label class="asis-product-label"
+                >상품<select data-verification="asis-product">
+                  <option value="">상품 선택</option>
+                </select></label
+              >
+            </div>
+            <p data-verification="asis-scope-help" class="verification-hint"></p>
+            <p data-verification="asis-product-info" class="verification-hint"></p>
+            <div data-verification="asis-input-container" class="table-scroll verification-inputs">
+              <table>
+                <caption class="sr-only">
+                  계산할 금액
+                </caption>
+                <thead data-verification="asis-input-head"></thead>
+                <tbody data-verification="asis-input-rows"></tbody>
+              </table>
+            </div>
+            <div data-verification="asis-input-empty" hidden></div>
+            <div class="verification-tools">
+              <button data-verification="asis-run" class="primary" disabled>계산</button
+              ><button data-verification="asis-add-row" class="text-button">+ 행 추가</button>
+              <p data-verification="asis-status" role="status" aria-live="polite"></p>
+            </div>
+            <div data-verification="asis-results" class="asis-results" hidden>
+              <p
+                data-verification="asis-summary"
+                class="asis-summary"
+                role="status"
+                aria-live="polite"
+                hidden
+              ></p>
+              <div class="table-scroll">
+                <table class="asis-result-table">
+                  <thead>
+                    <tr>
+                      <th data-verification="asis-identity-heading">행</th>
+                      <th>수수료</th>
+                      <th>VAT</th>
+                      <th>지급액</th>
+                      <th data-verification="asis-verdict-heading" hidden>비교</th>
+                    </tr>
+                  </thead>
+                  <tbody data-verification="asis-result-rows"></tbody>
+                </table>
+              </div>
+              <details class="asis-options calculation-breakdown">
+                <summary>계산 과정·확인사항</summary>
+                <div data-verification="asis-calculation-rows"></div>
+              </details>
+            </div>
+            <details data-verification="asis-import-panel" class="asis-options">
+              <summary>붙여넣기 · CSV</summary>
+              <textarea
+                data-verification="asis-paste"
+                rows="3"
+                spellcheck="false"
+                aria-label="금액 데이터 붙여넣기"
+                placeholder="금액  요율  [기존 수수료  VAT  지급액]&#10;-9900  1.5%  148  14  -10062"
+              ></textarea>
+              <div class="tools">
+                <button data-verification="asis-import">가져오기</button
+                ><label class="asis-file-label"
+                  >파일<input
+                    data-verification="asis-file"
+                    type="file"
+                    accept=".csv,.tsv,.txt" /></label
+                ><button data-verification="asis-sample" class="text-button">예시</button>
+              </div>
+              <details data-verification="asis-mapping" class="asis-options" hidden>
+                <summary>컬럼 연결</summary>
+                <div class="table-scroll">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>항목</th>
+                        <th>컬럼</th>
+                      </tr>
+                    </thead>
+                    <tbody data-verification="asis-mapping-rows"></tbody>
+                  </table>
+                </div>
+                <button data-verification="asis-apply-mapping">적용</button>
+              </details>
+              <p
+                data-verification="asis-import-info"
+                class="action-hint"
+                role="status"
+                aria-live="polite"
+              ></p>
+            </details>
+            <details data-verification="asis-extra" class="asis-options">
+              <summary>추가 설정</summary>
+              <label
+                ><input data-verification="asis-compare" type="checkbox" /> 기존 금액 비교</label
+              >
+              <label
+                ><input data-verification="asis-show-target" type="checkbox" /> 계산대상금액 별도
+                입력</label
+              >
+              <label
+                ><input data-verification="asis-row-products" type="checkbox" /> 행별 상품코드
+                사용</label
+              >
+              <label
+                >숫자로 입력한 요율<select data-verification="asis-rate-unit">
+                  <option value="ratio">비율 (0.015 = 1.5%)</option>
+                  <option value="percent">퍼센트 (1.5 = 1.5%)</option>
+                </select></label
+              >
+              <div class="tools">
+                <button data-verification="asis-template" class="text-button">입력 양식</button
+                ><button data-verification="asis-clear" class="text-button">비우기</button
+                ><button data-verification="asis-export" class="text-button" disabled>
+                  결과 CSV</button
+                ><select data-verification="asis-filter" aria-label="결과 필터">
+                  <option value="all">전체</option>
+                  <option value="mismatch">차이 있는 결과</option>
+                  <option value="error">계산 불가</option>
+                  <option value="uncompared">미비교·일부 비교</option>
+                </select>
+              </div>
+              <p>
+                공통 상품 설정의 모의계산입니다. 지급액은 선취·지급 상품의 금액 − 수수료 −
+                VAT입니다.
+              </p>
+              <span data-verification="asis-row-count" class="sr-only"></span>
+            </details>
+          </template>
+        </section>
+      </div>
+      <details class="help">
+        <summary>지원 범위와 사용 안내</summary>
+        <h3>분석 범위</h3>
+        <p>
+          조건부·다단계 계산은 ‘미확정’ 또는 ‘별도 계산 필요’로 표시해요. 전체 저장 프로시저의 실행
+          흐름은 분석하지 않아요. AI 검토로 미확정 값을 확정하지도 않아요.
+        </p>
+        <p>
+          수식 분석·상품명 추천·복사는 브라우저에서 동작해요. 입력한 수식은 저장하거나 외부로
+          전송하지 않아요. AI 검토는 서버에서 별도로 제공해요.
+        </p>
+        <div id="local-ai-settings" hidden>
+          <h3>AI 연결 설정</h3>
+          <p>
+            서버 폴더의 <code>.env</code>에 TypeSafe 공식 콘솔에서 발급한 <code>JEV_API_KEY</code>를
+            넣고 서버를 다시 시작하세요. 키는 브라우저로 보내지 않아요.
+          </p>
+          <p>
+            SQL 입력은 100,000자, TypeSafe 요청은 UTF-8 32 MiB까지예요. 모델의 문맥 길이 제한에
+            걸리면 계산 구문을 나눠 주세요.
+          </p>
+        </div>
+        <h3>입력 변경과 초기화</h3>
+        <p>
+          SQL·컬럼명을 바꾸면 결과·AI 검토·상품명 선택을 초기화해요. 새로고침하면 입력과 결과가
+          사라져요.
+        </p>
+      </details>
+      <footer>
+        <span>다날 정산 상품 생성기</span
+        ><span>검토용 설정 코드예요. 상품을 DB에 직접 등록하지 않아요.</span>
+      </footer>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

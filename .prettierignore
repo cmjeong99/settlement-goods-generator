@@ -1,0 +1,7 @@
+dist/
+node_modules/
+artifacts/
+public/confluence-macro.html
+package-lock.json
+.env
+.env.*
