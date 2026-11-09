@@ -120,6 +120,7 @@ function syncActions() {
   $('markdown').disabled = $('tsv').disabled = !r || draft.errors.length > 0;
   const insertErrors = productInsertErrors(draft.result, draft.name, draft.registration);
   $('copy-insert').disabled = !r || draft.errors.length > 0 || insertErrors.length > 0;
+  $('copy-hint').dataset.kind = r && insertErrors.length ? 'error' : 'info';
   $('copy-hint').textContent = !r
     ? '분석 결과가 나오면 복사할 수 있어요.'
     : insertErrors.length

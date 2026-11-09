@@ -5,6 +5,15 @@ import { SERVICES, detailServiceOptions, resolveServiceIdentity } from '../servi
 
 export function createInsertRegistration({ onChange }) {
   const inputs = new Map();
+  let authorError;
+  function syncAuthor() {
+    const input = inputs.get('REG_USER_ID');
+    const invalid = !input.disabled && !input.value.trim();
+    input.setAttribute('aria-invalid', String(invalid));
+    $('insert-author').dataset.invalid = String(invalid);
+    const message = invalid ? '등록자 ID를 입력해야 INSERT를 복사할 수 있어요.' : '';
+    if (authorError.textContent !== message) authorError.textContent = message;
+  }
   function syncService() {
     const service = resolveServiceIdentity(
       Object.fromEntries([...inputs].map(([key, input]) => [key, input.value])),
@@ -37,6 +46,7 @@ export function createInsertRegistration({ onChange }) {
     input.setAttribute('aria-required', String(required));
     input.addEventListener('input', () => {
       if (key === 'SRVC_CD' || key === 'DTLS_SRVC_CD') syncService();
+      if (key === 'REG_USER_ID') syncAuthor();
       onChange();
     });
     inputs.set(key, input);
@@ -55,7 +65,19 @@ export function createInsertRegistration({ onChange }) {
       input.setAttribute('list', list.id);
       control.append(list);
     }
-    $(required ? 'insert-required' : 'insert-optional').append(control);
+    if (key === 'REG_USER_ID') {
+      const title = make('span', `${label} `);
+      title.append(make('span', '필수', 'required-badge'));
+      authorError = make('span', '', 'field-error');
+      authorError.id = `${input.id}-error`;
+      authorError.setAttribute('role', 'status');
+      authorError.setAttribute('aria-live', 'polite');
+      input.required = true;
+      input.placeholder = '등록자 이름 또는 ID를 입력하세요';
+      input.setAttribute('aria-describedby', authorError.id);
+      control.replaceChildren(title, input);
+      $('insert-author').append(control, authorError);
+    } else $(required ? 'insert-required' : 'insert-optional').append(control);
   }
   return {
     read() {
@@ -69,6 +91,7 @@ export function createInsertRegistration({ onChange }) {
         input.disabled = !available;
       }
       syncService();
+      syncAuthor();
     },
   };
 }
