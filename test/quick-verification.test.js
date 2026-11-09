@@ -6,11 +6,19 @@ import { analyze } from '../public/analyzer.js';
 import { EXAMPLES } from '../public/examples.js';
 import { productByCode } from '../public/catalog.js';
 
-test('간단 검증은 선택한 DB 상품을 사용하고 분석 전에는 계산 대상을 만들지 않는다', () => {
+test('예시 검증은 DB 메타데이터를 유지하면서 사용자가 판단한 설정을 사용한다', () => {
   const product = productByCode.get('OPENBANKING-RATE');
   assert.equal(verificationProduct(null, product), null);
   const result = analyze(product.sql).results[0];
-  assert.equal(verificationProduct(result, product), product);
+  const draft = {
+    ...result,
+    fields: { ...result.fields, SIGN_APLY_LOCT_DVCD: { status: 'known', value: 'AFTER' } },
+  };
+  const selected = verificationProduct(draft, product);
+  assert.equal(selected.expected.SIGN_APLY_LOCT_DVCD, 'AFTER');
+  assert.equal(product.expected.SIGN_APLY_LOCT_DVCD, 'NONE');
+  assert.equal(selected.engine, product.engine);
+  assert.equal(selected.settlement, product.settlement);
 });
 
 test('직접 입력한 수식은 확인된 설정만 계산기로 전달하고 지급 방식은 추측하지 않는다', () => {

@@ -24,7 +24,6 @@ export function validateServerConfig(config) {
 
 export function loadServerConfig(env = process.env) {
   const config = validateServerConfig({
-    key: env.JEV_API_KEY,
     publicOrigin: env.PUBLIC_ORIGIN || env.RENDER_EXTERNAL_URL,
     accessUser: env.ACCESS_USERNAME,
     accessPassword: env.ACCESS_PASSWORD,

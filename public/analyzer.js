@@ -1,5 +1,6 @@
 import { extract, canonical, walk, lineAt } from './parser.js';
 import { FIELDS } from './domain.js';
+import { pairUpdates } from './update-pairs.js';
 const call = (n, name) => n?.kind === 'call' && n.name === name;
 const num = (n, v) => n?.kind === 'number' && Number(n.value) === v;
 const numeric = (n) =>
@@ -199,7 +200,7 @@ const supported = new Set([
   'COALESCE',
   'NULLIF',
 ]);
-export function analyzeBlock(block, source) {
+export function analyzeBlock(block, source, options = {}) {
   const fields = Object.fromEntries(
     FIELDS.map(([key]) => [
       key,
@@ -214,6 +215,7 @@ export function analyzeBlock(block, source) {
   );
   const notices = block.errors.map((e) => `${lineAt(source, e.offset)}행: ${e.message}`);
   function put(key, value, node, reason, status = 'known') {
+    if (value === null && status === 'known') status = 'unknown';
     fields[key] = {
       value,
       status,
@@ -418,6 +420,17 @@ export function analyzeBlock(block, source) {
         'NULL 처리 함수가 있어요. 실제 NULL 발생 여부와 대체값의 업무 의미를 확인해 주세요.',
       );
   }
+  if (options.inputScope === 'settlement' && !block.errors.length) {
+    for (const key of ['FEE_SMT_CALC_BASE_DVCD', 'VAT_SMT_CALC_BASE_DVCD']) {
+      if (fields[key].status !== 'known') continue;
+      fields[key] = {
+        ...fields[key],
+        value: 'SUM',
+        source: 'context',
+        reason: 'AMT는 가맹점·정산주기별로 이미 합산된 금액이라는 입력 기준을 반영했어요.',
+      };
+    }
+  }
   if (block.errors.length) {
     for (const key of Object.keys(fields))
       put(
@@ -435,6 +448,8 @@ export function analyzeBlock(block, source) {
     fields,
     notices: [...new Set(notices)],
     formulas: block.formulas,
+    inputScope: options.inputScope ?? 'row',
+    ...(block.statements ? { statements: block.statements } : {}),
   };
   result.summary = summarize(result);
   return result;
@@ -472,7 +487,11 @@ export function analyze(source, options = {}) {
   if (source.length > 100000)
     return { results: [], errors: ['입력은 100,000자 이하로 나눠 주세요.'] };
   try {
-    const results = extract(source, options).map((block) => analyzeBlock(block, source));
+    if (options?.inputScope !== undefined && !['row', 'settlement'].includes(options.inputScope))
+      throw new Error('입력 금액의 기준을 확인해 주세요.');
+    const results = pairUpdates(extract(source, options), source).map((block) =>
+      analyzeBlock(block, source, options),
+    );
     return {
       results,
       errors: results.length

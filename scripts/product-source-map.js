@@ -53,13 +53,7 @@ export function sourcesForProduct(code) {
     'CARD-BASIC': [status3(472, '수수료 끝자리 6 이상 여부로 VAT 올림/내림을 분기합니다.')],
     'CULTUREGIFT-BASIC': [status3(70, '건별 계산 구문입니다. DB의 합산 설정과 차이를 확인하세요.')],
     'CULTUREGIFT-OVERSEAS': [
-      {
-        source: 'ACCOUNT.dbo.fms_inMonSale',
-        line: 157,
-        selectLines: [157, 157],
-        columns: { feeColumn: 'FEE', vatColumn: 'VAT' },
-        note: '해외 가맹점 VAT 0 분기를 포함한 월 합산 원문입니다. 식별값은 예제값으로 치환합니다.',
-      },
+      status3(70, '공통 거래내역 계산. 해외 면세의 지급 단계 적용 조건은 별도 확인합니다.'),
     ],
     'MOBILE-BASIC-EACH': [
       status3(2408, 'AMT_R이 NULL이면 AMT, 거래금액 0이면 부호 0을 사용합니다.'),

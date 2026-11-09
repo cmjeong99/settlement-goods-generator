@@ -1,7 +1,7 @@
 import { analyze } from './analyzer.js';
 import { columnNames } from './parser.js';
 
-// Shared validation for browser naming and the optional local AI API.
+// Validation for browser-side analysis and product naming.
 export class InputError extends Error {
   constructor(status, message) {
     super(message);

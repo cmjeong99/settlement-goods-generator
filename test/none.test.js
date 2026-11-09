@@ -5,7 +5,7 @@ import { Script, runInNewContext } from 'node:vm';
 import { analyze } from '../public/analyzer.js';
 import { FIELDS, describeField, exportRow } from '../public/domain.js';
 import { EXAMPLES } from '../public/examples.js';
-import { reviewWithJev, suggestNames } from '../ai.js';
+import { suggestNames } from '../public/naming.js';
 
 const result = (sql) => analyze(sql).results[0];
 const value = (r, key) => r.fields[key].value;
@@ -87,38 +87,6 @@ test('로컬 상품명 추천은 NONE 설정을 유효한 값으로 받음', () 
   const sql = EXAMPLES['오픈뱅킹 정률'];
   const fields = result(sql).fields;
   assert.equal(suggestNames({ sql, fields, description: '오픈뱅킹' }).candidates.length, 3);
-});
-
-test('JEV 검토는 NONE 후보와 단수 처리 유지 규칙을 전달', async () => {
-  const sql = EXAMPLES['오픈뱅킹 정률'];
-  let calls = 0;
-  const response = await reviewWithJev({ sql }, { key: 'test' }, async (url, options) => {
-    calls++;
-    const request = JSON.parse(options.body);
-    assert.equal(request.state.candidates.SIGN_APLY_LOCT_DVCD.value, 'NONE');
-    assert.equal(request.state.candidates.ABS_PROCS_YN.value, 'Y');
-    assert.match(request.state.rules, /NONE.*단수 처리는 유지/);
-    assert.equal(request.state.sql, sql);
-    return {
-      ok: true,
-      json: async () => ({
-        model: 'jev-test',
-        answers: Object.fromEntries(
-          Object.keys(request.questions).map((key) => [
-            key,
-            {
-              type: 'choice',
-              choice: 'supported',
-              confidence: 1,
-              probabilities: { supported: 1, verify_more: 0, unsupported: 0 },
-            },
-          ]),
-        ),
-      }),
-    };
-  });
-  assert.equal(calls, 1);
-  assert.equal(response.fields.SIGN_APLY_LOCT_DVCD.value, 'NONE');
 });
 
 test('Confluence 매크로도 오픈뱅킹 정액과 정률을 NONE으로 내보냄', async () => {

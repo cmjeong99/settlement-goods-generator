@@ -5,9 +5,6 @@ import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { buildSite, outputDirectory } from '../scripts/build.js';
 import { browserAssets } from '../scripts/assets.js';
 import { createPreview } from '../scripts/preview.js';
-import { createApp } from '../server.js';
-import { runtime } from '../public/runtime-config.js';
-import { reviewFormula } from '../public/api.js';
 import { suggestNames } from '../public/naming.js';
 import { EXAMPLES } from '../public/examples.js';
 
@@ -80,34 +77,6 @@ for (const basePath of ['/', '/formula-studio/', '/renamed-repository/']) {
   });
 }
 
-test('정적 모드는 AI 요청을 보내지 않고 상품명을 브라우저 모듈에서 생성한다', async () => {
-  assert.deepEqual(runtime, { mode: 'static', aiEnabled: false });
-  await assert.rejects(
-    reviewFormula(
-      { sql: EXAMPLES['오픈뱅킹 정률'] },
-      {
-        baseUrl: 'https://example.github.io/project/',
-        fetchImpl: () => {
-          assert.fail('Static hosting must not call an AI API');
-        },
-      },
-    ),
-    /로컬 서버/,
-  );
+test('이름 추천은 외부 요청 없이 브라우저 모듈에서 생성한다', () => {
   assert.equal(suggestNames({ sql: EXAMPLES['오픈뱅킹 정률'] }).candidates.length, 3);
-});
-
-test('로컬 서버는 브라우저에 기능 사용 여부만 전달하고 키를 노출하지 않는다', async (t) => {
-  for (const key of [undefined, 'synthetic-test-secret']) {
-    const origin = await serve(t, createApp({ config: { key } }));
-    const source = await (await fetch(origin + '/runtime-config.js')).text();
-    assert.match(source, /"mode":"local"/);
-    assert.ok(source.includes(`"aiEnabled":${!!key}`));
-    assert.ok(!source.includes('synthetic-test-secret'));
-    for (const asset of browserAssets) {
-      const response = await fetch(origin + '/' + asset);
-      assert.equal(response.status, 200, asset);
-      assert.ok(!(await response.text()).includes('synthetic-test-secret'));
-    }
-  }
 });

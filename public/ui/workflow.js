@@ -34,18 +34,19 @@ export function createTabs(tablist) {
   };
 }
 
-export function createWorkflow() {
+export function createWorkflow({ onStepChange = () => {} } = {}) {
   const workspace = createTabs(document.querySelector('.workspace-tabs'));
   const cards = [...document.querySelectorAll('[data-workflow-step]')];
-  const steps = [...document.querySelectorAll('.steps li')];
   let available = false;
   function go(index, { focus = false } = {}) {
     if (index > 0 && !available) return;
     cards.forEach((card, i) => {
       card.open = i === index;
-      if (i === index) steps[i].setAttribute('aria-current', 'step');
-      else steps[i].removeAttribute('aria-current');
+      const heading = card.querySelector('summary');
+      if (i === index) heading.setAttribute('aria-current', 'step');
+      else heading.removeAttribute('aria-current');
     });
+    onStepChange(index);
     if (focus) {
       cards[index].querySelector('summary').focus({ preventScroll: true });
       cards[index].scrollIntoView({ block: 'start' });
@@ -75,13 +76,13 @@ export function createWorkflow() {
         button.disabled = Number(button.dataset.goStep) > 0 && !value;
       if (!value) {
         go(0);
-        setSummary(0, '수식이나 예제를 선택하세요');
-        setSummary(1, '수식을 먼저 분석하세요');
-        setSummary(2, '선택 사항');
-        setSummary(3, '이름은 선택 사항');
+        setSummary(0, '');
+        setSummary(1, '');
+        setSummary(2, '');
+        setSummary(3, '');
       } else {
-        setSummary(0, '입력 완료 · 눌러서 수정');
-        setSummary(1, '분석 결과 확인');
+        setSummary(0, '입력 완료');
+        setSummary(1, '도출 완료');
       }
     },
     openCalculator() {

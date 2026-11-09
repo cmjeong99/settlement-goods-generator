@@ -7,6 +7,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51102',
     detailServiceCode: 'HKG',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -29,11 +37,13 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3144,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
   },
   {
     code: 'ALIPAYPLUS-IDN',
@@ -41,6 +51,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51102',
     detailServiceCode: 'IDN',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -63,11 +81,13 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3144,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
   },
   {
     code: 'ALIPAYPLUS-MYS',
@@ -75,6 +95,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51102',
     detailServiceCode: 'MYS',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -97,11 +125,13 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3144,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
   },
   {
     code: 'ALIPAYPLUS-PHL',
@@ -109,6 +139,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51102',
     detailServiceCode: 'PHL',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -131,11 +169,13 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3144,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
   },
   {
     code: 'ALIPAYPLUS-THA',
@@ -143,6 +183,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51102',
     detailServiceCode: 'THA',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -165,11 +213,13 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3144,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3144\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
   },
   {
     code: 'AMTTRANS-BANKPAY',
@@ -177,6 +227,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10602',
     detailServiceCode: '01',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -199,17 +254,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 1273,
+        stage: '거래 계산',
+        active: true,
         note: '실시간 환불 및 에스크로 분기. CPFEE2는 별도 계산입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 1296,
+        stage: '거래 계산',
+        active: true,
         note: '앞 단계에서 산출한 CPFEE를 참조하는 후속 UPDATE입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_AMTTRAN',
+        line: 26,
+        stage: '집계 입력',
+        active: false,
+        note: 'SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.',
+        hash: '8bb3456ca30f7e1a629457781f55296494c7cab8d2e1bf3df245fff6191933bf',
+        groupBy: 'GROUP BY SERVICECODE, cpid, left(TDATE, 6), CPRATE, PERIOD, ITEMCODE',
+        groupByLine: 40,
+      },
     ],
-    sql: "-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1273\n-- 실시간 환불 및 에스크로 분기. CPFEE2는 별도 계산입니다.\nSELECT\n  CASE \t\r\n\t\t\t\t\t-- 실시간 환불 건 수수료 0\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('006', '007', '008') THEN 0 \r\n\t\t\t\t\tELSE FLOOR(ABS(AMT)*CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\tEND AS CPFEE;\n\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1296\n-- 앞 단계에서 산출한 CPFEE를 참조하는 후속 UPDATE입니다.\nSELECT\n  CASE\r\n\t\t\t\t\t/* \t\r\n\t\t\t\t\t-- 거래금액 * 0.003 = 에스크로 수수료\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('003') THEN FLOOR((FLOOR(ABS(AMT) * 0.003) + FLOOR(ABS(CPFEE))) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\t\t-- 실시간 환불 건 수수료 0\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('006', '007', '008') THEN 0\r\n\t\t\t\t\t-- 이외의 건  \r\n\t\t\t\t\tELSE FLOOR(FLOOR(ABS(AMT)*CPRATE) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\t\t*/\r\n\r\n\t\t\t\t\t-- 거래금액 * 0.003 = 에스크로 수수료\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('003') THEN FLOOR(FLOOR(ABS(AMT) * 0.003)  * 0.1) + FLOOR(FLOOR(ABS(AMT)*CPRATE)  * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\t\t-- 실시간 환불 건 수수료 0\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('006', '007', '008') THEN 0\r\n\t\t\t\t\t-- 이외의 건  \r\n\t\t\t\t\tELSE FLOOR(ABS(CPFEE) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\tEND AS CPVAT;",
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1273\n-- 실시간 환불 및 에스크로 분기. CPFEE2는 별도 계산입니다.\nSELECT\n  CASE \t\r\n\t\t\t\t\t-- 실시간 환불 건 수수료 0\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('006', '007', '008') THEN 0 \r\n\t\t\t\t\tELSE FLOOR(ABS(AMT)*CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\tEND AS CPFEE;\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1296\n-- 앞 단계에서 산출한 CPFEE를 참조하는 후속 UPDATE입니다.\nSELECT\n  CASE\r\n\t\t\t\t\t/* \t\r\n\t\t\t\t\t-- 거래금액 * 0.003 = 에스크로 수수료\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('003') THEN FLOOR((FLOOR(ABS(AMT) * 0.003) + FLOOR(ABS(CPFEE))) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\t\t-- 실시간 환불 건 수수료 0\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('006', '007', '008') THEN 0\r\n\t\t\t\t\t-- 이외의 건  \r\n\t\t\t\t\tELSE FLOOR(FLOOR(ABS(AMT)*CPRATE) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\t\t*/\r\n\r\n\t\t\t\t\t-- 거래금액 * 0.003 = 에스크로 수수료\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('003') THEN FLOOR(FLOOR(ABS(AMT) * 0.003)  * 0.1) + FLOOR(FLOOR(ABS(AMT)*CPRATE)  * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\t\t-- 실시간 환불 건 수수료 0\r\n\t\t\t\t\tWHEN A.SUBTYPE IN ('006', '007', '008') THEN 0\r\n\t\t\t\t\t-- 이외의 건  \r\n\t\t\t\t\tELSE FLOOR(ABS(CPFEE) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\r\n\t\t\t\tEND AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_AMTTRAN:26\n-- SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.\n-- GROUP BY SERVICECODE, cpid, left(TDATE, 6), CPRATE, PERIOD, ITEMCODE\n-- SELECT\n--   sum(CPFEE) AS CPFEE,\n--   sum(CPVAT) AS CPVAT;",
   },
   {
     code: 'AMTTRANS-KBANK',
@@ -217,6 +286,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10602',
     detailServiceCode: '02',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -239,11 +313,23 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 1487,
+        stage: '거래 계산',
+        active: true,
         note: 'ORICODE=KA, SUBTYPE=001 일반 거래',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_AMTTRAN',
+        line: 26,
+        stage: '집계 입력',
+        active: false,
+        note: 'SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.',
+        hash: '8bb3456ca30f7e1a629457781f55296494c7cab8d2e1bf3df245fff6191933bf',
+        groupBy: 'GROUP BY SERVICECODE, cpid, left(TDATE, 6), CPRATE, PERIOD, ITEMCODE',
+        groupByLine: 40,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1487\n-- ORICODE=KA, SUBTYPE=001 일반 거래\nSELECT\n  FLOOR(ABS(AMT)*CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ABS(FLOOR(ABS(AMT)*CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: '-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1487\n-- ORICODE=KA, SUBTYPE=001 일반 거래\nSELECT\n  FLOOR(ABS(AMT)*CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ABS(FLOOR(ABS(AMT)*CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_AMTTRAN:26\n-- SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.\n-- GROUP BY SERVICECODE, cpid, left(TDATE, 6), CPRATE, PERIOD, ITEMCODE\n-- SELECT\n--   sum(CPFEE) AS CPFEE,\n--   sum(CPVAT) AS CPVAT;',
   },
   {
     code: 'AMTTRANS-KBANK-FIX',
@@ -251,6 +337,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10602',
     detailServiceCode: '02',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'conditional',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+      unresolved:
+        '일반 집계는 ORICODE=KA/SUBTYPE=001·002입니다. 건별 정산 SUBTYPE=003의 최종 지급 입력 경로는 이 분기로 확정하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -273,11 +366,23 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 1588,
+        stage: '거래 계산',
+        active: true,
         note: 'ORICODE=KA, SUBTYPE=003 건별 정산. 음수 VAT 부호 적용을 원문대로 확인하세요.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_AMTTRAN',
+        line: 26,
+        stage: '집계 입력',
+        active: false,
+        note: 'SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.',
+        hash: '8bb3456ca30f7e1a629457781f55296494c7cab8d2e1bf3df245fff6191933bf',
+        groupBy: 'GROUP BY SERVICECODE, cpid, left(TDATE, 6), CPRATE, PERIOD, ITEMCODE',
+        groupByLine: 40,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1588\n-- ORICODE=KA, SUBTYPE=003 건별 정산. 음수 VAT 부호 적용을 원문대로 확인하세요.\nSELECT\n  CPRATE2 * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ABS(CPRATE2) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: '-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 확인 필요: 일반 집계는 ORICODE=KA/SUBTYPE=001·002입니다. 건별 정산 SUBTYPE=003의 최종 지급 입력 경로는 이 분기로 확정하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1588\n-- ORICODE=KA, SUBTYPE=003 건별 정산. 음수 VAT 부호 적용을 원문대로 확인하세요.\nSELECT\n  CPRATE2 * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ABS(CPRATE2) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_AMTTRAN:26\n-- SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.\n-- GROUP BY SERVICECODE, cpid, left(TDATE, 6), CPRATE, PERIOD, ITEMCODE\n-- SELECT\n--   sum(CPFEE) AS CPFEE,\n--   sum(CPVAT) AS CPVAT;',
   },
   {
     code: 'BOKU-IDN',
@@ -285,6 +390,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'IDN',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -307,11 +420,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOKU-MYS',
@@ -319,6 +442,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'MYS',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -341,11 +472,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOKU-PHL',
@@ -353,6 +494,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'PHL',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -375,11 +524,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOKU-SGP',
@@ -387,6 +546,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'SGP',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -409,11 +576,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOKU-THA',
@@ -421,6 +598,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'THA',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -443,11 +628,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOKU-TWN',
@@ -455,6 +650,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'TWN',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -477,11 +680,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOKU-VNM',
@@ -489,6 +702,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51101',
     detailServiceCode: 'VNM',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.',
+      unresolved:
+        '국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -511,11 +732,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3096,
+        stage: '거래 계산',
+        active: true,
         note: '국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 596,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;',
+    sql: "-- 거래별 계산식은 확인했습니다. 보관 SP에서 최초 지급 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 국가별 지급 집계 입력 경로 미확인. 조회·파일 생성 SP의 SUM을 지급 계산식으로 대체하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3096\n-- 국가별 정책은 별도이며 면세 후 공통 계산 구문입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * (CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) AS CPFEE,\n  0 AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:596\n-- PAYOUT의 기존 BK 지급 결과를 이관합니다. 최초 집계 또는 재계산 근거로 사용하지 않습니다.\n-- --페이코인  and b_flag = 'PC', 카드자동납부 b_flag = 'AC', BOKU 해외간편결제  b_flag = 'BK'\n-- select DISTINCT  CASE A.B_FLAG WHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'AC' THEN '12208'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'BK' THEN '51101' END [SERVICECODE] ,\n-- \t'01'[PLFCODE] ,\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.mamt_r [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from PAYOUT..tpaynote  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt\n-- \t\tAND A.B_FLAG = B.B_FLAG\n-- \t\tAND B.B_FLAG IN ('PC','AC','BK')",
   },
   {
     code: 'BOOKNLIFEGIFT-BASIC',
@@ -523,6 +754,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10903',
     detailServiceCode: '00',
     engine: 'COMMON',
+    inputScope: 'settlement',
+    calculation: {
+      kind: 'amount-aggregate',
+      status: 'verified',
+      summary:
+        '거래금액을 가맹점·월·주기·요율·지급 구분·B_FLAG별로 합산한 뒤 수수료와 VAT를 각각 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -543,13 +781,42 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 160,
+        stage: '집계 계산',
+        active: true,
+        note: 'TEAMDB.TPAYNOTE_REGMON의 AMT는 #CPIDS2에서 이미 합산한 금액입니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 229,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 71,
+        stage: '금액 집계',
+        active: false,
+        note: 'SUM(CAST(AMT AS BIGINT)) AMT → #CPIDS2',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+        groupBy:
+          'GROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG',
+        groupByLine: 78,
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 117,
+        stage: '집계 입력',
+        active: false,
+        note: '#CPIDS2의 합산 AMT와 CPRATE를 TEAMDB.TPAYNOTE_REGMON의 AMT·RATE로 입력합니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:229\n-- \nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ABS(AMT) * CPRATE* 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래금액을 가맹점·월·주기·요율·지급 구분·B_FLAG별로 합산한 뒤 수수료와 VAT를 각각 계산합니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:160\n-- TEAMDB.TPAYNOTE_REGMON의 AMT는 #CPIDS2에서 이미 합산한 금액입니다.\nUPDATE TEAMDB.DBO.TPAYNOTE_REGMON \n\t\t\t\t\tSET RAMT = FLOOR(ABS(AMT) * RATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\n\t\t\t\t\t, RAMT_2 = 0\n\t\t\t\tWHERE B_FLAG IN ('J','H','CG') \n\t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n\t\t\t\t\n\n\t\t\t\t--- 부가세계산  \n\t\t\t\tUPDATE TEAMDB.DBO.TPAYNOTE_REGMON SET\n\t\t\t\t\tVAMT = FLOOR(ABS(AMT) * RATE * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\n\t\t\t\tWHERE B_FLAG IN ('J','H','CG')\n\t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:229\n-- SELECT\n--   FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n--   FLOOR(ABS(AMT) * CPRATE* 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 금액 집계\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:71\n-- SUM(CAST(AMT AS BIGINT)) AMT → #CPIDS2\n-- GROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG\n-- SELECT SERVICECODE, B_FLAG, CPID, LEFT(TDATE,6) REGMON,  PERIOD, PAY_FLAG, PAY_SFLAG, CPRATE,\n-- \t\t\tCASE WHEN PERIOD = '45' THEN CASE WHEN RIGHT(@PDATE, 2) > '15' THEN CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '01' ELSE CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '16' END ELSE LEFT(TDATE,6)+'01' END AS SDATE,\n-- \t\t\tCASE WHEN PERIOD = '45' THEN CASE WHEN RIGHT(@PDATE, 2) > '15' THEN CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '15' ELSE CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + ADMINPROC.DBO.RTN_ENDDATE(CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME, CONVERT(VARCHAR(8), GETDATE(), 112))), 112)) END ELSE LEFT(TDATE,6)+ADMINPROC.DBO.RTN_ENDDATE(LEFT(TDATE,6)) END AS EDATE,\n-- \t\t\tSUM(CAST(AMT AS BIGINT)) AMT\n-- \t\tinto #CPIDS2\n-- \t\tFROM teamdb.DBO.TB_BILL\n-- \t\tWHERE SERVICECODE IN ('10903', '10901' ,'10910')\n-- \t\t\tAND PDATE_DUE = @PDATE\n-- \t\t\tAND CPID <> 'EXAMPLE_CP_1' --//테스트 다날계정 제외\n-- \t\t\tAND STATUS = 'CAL'\n-- \t\tGROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:117\n-- #CPIDS2의 합산 AMT와 CPRATE를 TEAMDB.TPAYNOTE_REGMON의 AMT·RATE로 입력합니다.\n-- INSERT INTO teamdb.DBO.TPAYNOTE_REGMON\n-- \t\t\t\t\t(CPID, REGMON, SDATE, EDATE, ICODE, AMT100, AMT, RATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PAY_PERIOD, MCPID, INDATE, ACTIONDATE, OPDATE)\n-- \t\t\t\tSELECT\n-- \t\t\t\t\tCPID, REGMON, SDATE, EDATE, '1' ICODE, AMT AMT100, AMT, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD PAY_PERIOD, CPID MCPID, GETDATE() INDATE, @ACTIONDATE, @PDATE\n-- \t\t\t\tFROM #CPIDS2\n-- \t\t\t\tWHERE servicecode in( '10903', '10901' ,'10910' ) \n-- \t\t\t\tand AMT <> 0",
   },
   {
     code: 'CARD-BASIC',
@@ -557,6 +824,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12206',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -579,11 +851,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 472,
+        stage: '거래 계산',
+        active: true,
         note: '수수료 끝자리 6 이상 여부로 VAT 올림/내림을 분기합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_DANALPAYCARD',
+        line: 34,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12206. EXT2·하위 가맹점 분기별로 이미 계산한 수수료·VAT를 합산합니다.',
+        hash: '85e9ec336851cee1c9609a7f5341f743b89bc127043a7bfe0acf062cafa9bc3a',
+        groupBy:
+          "GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period",
+        groupByLine: 45,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:472\n-- 수수료 끝자리 6 이상 여부로 VAT 올림/내림을 분기합니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  ((CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) *\r\n\t\t\t\t\t\t\tCASE WHEN RIGHT((FLOOR(ABS(AMT) * CPRATE)), 1) >=6 THEN CEILING((ABS(AMT) * CPRATE)*0.1)\r\n\t\t\t\t\t\t\tELSE FLOOR((ABS(AMT) * CPRATE)*0.1) END) AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:472\n-- 수수료 끝자리 6 이상 여부로 VAT 올림/내림을 분기합니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  ((CASE WHEN AMT < 0 THEN (-1) ELSE 1 END) *\r\n\t\t\t\t\t\t\tCASE WHEN RIGHT((FLOOR(ABS(AMT) * CPRATE)), 1) >=6 THEN CEILING((ABS(AMT) * CPRATE)*0.1)\r\n\t\t\t\t\t\t\tELSE FLOOR((ABS(AMT) * CPRATE)*0.1) END) AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_DANALPAYCARD:34\n-- SERVICECODE=12206. EXT2·하위 가맹점 분기별로 이미 계산한 수수료·VAT를 합산합니다.\n-- GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period\n-- SELECT\n--   sum(ISNULL(CPFEE, 0)) AS CPFEE,\n--   SUM(ISNULL(CPVAT,0)) AS CPVAT;",
   },
   {
     code: 'CULTUREGIFT-BASIC',
@@ -591,6 +876,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10901',
     detailServiceCode: '00',
     engine: 'COMMON',
+    inputScope: 'settlement',
+    calculation: {
+      kind: 'amount-aggregate',
+      status: 'verified',
+      summary:
+        '거래금액을 가맹점·월·주기·요율·지급 구분·B_FLAG별로 합산한 뒤 수수료와 VAT를 각각 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -611,13 +903,42 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 160,
+        stage: '집계 계산',
+        active: true,
+        note: 'TEAMDB.TPAYNOTE_REGMON의 AMT는 #CPIDS2에서 이미 합산한 금액입니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 70,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '건별 계산 구문입니다. DB의 합산 설정과 차이를 확인하세요.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 71,
+        stage: '금액 집계',
+        active: false,
+        note: 'SUM(CAST(AMT AS BIGINT)) AMT → #CPIDS2',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+        groupBy:
+          'GROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG',
+        groupByLine: 78,
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 117,
+        stage: '집계 입력',
+        active: false,
+        note: '#CPIDS2의 합산 AMT와 CPRATE를 TEAMDB.TPAYNOTE_REGMON의 AMT·RATE로 입력합니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:70\n-- 건별 계산 구문입니다. DB의 합산 설정과 차이를 확인하세요.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ABS(AMT) * CPRATE* 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래금액을 가맹점·월·주기·요율·지급 구분·B_FLAG별로 합산한 뒤 수수료와 VAT를 각각 계산합니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:160\n-- TEAMDB.TPAYNOTE_REGMON의 AMT는 #CPIDS2에서 이미 합산한 금액입니다.\nUPDATE TEAMDB.DBO.TPAYNOTE_REGMON \n\t\t\t\t\tSET RAMT = FLOOR(ABS(AMT) * RATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\n\t\t\t\t\t, RAMT_2 = 0\n\t\t\t\tWHERE B_FLAG IN ('J','H','CG') \n\t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n\t\t\t\t\n\n\t\t\t\t--- 부가세계산  \n\t\t\t\tUPDATE TEAMDB.DBO.TPAYNOTE_REGMON SET\n\t\t\t\t\tVAMT = FLOOR(ABS(AMT) * RATE * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\n\t\t\t\tWHERE B_FLAG IN ('J','H','CG')\n\t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:70\n-- 건별 계산 구문입니다. DB의 합산 설정과 차이를 확인하세요.\n-- SELECT\n--   FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n--   FLOOR(ABS(AMT) * CPRATE* 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 금액 집계\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:71\n-- SUM(CAST(AMT AS BIGINT)) AMT → #CPIDS2\n-- GROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG\n-- SELECT SERVICECODE, B_FLAG, CPID, LEFT(TDATE,6) REGMON,  PERIOD, PAY_FLAG, PAY_SFLAG, CPRATE,\n-- \t\t\tCASE WHEN PERIOD = '45' THEN CASE WHEN RIGHT(@PDATE, 2) > '15' THEN CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '01' ELSE CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '16' END ELSE LEFT(TDATE,6)+'01' END AS SDATE,\n-- \t\t\tCASE WHEN PERIOD = '45' THEN CASE WHEN RIGHT(@PDATE, 2) > '15' THEN CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '15' ELSE CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + ADMINPROC.DBO.RTN_ENDDATE(CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME, CONVERT(VARCHAR(8), GETDATE(), 112))), 112)) END ELSE LEFT(TDATE,6)+ADMINPROC.DBO.RTN_ENDDATE(LEFT(TDATE,6)) END AS EDATE,\n-- \t\t\tSUM(CAST(AMT AS BIGINT)) AMT\n-- \t\tinto #CPIDS2\n-- \t\tFROM teamdb.DBO.TB_BILL\n-- \t\tWHERE SERVICECODE IN ('10903', '10901' ,'10910')\n-- \t\t\tAND PDATE_DUE = @PDATE\n-- \t\t\tAND CPID <> 'EXAMPLE_CP_1' --//테스트 다날계정 제외\n-- \t\t\tAND STATUS = 'CAL'\n-- \t\tGROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:117\n-- #CPIDS2의 합산 AMT와 CPRATE를 TEAMDB.TPAYNOTE_REGMON의 AMT·RATE로 입력합니다.\n-- INSERT INTO teamdb.DBO.TPAYNOTE_REGMON\n-- \t\t\t\t\t(CPID, REGMON, SDATE, EDATE, ICODE, AMT100, AMT, RATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PAY_PERIOD, MCPID, INDATE, ACTIONDATE, OPDATE)\n-- \t\t\t\tSELECT\n-- \t\t\t\t\tCPID, REGMON, SDATE, EDATE, '1' ICODE, AMT AMT100, AMT, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD PAY_PERIOD, CPID MCPID, GETDATE() INDATE, @ACTIONDATE, @PDATE\n-- \t\t\t\tFROM #CPIDS2\n-- \t\t\t\tWHERE servicecode in( '10903', '10901' ,'10910' ) \n-- \t\t\t\tand AMT <> 0",
   },
   {
     code: 'CULTUREGIFT-OVERSEAS',
@@ -625,6 +946,15 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10901',
     detailServiceCode: '00',
     engine: 'COMMON',
+    inputScope: 'settlement',
+    calculation: {
+      kind: 'amount-aggregate',
+      status: 'conditional',
+      summary:
+        '거래금액을 가맹점·월·주기·요율·지급 구분·B_FLAG별로 합산한 뒤 수수료와 VAT를 각각 계산합니다.',
+      unresolved:
+        '현행 TEAMDB의 해외 VAT 0 후처리는 확인하지 못했습니다. 본문은 공통 과세식이며, 기존 휴대폰 월집계 SP 연결은 잘못된 출처라 제거했습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -645,13 +975,50 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
-        name: 'ACCOUNT.dbo.fms_inMonSale',
-        line: 157,
-        note: '해외 가맹점 VAT 0 분기를 포함한 월 합산 원문입니다. 식별값은 예제값으로 치환합니다.',
-        hash: '36257b49e19479d2e94ad9985c159b1a0f9b0a5c66591697fc663e0afe698e6f',
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 160,
+        stage: '집계 계산',
+        active: true,
+        note: 'TEAMDB.TPAYNOTE_REGMON의 AMT는 #CPIDS2에서 이미 합산한 금액입니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
+        line: 70,
+        stage: '거래 계산 · 참고',
+        active: false,
+        note: '공통 거래내역 계산. 해외 면세의 지급 단계 적용 조건은 별도 확인합니다.',
+        hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 71,
+        stage: '금액 집계',
+        active: false,
+        note: 'SUM(CAST(AMT AS BIGINT)) AMT → #CPIDS2',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+        groupBy:
+          'GROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG',
+        groupByLine: 78,
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 117,
+        stage: '집계 입력',
+        active: false,
+        note: '#CPIDS2의 합산 AMT와 CPRATE를 TEAMDB.TPAYNOTE_REGMON의 AMT·RATE로 입력합니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE',
+        line: 145,
+        stage: '비활성 과거 후처리',
+        active: false,
+        note: '원문에서도 주석인 ACCOUNT 대상 VAT 0 처리입니다. 현행 TEAMDB 해외 면세 근거로 사용하지 않습니다.',
+        hash: 'e3ea990032a399f331d3e497e84be500559cea8c2a97bc6d4536b61c6f4d9a09',
       },
     ],
-    sql: "-- ACCOUNT.dbo.fms_inMonSale:157\n-- 해외 가맹점 VAT 0 분기를 포함한 월 합산 원문입니다. 식별값은 예제값으로 치환합니다.\nSELECT\n  round(sum(a.amt)*b.calrate,0) AS CPFEE,\n  case when a.cpid in ('EXAMPLE_CP_1','EXAMPLE_CP_2','EXAMPLE_CP_3','EXAMPLE_CP_4') then 0 else round(round(sum(a.amt)*b.calrate,0)*0.1,0) end AS CPVAT;",
+    sql: "-- 거래금액을 가맹점·월·주기·요율·지급 구분·B_FLAG별로 합산한 뒤 수수료와 VAT를 각각 계산합니다.\n\n-- 확인 필요: 현행 TEAMDB의 해외 VAT 0 후처리는 확인하지 못했습니다. 본문은 공통 과세식이며, 기존 휴대폰 월집계 SP 연결은 잘못된 출처라 제거했습니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:160\n-- TEAMDB.TPAYNOTE_REGMON의 AMT는 #CPIDS2에서 이미 합산한 금액입니다.\nUPDATE TEAMDB.DBO.TPAYNOTE_REGMON \n\t\t\t\t\tSET RAMT = FLOOR(ABS(AMT) * RATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\n\t\t\t\t\t, RAMT_2 = 0\n\t\t\t\tWHERE B_FLAG IN ('J','H','CG') \n\t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n\t\t\t\t\n\n\t\t\t\t--- 부가세계산  \n\t\t\t\tUPDATE TEAMDB.DBO.TPAYNOTE_REGMON SET\n\t\t\t\t\tVAMT = FLOOR(ABS(AMT) * RATE * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END\n\t\t\t\tWHERE B_FLAG IN ('J','H','CG')\n\t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:70\n-- 공통 거래내역 계산. 해외 면세의 지급 단계 적용 조건은 별도 확인합니다.\n-- SELECT\n--   FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n--   FLOOR(ABS(AMT) * CPRATE* 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 금액 집계\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:71\n-- SUM(CAST(AMT AS BIGINT)) AMT → #CPIDS2\n-- GROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG\n-- SELECT SERVICECODE, B_FLAG, CPID, LEFT(TDATE,6) REGMON,  PERIOD, PAY_FLAG, PAY_SFLAG, CPRATE,\n-- \t\t\tCASE WHEN PERIOD = '45' THEN CASE WHEN RIGHT(@PDATE, 2) > '15' THEN CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '01' ELSE CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '16' END ELSE LEFT(TDATE,6)+'01' END AS SDATE,\n-- \t\t\tCASE WHEN PERIOD = '45' THEN CASE WHEN RIGHT(@PDATE, 2) > '15' THEN CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + '15' ELSE CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME,CONVERT(VARCHAR(8), GETDATE(), 112))), 112)  + ADMINPROC.DBO.RTN_ENDDATE(CONVERT(CHAR(6), DATEADD(M, -1, CONVERT(DATETIME, CONVERT(VARCHAR(8), GETDATE(), 112))), 112)) END ELSE LEFT(TDATE,6)+ADMINPROC.DBO.RTN_ENDDATE(LEFT(TDATE,6)) END AS EDATE,\n-- \t\t\tSUM(CAST(AMT AS BIGINT)) AMT\n-- \t\tinto #CPIDS2\n-- \t\tFROM teamdb.DBO.TB_BILL\n-- \t\tWHERE SERVICECODE IN ('10903', '10901' ,'10910')\n-- \t\t\tAND PDATE_DUE = @PDATE\n-- \t\t\tAND CPID <> 'EXAMPLE_CP_1' --//테스트 다날계정 제외\n-- \t\t\tAND STATUS = 'CAL'\n-- \t\tGROUP BY SERVICECODE, CPID, LEFT(TDATE,6), PAY_FLAG, PAY_SFLAG, CPRATE,  PERIOD ,B_FLAG\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:117\n-- #CPIDS2의 합산 AMT와 CPRATE를 TEAMDB.TPAYNOTE_REGMON의 AMT·RATE로 입력합니다.\n-- INSERT INTO teamdb.DBO.TPAYNOTE_REGMON\n-- \t\t\t\t\t(CPID, REGMON, SDATE, EDATE, ICODE, AMT100, AMT, RATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PAY_PERIOD, MCPID, INDATE, ACTIONDATE, OPDATE)\n-- \t\t\t\tSELECT\n-- \t\t\t\t\tCPID, REGMON, SDATE, EDATE, '1' ICODE, AMT AMT100, AMT, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD PAY_PERIOD, CPID MCPID, GETDATE() INDATE, @ACTIONDATE, @PDATE\n-- \t\t\t\tFROM #CPIDS2\n-- \t\t\t\tWHERE servicecode in( '10903', '10901' ,'10910' ) \n-- \t\t\t\tand AMT <> 0\n\n-- 비활성 과거 후처리\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_CULTUERE:145\n-- 원문에서도 주석인 ACCOUNT 대상 VAT 0 처리입니다. 현행 TEAMDB 해외 면세 근거로 사용하지 않습니다.\n-- /*\n-- \t\t\t\t-- 해외CP 부가세 제외 처리 \n-- \t\t\t\tUPDATE ACCOUNT.DBO.TPAYNOTE_REGMON SET\n-- \t\t\t\t\tVAMT = 0 \n-- \t\t\t\tWHERE B_FLAG = 'H'\n-- \t\t\t\t\tAND CPID = 'EXAMPLE_CP_2'\n-- \t\t\t\t\tAND REGMON < '202404'   --4월 거래부터 부가세 반영  24.04.23커머스운영팀 요청\n-- \t\t\t\t\tAND ACTIONDATE = @ACTIONDATE\n-- \t\t\t\t\t--AND PAY_PERIOD = @PERIOD",
   },
   {
     code: 'KAKAOPAY-MONEY',
@@ -659,6 +1026,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12801',
     detailServiceCode: '03',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -681,11 +1053,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3039,
+        stage: '거래 계산',
+        active: true,
         note: 'ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE',
+        line: 34,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.',
+        hash: '06250cc0eff7314cbe6e853004dcfa93e4655556e5706dd2ce15e1db9204386b',
+        groupBy:
+          "GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period",
+        groupByLine: 45,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE:34\n-- SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.\n-- GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period\n-- SELECT\n--   sum(ISNULL(CPFEE, 0)) AS CPFEE,\n--   SUM(ISNULL(CPVAT,0)) AS CPVAT;",
   },
   {
     code: 'MOBILE-BASIC-EACH',
@@ -693,6 +1078,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -715,11 +1105,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2408,
+        stage: '거래 계산',
+        active: true,
         note: 'AMT_R이 NULL이면 AMT, 거래금액 0이면 부호 0을 사용합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT',
+        line: 48,
+        stage: '집계 입력',
+        active: false,
+        note: 'CALTYPE=T 거래의 CPFEE·CPVAT를 합산합니다.',
+        hash: '92d41cdc6c31d6dc458420de732ce944aabd44be5c21451fe0246795aeab3b42',
+        groupBy:
+          "GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE",
+        groupByLine: 64,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- AMT_R이 NULL이면 AMT, 거래금액 0이면 부호 0을 사용합니다.\nSELECT\n  FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n  FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- AMT_R이 NULL이면 AMT, 거래금액 0이면 부호 0을 사용합니다.\nSELECT\n  FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n  FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT:48\n-- CALTYPE=T 거래의 CPFEE·CPVAT를 합산합니다.\n-- GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;",
   },
   {
     code: 'MOBILE-BASIC-SUM',
@@ -727,6 +1130,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'amount-aggregate',
+      status: 'conditional',
+      summary:
+        'CALTYPE=G 지급 집계에서 원금 합계에 PCALRATE를 적용해 계산대상금액을 만든 뒤 CALRATE로 수수료·VAT를 계산합니다.',
+      unresolved:
+        '요율 유효기간·PCALRATE·CALTYPE=G 및 지급주기 조건을 함께 확인합니다. DB 상품 설정을 맞추려고 원문 식을 단순화하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -747,13 +1158,42 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT',
+        line: 74,
+        stage: '집계 계산',
+        active: true,
+        note: '실제 REGMON 호출 경로의 합산 분기. FLOOR(SUM(AMT)*PCALRATE) 계산대상금액 단계를 생략하지 않습니다.',
+        hash: '92d41cdc6c31d6dc458420de732ce944aabd44be5c21451fe0246795aeab3b42',
+        groupBy:
+          "GROUP BY A.CPID, CASE WHEN C.ISSUBPAY = '1' THEN ISNULL(A.SUBCPID, A.CPID) ELSE A.CPID END, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, A.B_FLAG, A.B_SFLAG, A.PAY_FLAG, A.PAY_SFLAG, A.PERIOD, B.PCALRATE, B.CALRATE, PDATE_DUE",
+        groupByLine: 99,
+      },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
+        line: 2408,
+        stage: '거래 계산 · 참고',
+        active: false,
+        note: '',
+        hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
+      },
+      {
         name: 'JUNGSAN.dbo.DV_JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_MONTHLY',
         line: 70,
-        note: 'DB 보관 DV 월정산 SP의 합산 분기입니다. 실제 운영 호출 여부는 별도 확인하세요.',
+        stage: 'DV 참고 · 기본 분석 제외',
+        active: false,
+        note: 'LABS에 입력하는 DV SP의 단순 합산식입니다. 운영 지급 분기의 PCALRATE 단계를 대체하지 않습니다.',
         hash: '6d823e652d01bc3d27d4e67b6c10547d479798920a1c4b80d89db3ef71abed9d',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT',
+        line: 88,
+        stage: '집계 대상·단위',
+        active: false,
+        note: '',
+        hash: '92d41cdc6c31d6dc458420de732ce944aabd44be5c21451fe0246795aeab3b42',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.DV_JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_MONTHLY:70\n-- DB 보관 DV 월정산 SP의 합산 분기입니다. 실제 운영 호출 여부는 별도 확인하세요.\nSELECT\n  FLOOR(SUM(AMT)*B.calrate) AS CPFEE,\n  FLOOR(FLOOR(SUM(AMT)*B.calrate) *0.1) AS CPVAT;',
+    sql: "-- CALTYPE=G 지급 집계에서 원금 합계에 PCALRATE를 적용해 계산대상금액을 만든 뒤 CALRATE로 수수료·VAT를 계산합니다.\n\n-- 확인 필요: 요율 유효기간·PCALRATE·CALTYPE=G 및 지급주기 조건을 함께 확인합니다. DB 상품 설정을 맞추려고 원문 식을 단순화하지 않습니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT:74\n-- 실제 REGMON 호출 경로의 합산 분기. FLOOR(SUM(AMT)*PCALRATE) 계산대상금액 단계를 생략하지 않습니다.\n-- GROUP BY A.CPID, CASE WHEN C.ISSUBPAY = '1' THEN ISNULL(A.SUBCPID, A.CPID) ELSE A.CPID END, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, A.B_FLAG, A.B_SFLAG, A.PAY_FLAG, A.PAY_SFLAG, A.PERIOD, B.PCALRATE, B.CALRATE, PDATE_DUE\nSELECT\n  FLOOR(FLOOR(SUM(CONVERT(BIGINT,AMT))*B.PCALRATE)*B.CALRATE) AS CPFEE,\n  FLOOR(FLOOR(FLOOR(SUM(CONVERT(BIGINT,AMT))*B.PCALRATE)*B.CALRATE)*.1) AS CPVAT;\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- SELECT\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;\n\n-- DV 참고 · 기본 분석 제외\n-- JUNGSAN.dbo.DV_JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_MONTHLY:70\n-- LABS에 입력하는 DV SP의 단순 합산식입니다. 운영 지급 분기의 PCALRATE 단계를 대체하지 않습니다.\n-- SELECT\n--   FLOOR(SUM(AMT)*B.calrate) AS CPFEE,\n--   FLOOR(FLOOR(SUM(AMT)*B.calrate) *0.1) AS CPVAT;\n\n-- 집계 대상·단위\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT:88\n-- WHERE 1=1\n-- \t\t\t\t\tAND A.B_FLAG IN ('T')\n-- \t\t\t\t\tAND A.PDATE_DUE = @PDATE\n-- \t\t\t\t\tAND A.PERIOD IN (SELECT ID FROM ACCOUNT..PAYOUTPERIOD\n-- \t\t\t\t\t\t\t\t\tWHERE DAYCOUNT = '1'\n-- \t\t\t\t\t\t\t\t\tAND PAYCOUNT NOT IN ('1') UNION ALL SELECT '5' UNION ALL SELECT '23') --일정산중 D+1,D+2 제외, 익월 10일 추가(KBPAY), GS홈쇼핑(15일, 수기->통합으로 추가, 2022.06)\n-- \t\t\t\t\tAND A.STATUS = 'CAL'\n-- \t\t\t\t\tAND A.CALTYPE = 'G'\n-- \t\t\t\t\t--AND A.CPID <> 'EXAMPLE_CP_1'\n-- \t\t\t\t\tAND A.CPID NOT IN ('EXAMPLE_CP_2','EXAMPLE_CP_3','EXAMPLE_CP_4','EXAMPLE_CP_5') --쿠팡 따로 정산/ 다모음 충전 제외\n-- \t\t\t\t\tAND B.SREGMON <= A.TDATE and  A.TDATE  < B.EREGMON\t\t\t\t\n-- \t\t\t\tGROUP BY A.CPID, CASE WHEN C.ISSUBPAY = '1' THEN ISNULL(A.SUBCPID, A.CPID) ELSE A.CPID END, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, A.B_FLAG, A.B_SFLAG, A.PAY_FLAG, A.PAY_SFLAG, A.PERIOD, B.PCALRATE, B.CALRATE, PDATE_DUE",
   },
   {
     code: 'MOBILE-COUPANG',
@@ -761,6 +1201,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'CUSTOM',
+    calculation: {
+      kind: 'reconciled-aggregate',
+      status: 'conditional',
+      summary:
+        '대사 완료 ACTIVE_AMT를 사용해 행별 과세 수수료를 합산하고 공급가액·VAT를 재분리합니다.',
+      unresolved:
+        '대사 완료 조건·ACTIVE_AMT·두 요율과 환불 분기를 확인해야 합니다. 일반 합산 정률 상품과 동일하다고 보지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -783,11 +1231,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_jungsan_coupang',
         line: 110,
+        stage: '집계 계산',
+        active: true,
         note: '대사 완료 ACTIVE_AMT와 CALRATE/PCALRATE를 사용하는 별도 집계 계산입니다.',
         hash: '2ffa48acf54ef6a3c348a6bab0e8a3bc04ef5293f632ed0ca981ea2d61f4e514',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
+        line: 2408,
+        stage: '거래 계산 · 일반 참고',
+        active: false,
+        note: '집계 본문은 ACTIVE_AMT·CALRATE·PCALRATE를 사용합니다. 일반 TB_BILL 식은 참고로만 남깁니다.',
+        hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_jungsan_coupang:110\n-- 대사 완료 ACTIVE_AMT와 CALRATE/PCALRATE를 사용하는 별도 집계 계산입니다.\nSELECT\n  case sum(floor(a.active_amt*b.pcalrate)) when 0 then 0 else floor(sum(floor(abs(a.active_amt) * (b.calrate * 1.1)) * a.active_amt/abs(a.active_amt))/1.1) end AS CPFEE,\n  case sum(floor(a.active_amt*b.pcalrate)) when 0 then 0 else sum(floor(abs(a.active_amt) * (b.calrate * 1.1)) * a.active_amt/abs(a.active_amt)) - floor(sum(floor(abs(a.active_amt) * (b.calrate * 1.1)) * a.active_amt/abs(a.active_amt))/1.1) end AS CPVAT;',
+    sql: '-- 대사 완료 ACTIVE_AMT를 사용해 행별 과세 수수료를 합산하고 공급가액·VAT를 재분리합니다.\n\n-- 확인 필요: 대사 완료 조건·ACTIVE_AMT·두 요율과 환불 분기를 확인해야 합니다. 일반 합산 정률 상품과 동일하다고 보지 않습니다.\n\n-- 집계 계산\n-- ADMINPROC.dbo.job_jungsan_coupang:110\n-- 대사 완료 ACTIVE_AMT와 CALRATE/PCALRATE를 사용하는 별도 집계 계산입니다.\nSELECT\n  case sum(floor(a.active_amt*b.pcalrate)) when 0 then 0 else floor(sum(floor(abs(a.active_amt) * (b.calrate * 1.1)) * a.active_amt/abs(a.active_amt))/1.1) end AS CPFEE,\n  case sum(floor(a.active_amt*b.pcalrate)) when 0 then 0 else sum(floor(abs(a.active_amt) * (b.calrate * 1.1)) * a.active_amt/abs(a.active_amt)) - floor(sum(floor(abs(a.active_amt) * (b.calrate * 1.1)) * a.active_amt/abs(a.active_amt))/1.1) end AS CPVAT;\n\n-- 거래 계산 · 일반 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- 집계 본문은 ACTIVE_AMT·CALRATE·PCALRATE를 사용합니다. 일반 TB_BILL 식은 참고로만 남깁니다.\n-- SELECT\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;',
   },
   {
     code: 'MOBILE-EACH-VAT-RND',
@@ -795,6 +1253,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'fee-aggregate',
+      status: 'conditional',
+      summary:
+        'TFI_DAILYSALE의 수수료를 월 합산한 뒤 ROUND(SUM(FEE)*0.1,0)으로 VAT를 다시 계산합니다.',
+      unresolved:
+        '월청구의 대상 CPID·요금제 설정에 해당하는지 확인합니다. 건별 CPVAT의 ROUND를 합산 VAT 계산 근거로 사용하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -815,13 +1281,34 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'ACCOUNT.dbo.fms_inMonSale',
+        line: 66,
+        stage: '집계 계산',
+        active: true,
+        note: '수수료는 기존 건별 결과의 합, VAT만 합계 기준 반올림입니다.',
+        hash: '36257b49e19479d2e94ad9985c159b1a0f9b0a5c66591697fc663e0afe698e6f',
+        groupBy:
+          'group by goodscode, servicecode, cpid, left(t_date,6), left(d_date,6), icode, moid, pay_flag, pay_sflag, pay_period, sub_servicecode, isnull(subcpid,cpid)',
+        groupByLine: 90,
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2285,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '코리아세븐 특이 건별 계산. VAT 합산 정책과의 차이는 별도 확인하세요.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.fms_inMonSale',
+        line: 68,
+        stage: '청구 대상·단위',
+        active: false,
+        note: '',
+        hash: '36257b49e19479d2e94ad9985c159b1a0f9b0a5c66591697fc663e0afe698e6f',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2285\n-- 코리아세븐 특이 건별 계산. VAT 합산 정책과의 차이는 별도 확인하세요.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  ROUND(FLOOR(ABS(AMT) * CPRATE )* 0.1, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- TFI_DAILYSALE의 수수료를 월 합산한 뒤 ROUND(SUM(FEE)*0.1,0)으로 VAT를 다시 계산합니다.\n\n-- 확인 필요: 월청구의 대상 CPID·요금제 설정에 해당하는지 확인합니다. 건별 CPVAT의 ROUND를 합산 VAT 계산 근거로 사용하지 않습니다.\n\n-- 집계 계산\n-- ACCOUNT.dbo.fms_inMonSale:66\n-- 수수료는 기존 건별 결과의 합, VAT만 합계 기준 반올림입니다.\n-- group by goodscode, servicecode, cpid, left(t_date,6), left(d_date,6), icode, moid, pay_flag, pay_sflag, pay_period, sub_servicecode, isnull(subcpid,cpid)\nSELECT\n  sum(fee) AS CPFEE,\n  round(sum(fee)*0.1,0) AS CPVAT;\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2285\n-- 코리아세븐 특이 건별 계산. VAT 합산 정책과의 차이는 별도 확인하세요.\n-- SELECT\n--   FLOOR(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n--   ROUND(FLOOR(ABS(AMT) * CPRATE )* 0.1, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 청구 대상·단위\n-- ACCOUNT.dbo.fms_inMonSale:68\n-- where servicecode = '10101'\n-- \t\tand d_date like @regmon+'%'\n-- \t\tand cpid in (--특이정산\n-- \t\t\t\t\tselect cpid from teleditother.dbo.tcp_rate_fixed -- 건별수수료\n-- \t\t\t\t\tunion\n-- \t\t\t\t\tselect cpid from teleditother.dbo.tuwaytype_cpid -- 행자부, 유웨이, 휴먼피아\n-- \t\t\t\t\tunion\n-- \t\t\t\t\tselect cpid from account.dbo.trate where period = 99 and b_flag = 'T' -- 행자부, 유웨이, 휴먼피아\n-- \t\t\t\t\tunion\n-- \t\t\t\t\tselect cpid\n-- \t\t\t\t\tfrom teleditother.dbo.vcp_info\n-- \t\t\t\t\twhere cpidenti in ('EXAMPLE_CP_1','EXAMPLE_CP_2','EXAMPLE_CP_3','EXAMPLE_CP_4','EXAMPLE_CP_5','EXAMPLE_CP_6') -- GS홈쇼핑, CJ오쇼핑, AK프라자, KSNET, 이베이\n-- \t\t\t\t\tand edate = '999999'\n-- \t\t\t\t\tunion\n-- \t\t\t\t\tselect cpid \n-- \t\t\t\t\tfrom teleditother.dbo.tcp_config \n-- \t\t\t\t\twhere cpid in ('EXAMPLE_CP_7','EXAMPLE_CP_8') --쿠팡\n-- \t\t\t\t\tUNION\n-- \t\t\t\t\tselect cpid from JUNGSAN.DBO.TB_UNION_JUNGSAN_CPID\n-- \t\t\t\t\twhere status = 'Y' and caltype = 'T' and b_flag = 'T' \n-- \n-- \t\t)\n-- \t\tgroup by goodscode, servicecode, cpid, left(t_date,6), left(d_date,6), icode, moid, pay_flag, pay_sflag, pay_period, sub_servicecode, isnull(subcpid,cpid)",
   },
   {
     code: 'MOBILE-EACH-VAT-SUM',
@@ -829,6 +1316,12 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'CUSTOM',
+    calculation: {
+      kind: 'fee-aggregate',
+      status: 'verified',
+      summary:
+        '건별 CPFEE를 더해 RAMT로 넣고 FLOOR(ABS(SUM(CPFEE))*0.1)에 합산 원금의 부호를 붙여 VAT를 재계산합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -849,19 +1342,34 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT',
+        line: 210,
+        stage: '집계 계산',
+        active: true,
+        note: 'CALTYPE=T, CALTYPE2=2의 후속 집계입니다. 수수료를 원금 합계×요율로 다시 계산하지 않습니다.',
+        hash: '92d41cdc6c31d6dc458420de732ce944aabd44be5c21451fe0246795aeab3b42',
+        groupBy:
+          'GROUP BY CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE',
+        groupByLine: 232,
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2408,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT',
-        line: 210,
-        note: '건별 CPFEE를 합산한 뒤 VAT를 재계산하는 후속 단계입니다. 컬리 ADJUSTED_AMT 매핑은 별도입니다.',
+        line: 220,
+        stage: '집계 대상·단위',
+        active: false,
+        note: '',
         hash: '92d41cdc6c31d6dc458420de732ce944aabd44be5c21451fe0246795aeab3b42',
       },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- \nSELECT\n  FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n  FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;\n\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT:210\n-- 건별 CPFEE를 합산한 뒤 VAT를 재계산하는 후속 단계입니다. 컬리 ADJUSTED_AMT 매핑은 별도입니다.\nSELECT\n  SUM(CPFEE) AS CPFEE,\n  (CASE WHEN SUM(AMT) < 0 THEN -1 ELSE 1 END) * FLOOR(ABS(SUM(CPFEE))*.1) AS CPVAT;',
+    sql: "-- 건별 CPFEE를 더해 RAMT로 넣고 FLOOR(ABS(SUM(CPFEE))*0.1)에 합산 원금의 부호를 붙여 VAT를 재계산합니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT:210\n-- CALTYPE=T, CALTYPE2=2의 후속 집계입니다. 수수료를 원금 합계×요율로 다시 계산하지 않습니다.\n-- GROUP BY CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE\nSELECT\n  SUM(CPFEE) AS CPFEE,\n  (CASE WHEN SUM(AMT) < 0 THEN -1 ELSE 1 END) * FLOOR(ABS(SUM(CPFEE))*.1) AS CPVAT;\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- SELECT\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;\n\n-- 집계 대상·단위\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT:220\n-- WHERE 1=1\n-- \t\t\t\t\tAND B_FLAG IN ('T')\n-- \t\t\t\t\tAND PDATE_DUE = @PDATE\n-- \t\t\t\t\tAND PERIOD IN (SELECT ID FROM ACCOUNT..PAYOUTPERIOD\n-- \t\t\t\t\t\t\t\t\tWHERE DAYCOUNT = '1'\n-- \t\t\t\t\t\t\t\t\tAND PAYCOUNT NOT IN ('1') UNION ALL SELECT '5' UNION ALL SELECT '23') --일정산중 D+1,D+2 제외, 익월 10일 추가(KBPAY), GS홈쇼핑(15일, 수기->통합으로 추가, 2022.06)\n-- \t\t\t\t\tAND STATUS = 'CAL'\n-- \t\t\t\t\tAND CALTYPE = 'T'\t\t\t\t\t\n-- \t\t\t\t\tAND CPID IN (SELECT CPID FROM JUNGSAN.DBO.TB_UNION_JUNGSAN_CPID\n-- \t\t\t\t\t\t\t\t\tWHERE CALTYPE = 'T'\n-- \t\t\t\t\t\t\t\t\tAND STATUS = 'Y'\n-- \t\t\t\t\t\t\t\t\tAND CALTYPE2 = '2')\n-- \t\t\t\tGROUP BY CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE",
   },
   {
     code: 'MOBILE-FIXED-INCL',
@@ -869,6 +1377,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'CUSTOM',
+    calculation: {
+      kind: 'included-split',
+      status: 'conditional',
+      summary:
+        '건별 고정 수수료를 합산한 뒤 /1.1로 공급가액을 반올림하고, 재분리한 B.FEE로 VAT를 계산합니다.',
+      unresolved:
+        '고정요금 대상과 CPID·단가·승인/취소별 집계 조건이 필요합니다. 정률 공통식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -889,19 +1405,31 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT',
+        line: 332,
+        stage: '집계 계산',
+        active: true,
+        note: '하위 SELECT에서 재분리한 B.FEE를 받아 VAT를 계산하는 후속 UPDATE입니다.',
+        hash: '170a0ce48daa2b2c77922e2f745208798ab72d7579e106be98cb1929cb43ae4d',
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2475,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
       {
         name: 'ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT',
-        line: 332,
-        note: '하위 SELECT에서 재분리한 B.FEE를 받아 VAT를 계산하는 후속 UPDATE입니다.',
+        line: 334,
+        stage: '집계·공급가액 준비',
+        active: false,
+        note: 'B.FEE는 ROUND(ABS(SUM(FEE))/1.1,0)에 승인/취소 부호를 적용한 값입니다.',
         hash: '170a0ce48daa2b2c77922e2f745208798ab72d7579e106be98cb1929cb43ae4d',
       },
     ],
-    sql: "-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2475\n-- \nSELECT\n  B.FEE * CONVERT(BIGINT, A.AMT) / ABS(CONVERT(BIGINT, A.AMT)) AS CPFEE,\n  0 AS CPVAT;\n\n-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:332\n-- 하위 SELECT에서 재분리한 B.FEE를 받아 VAT를 계산하는 후속 UPDATE입니다.\nSELECT\n  B.FEE AS CPFEE,\n  ROUND(ABS(B.FEE)*0.1,0) * (CASE B.C_FLAG WHEN '0' THEN 1 WHEN '1' THEN (-1) END) AS CPVAT;",
+    sql: "-- 건별 고정 수수료를 합산한 뒤 /1.1로 공급가액을 반올림하고, 재분리한 B.FEE로 VAT를 계산합니다.\n\n-- 확인 필요: 고정요금 대상과 CPID·단가·승인/취소별 집계 조건이 필요합니다. 정률 공통식으로 대체하지 않습니다.\n\n-- 집계 계산\n-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:332\n-- 하위 SELECT에서 재분리한 B.FEE를 받아 VAT를 계산하는 후속 UPDATE입니다.\nSELECT\n  B.FEE AS CPFEE,\n  ROUND(ABS(B.FEE)*0.1,0) * (CASE B.C_FLAG WHEN '0' THEN 1 WHEN '1' THEN (-1) END) AS CPVAT;\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2475\n-- SELECT\n--   B.FEE * CONVERT(BIGINT, A.AMT) / ABS(CONVERT(BIGINT, A.AMT)) AS CPFEE,\n--   0 AS CPVAT;\n\n-- 집계·공급가액 준비\n-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:334\n-- B.FEE는 ROUND(ABS(SUM(FEE))/1.1,0)에 승인/취소 부호를 적용한 값입니다.\n-- INNER JOIN ( SELECT CPID, T_DATE, D_DATE, LEFT(ITEMCODE,1) AS ICODE, MOID, C_FLAG, SUM(AMT) AMT, ROUND(ABS(SUM(FEE))/1.1,0)*(CASE C_FLAG WHEN '0' THEN 1 WHEN '1' THEN (-1) END) FEE \n-- \t\tFROM #FIXED_FEE \n-- \t\tGROUP BY CPID, T_DATE, D_DATE, LEFT(ITEMCODE,1), MOID, C_FLAG ) B \n-- \t\tON (A.CPID = B.CPID AND A.T_DATE = B.T_DATE AND A.D_DATE = B.D_DATE AND A.ICODE = B.ICODE AND A.MOID = B.MOID AND A.AMT = B.AMT AND A.C_FLAG = B.C_FLAG) \n-- \t\tWHERE A.SERVICECODE = '10101' \n-- \t\tAND A.D_DATE = @DATE",
   },
   {
     code: 'MOBILE-GOVERNMENT',
@@ -909,6 +1437,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'CUSTOM',
+    calculation: {
+      kind: 'payout-inverse',
+      status: 'conditional',
+      summary: '집계 원금과 지급요청금액 EXT1의 차액에서 공급가액·VAT를 역산합니다.',
+      unresolved:
+        'EXT1 원천·지급요청 대상이 필요한 특수 역산입니다. 일반 거래별 요율식으로 대체하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -931,11 +1466,13 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.Job_Monthly_Prepayout_C2',
         line: 128,
+        stage: '집계 계산',
+        active: true,
         note: 'EXT1 지급요청금액을 사용한 역산입니다.',
         hash: 'f6a167b73940acbb0b04aa447d49bd035e77be4383691a64587d51e4dd093259',
       },
     ],
-    sql: '-- ADMINPROC.dbo.Job_Monthly_Prepayout_C2:128\n-- EXT1 지급요청금액을 사용한 역산입니다.\nSELECT\n  FLOOR((SUM(A.amt)-SUM(CAST(isnull(A.EXT1,0) as numeric)))/1.1) AS CPFEE,\n  SUM(A.amt)-SUM(CAST(isnull(A.EXT1,0) as numeric))-FLOOR((SUM(A.amt)-SUM(CAST(isnull(A.EXT1,0) as numeric)))/1.1) AS CPVAT;',
+    sql: '-- 집계 원금과 지급요청금액 EXT1의 차액에서 공급가액·VAT를 역산합니다.\n\n-- 확인 필요: EXT1 원천·지급요청 대상이 필요한 특수 역산입니다. 일반 거래별 요율식으로 대체하지 않습니다.\n\n-- 집계 계산\n-- ADMINPROC.dbo.Job_Monthly_Prepayout_C2:128\n-- EXT1 지급요청금액을 사용한 역산입니다.\nSELECT\n  FLOOR((SUM(A.amt)-SUM(CAST(isnull(A.EXT1,0) as numeric)))/1.1) AS CPFEE,\n  SUM(A.amt)-SUM(CAST(isnull(A.EXT1,0) as numeric))-FLOOR((SUM(A.amt)-SUM(CAST(isnull(A.EXT1,0) as numeric)))/1.1) AS CPVAT;',
   },
   {
     code: 'MOBILE-RATE-INCL',
@@ -943,6 +1480,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'CUSTOM',
+    calculation: {
+      kind: 'included-split',
+      status: 'conditional',
+      summary:
+        '거래별 VAT 포함 수수료를 절사해 합산하고, 합계/1.1로 공급가액을 절사한 뒤 차액을 VAT로 분리합니다.',
+      unresolved:
+        'VAT 포함 총액의 건별 절사 → 합계 → 재분리 순서를 유지합니다. 대상 CPID·요율 조건은 본문 출처를 확인합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -965,11 +1510,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT',
         line: 352,
+        stage: '집계 계산',
+        active: true,
         note: '건별 VAT 포함 수수료를 합산한 뒤 공급가액/VAT로 재분리합니다. 환불 조건은 별도입니다.',
         hash: '170a0ce48daa2b2c77922e2f745208798ab72d7579e106be98cb1929cb43ae4d',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
+        line: 2408,
+        stage: '거래 계산 · 일반 참고',
+        active: false,
+        note: '별도 가맹점의 VAT 포함 계산이므로 이 일반 건별 식과 동일하다고 확정하지 않습니다.',
+        hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
+      },
     ],
-    sql: '-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:352\n-- 건별 VAT 포함 수수료를 합산한 뒤 공급가액/VAT로 재분리합니다. 환불 조건은 별도입니다.\nSELECT\n  FLOOR(SUM(FLOOR(ABS(A.AMT) * (B.CALRATE * 1.1)) * A.AMT/ABS(A.AMT))/1.1) AS CPFEE,\n  SUM(FLOOR(ABS(A.AMT) * (B.CALRATE * 1.1)) * A.AMT/ABS(A.AMT)) - FLOOR(SUM(FLOOR(ABS(A.AMT) * (B.CALRATE * 1.1)) * A.AMT/ABS(A.AMT))/1.1) AS CPVAT;',
+    sql: '-- 거래별 VAT 포함 수수료를 절사해 합산하고, 합계/1.1로 공급가액을 절사한 뒤 차액을 VAT로 분리합니다.\n\n-- 확인 필요: VAT 포함 총액의 건별 절사 → 합계 → 재분리 순서를 유지합니다. 대상 CPID·요율 조건은 본문 출처를 확인합니다.\n\n-- 집계 계산\n-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:352\n-- 건별 VAT 포함 수수료를 합산한 뒤 공급가액/VAT로 재분리합니다. 환불 조건은 별도입니다.\nSELECT\n  FLOOR(SUM(FLOOR(ABS(A.AMT) * (B.CALRATE * 1.1)) * A.AMT/ABS(A.AMT))/1.1) AS CPFEE,\n  SUM(FLOOR(ABS(A.AMT) * (B.CALRATE * 1.1)) * A.AMT/ABS(A.AMT)) - FLOOR(SUM(FLOOR(ABS(A.AMT) * (B.CALRATE * 1.1)) * A.AMT/ABS(A.AMT))/1.1) AS CPVAT;\n\n-- 거래 계산 · 일반 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2408\n-- 별도 가맹점의 VAT 포함 계산이므로 이 일반 건별 식과 동일하다고 확정하지 않습니다.\n-- SELECT\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPFEE,\n--   FLOOR(ABS(ISNULL(AMT_R,AMT)) * CPRATE* 0.1) * CASE WHEN AMT = 0 THEN 0 ELSE (AMT/ABS(AMT)) END AS CPVAT;',
   },
   {
     code: 'MOBILE-TIMONET',
@@ -977,6 +1532,14 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10101',
     detailServiceCode: '00',
     engine: 'CUSTOM',
+    calculation: {
+      kind: 'included-split',
+      status: 'conditional',
+      summary:
+        '건별 CPFEE를 주기별로 합산하고 공급가액=FLOOR(ABS(SUM(CPFEE))/1.1)·부호, VAT=SUM(CPFEE)−공급가액으로 재분리합니다.',
+      unresolved:
+        'CPID에 따라 수수료 합계 재분리와 대상금액 합산×요율 분기가 다릅니다. 계약 분기를 확인합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -997,19 +1560,45 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_WEEKLY',
+        line: 160,
+        stage: '집계 계산',
+        active: true,
+        note: '주정산 CALTYPE=F의 티모넷 재분리 분기입니다.',
+        hash: '00946a225ab91502cb28b6a05d3d37e165c9fc387d7fd05085e4319be0cf4e3f',
+        groupBy:
+          "GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE",
+        groupByLine: 195,
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2520,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
       {
         name: 'ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT',
         line: 244,
-        note: '앞 단계에서 계산한 FEE를 합산해 공급가액과 VAT로 재분리합니다.',
+        stage: '일집계 대응식',
+        active: false,
+        note: 'TFI_DAILYSALE에서는 같은 순서로 SUM(FEE)를 재분리합니다.',
         hash: '170a0ce48daa2b2c77922e2f745208798ab72d7579e106be98cb1929cb43ae4d',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_WEEKLY',
+        line: 203,
+        stage: '다른 계약 분기 · 참고',
+        active: false,
+        note: '별도 CPID 목록은 SUM(AMT_R)×CPRATE로 계산합니다. 주 분기와 혼용하지 않습니다.',
+        hash: '00946a225ab91502cb28b6a05d3d37e165c9fc387d7fd05085e4319be0cf4e3f',
+        groupBy:
+          "GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE",
+        groupByLine: 234,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2520\n-- \nSELECT\n  FLOOR(ABS(AMT_R) * CONVERT(NUMERIC(18,5),EXT2)/100) * (AMT/ABS(AMT)) AS CPFEE,\n  0 AS CPVAT;\n\n-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:244\n-- 앞 단계에서 계산한 FEE를 합산해 공급가액과 VAT로 재분리합니다.\nSELECT\n  FLOOR(ABS(SUM(FEE))/1.1) * SUM(AMT)/ABS(SUM(AMT)) AS CPFEE,\n  SUM(FEE) - FLOOR(ABS(SUM(FEE))/1.1) * SUM(AMT)/ABS(SUM(AMT)) AS CPVAT;',
+    sql: "-- 건별 CPFEE를 주기별로 합산하고 공급가액=FLOOR(ABS(SUM(CPFEE))/1.1)·부호, VAT=SUM(CPFEE)−공급가액으로 재분리합니다.\n\n-- 확인 필요: CPID에 따라 수수료 합계 재분리와 대상금액 합산×요율 분기가 다릅니다. 계약 분기를 확인합니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_WEEKLY:160\n-- 주정산 CALTYPE=F의 티모넷 재분리 분기입니다.\n-- GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE\nSELECT\n  FLOOR(ABS(SUM(CPFEE))/1.1) * SUM(AMT)/ABS(SUM(AMT)) AS CPFEE,\n  SUM(CPFEE) - FLOOR(ABS(SUM(CPFEE))/1.1) * SUM(AMT)/ABS(SUM(AMT)) AS CPVAT;\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2520\n-- SELECT\n--   FLOOR(ABS(AMT_R) * CONVERT(NUMERIC(18,5),EXT2)/100) * (AMT/ABS(AMT)) AS CPFEE,\n--   0 AS CPVAT;\n\n-- 일집계 대응식\n-- ACCOUNT.dbo.FMS_INDAILYSALE_TELEDIT:244\n-- TFI_DAILYSALE에서는 같은 순서로 SUM(FEE)를 재분리합니다.\n-- SELECT\n--   FLOOR(ABS(SUM(FEE))/1.1) * SUM(AMT)/ABS(SUM(AMT)) AS CPFEE,\n--   SUM(FEE) - FLOOR(ABS(SUM(FEE))/1.1) * SUM(AMT)/ABS(SUM(AMT)) AS CPVAT;\n\n-- 다른 계약 분기 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_TELEDIT_WEEKLY:203\n-- 별도 CPID 목록은 SUM(AMT_R)×CPRATE로 계산합니다. 주 분기와 혼용하지 않습니다.\n-- GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE,6), ITEMCODE, CALTYPE, CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE\n-- SELECT\n--   FLOOR(SUM(AMT_R) * CPRATE) AS CPFEE,\n--   FLOOR(SUM(AMT_R) * CPRATE *0.1) AS CPVAT;",
   },
   {
     code: 'MOBILEGIFT-BASIC',
@@ -1017,6 +1606,12 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '11515',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'amount-aggregate',
+      status: 'verified',
+      summary:
+        'TPAYNOTE_REGMON INSERT SELECT에서 SUM(AMT)에 요율을 적용하고 수수료·VAT를 각각 반올림합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1037,13 +1632,33 @@ export const PRODUCT_EXAMPLES = [
     },
     sources: [
       {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_MOBILEGIFT',
+        line: 27,
+        stage: '집계 계산',
+        active: true,
+        note: '서비스·발행처(ORICODE_DET)·월·CPRATE·주기·CPID별 집계. 11515 일반 분기입니다.',
+        hash: 'cdea679e7b63e2ba090d9628c8c40c10a37011a81989cde1ae512ae44715da11',
+        groupBy: 'GROUP BY SERVICECODE, ORICODE_DET, left(TDATE, 6), CPRATE, b.PERIOD, cpid',
+        groupByLine: 39,
+      },
+      {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 1184,
+        stage: '거래 계산 · 참고',
+        active: false,
         note: '건별 계산 구문입니다. 집계 단계는 별도로 확인하세요.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_MOBILEGIFT',
+        line: 34,
+        stage: '집계 대상·단위',
+        active: false,
+        note: '',
+        hash: 'cdea679e7b63e2ba090d9628c8c40c10a37011a81989cde1ae512ae44715da11',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1184\n-- 건별 계산 구문입니다. 집계 단계는 별도로 확인하세요.\nSELECT\n  CONVERT(BIGINT, ROUND(ABS(AMT) * CPRATE,0)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  CONVERT(BIGINT, ROUND(ROUND((ABS(AMT) * CPRATE),0) * 0.1, 0)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- TPAYNOTE_REGMON INSERT SELECT에서 SUM(AMT)에 요율을 적용하고 수수료·VAT를 각각 반올림합니다.\n\n-- 집계 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_MOBILEGIFT:27\n-- 서비스·발행처(ORICODE_DET)·월·CPRATE·주기·CPID별 집계. 11515 일반 분기입니다.\n-- GROUP BY SERVICECODE, ORICODE_DET, left(TDATE, 6), CPRATE, b.PERIOD, cpid\nSELECT\n  round(cprate * sum(cast(amt as bigint)), 0) AS CPFEE,\n  round(round(cprate * sum(cast(amt as bigint)), 0) * 0.1, 0) AS CPVAT;\n\n-- 거래 계산 · 참고\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:1184\n-- 건별 계산 구문입니다. 집계 단계는 별도로 확인하세요.\n-- SELECT\n--   CONVERT(BIGINT, ROUND(ABS(AMT) * CPRATE,0)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n--   CONVERT(BIGINT, ROUND(ROUND((ABS(AMT) * CPRATE),0) * 0.1, 0)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 대상·단위\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_MOBILEGIFT:34\n-- WHERE servicecode in ('11515', '11516')\n-- \t\t\t\t\t\tand status = 'CAL'\n-- \t\t\t\t\t\tand cpid not in ('EXAMPLE_CP_1') -- 테스트\n-- \t\t\t\t\t\t--and oricode <> '3Y' -- 모바일상품권 2020.08 부터 회계처리 변경으로 선정산 업체 지급제외 처리\n-- \t\t\t\t\t\tand pdate_due = @pdate\n-- \t\t\t\tGROUP BY SERVICECODE, ORICODE_DET, left(TDATE, 6), CPRATE, b.PERIOD, cpid",
   },
   {
     code: 'NAVERPAY-MONEY',
@@ -1051,6 +1666,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12801',
     detailServiceCode: '02',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1073,11 +1693,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3039,
+        stage: '거래 계산',
+        active: true,
         note: 'ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE',
+        line: 34,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.',
+        hash: '06250cc0eff7314cbe6e853004dcfa93e4655556e5706dd2ce15e1db9204386b',
+        groupBy:
+          "GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period",
+        groupByLine: 45,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE:34\n-- SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.\n-- GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period\n-- SELECT\n--   sum(ISNULL(CPFEE, 0)) AS CPFEE,\n--   SUM(ISNULL(CPVAT,0)) AS CPVAT;",
   },
   {
     code: 'OPENBANKING-FIXED',
@@ -1085,6 +1718,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10603',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1107,11 +1745,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2972,
+        stage: '거래 계산',
+        active: true,
         note: '승인·취소 모두 양수 정액 수수료를 부과합니다. ICODE=4는 정률에서 다시 계산합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_OPENBANKING',
+        line: 23,
+        stage: '집계 입력',
+        active: false,
+        note: 'ORICODE_DET=001·002 및 003 분기에서 SUM(CPFEE)·SUM(CPVAT)를 입력합니다. 원금이 취소여도 거래 단계 양수 수수료를 그대로 더합니다.',
+        hash: '5df28479e4a5c12db76fe9d6b4226f1172c9ea1c67caf877846cb3b5158a0a23',
+        groupBy:
+          "GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE, 6), CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE, ITEMCODE",
+        groupByLine: 32,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2972\n-- 승인·취소 모두 양수 정액 수수료를 부과합니다. ICODE=4는 정률에서 다시 계산합니다.\nSELECT\n  B.AUTHRATE AS CPFEE,\n  FLOOR(B.AUTHRATE * 0.1) AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2972\n-- 승인·취소 모두 양수 정액 수수료를 부과합니다. ICODE=4는 정률에서 다시 계산합니다.\nSELECT\n  B.AUTHRATE AS CPFEE,\n  FLOOR(B.AUTHRATE * 0.1) AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_OPENBANKING:23\n-- ORICODE_DET=001·002 및 003 분기에서 SUM(CPFEE)·SUM(CPVAT)를 입력합니다. 원금이 취소여도 거래 단계 양수 수수료를 그대로 더합니다.\n-- GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE, 6), CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE, ITEMCODE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;",
   },
   {
     code: 'OPENBANKING-RATE',
@@ -1119,6 +1770,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '10603',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1141,11 +1797,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2988,
+        stage: '거래 계산',
+        active: true,
         note: 'B_FLAG=OB, ICODE=4. 취소도 양수 수수료/VAT를 부과합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_OPENBANKING',
+        line: 23,
+        stage: '집계 입력',
+        active: false,
+        note: 'ORICODE_DET=001·002 및 003 분기에서 SUM(CPFEE)·SUM(CPVAT)를 입력합니다. 원금이 취소여도 거래 단계 양수 수수료를 그대로 더합니다.',
+        hash: '5df28479e4a5c12db76fe9d6b4226f1172c9ea1c67caf877846cb3b5158a0a23',
+        groupBy:
+          "GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE, 6), CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE, ITEMCODE",
+        groupByLine: 32,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2988\n-- B_FLAG=OB, ICODE=4. 취소도 양수 수수료/VAT를 부과합니다.\nSELECT\n  FLOOR(ABS(AMT)*A.CPRATE) AS CPFEE,\n  FLOOR(ABS(AMT)*A.CPRATE*0.1) AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2988\n-- B_FLAG=OB, ICODE=4. 취소도 양수 수수료/VAT를 부과합니다.\nSELECT\n  FLOOR(ABS(AMT)*A.CPRATE) AS CPFEE,\n  FLOOR(ABS(AMT)*A.CPRATE*0.1) AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_OPENBANKING:23\n-- ORICODE_DET=001·002 및 003 분기에서 SUM(CPFEE)·SUM(CPVAT)를 입력합니다. 원금이 취소여도 거래 단계 양수 수수료를 그대로 더합니다.\n-- GROUP BY CASE WHEN SUBTYPE = '1' THEN SUBCPID ELSE CPID END, CPID, LEFT(TDATE, 6), CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE, ITEMCODE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;",
   },
   {
     code: 'PAYCO-COUPON',
@@ -1153,6 +1822,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12801',
     detailServiceCode: '05',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1175,11 +1849,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3039,
+        stage: '거래 계산',
+        active: true,
         note: 'ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE',
+        line: 34,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.',
+        hash: '06250cc0eff7314cbe6e853004dcfa93e4655556e5706dd2ce15e1db9204386b',
+        groupBy:
+          "GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period",
+        groupByLine: 45,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE:34\n-- SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.\n-- GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period\n-- SELECT\n--   sum(ISNULL(CPFEE, 0)) AS CPFEE,\n--   SUM(ISNULL(CPVAT,0)) AS CPVAT;",
   },
   {
     code: 'PAYCO-POINT',
@@ -1187,6 +1874,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12801',
     detailServiceCode: '04',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1209,11 +1901,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3039,
+        stage: '거래 계산',
+        active: true,
         note: 'ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE',
+        line: 34,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.',
+        hash: '06250cc0eff7314cbe6e853004dcfa93e4655556e5706dd2ce15e1db9204386b',
+        groupBy:
+          "GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period",
+        groupByLine: 45,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE:34\n-- SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.\n-- GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period\n-- SELECT\n--   sum(ISNULL(CPFEE, 0)) AS CPFEE,\n--   SUM(ISNULL(CPVAT,0)) AS CPVAT;",
   },
   {
     code: 'PAYCOIN-BASIC',
@@ -1221,6 +1926,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1243,11 +1953,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2756,
+        stage: '거래 계산',
+        active: true,
         note: '',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_PAYCOIN',
+        line: 23,
+        stage: '집계 입력',
+        active: false,
+        note: 'SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.',
+        hash: '50358490d104e516450af7e6dc7be3a496ec38a5fb58b8d4edd6a85732375e07',
+        groupBy:
+          "GROUP BY ( CASE WHEN B.ISSUBPAY = '1' THEN ISNULL(A.SUBCPID, A.CPID) ELSE A.CPID END ), A.CPID , LEFT(TDATE,6), ITEMCODE, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD,  B_SFLAG, PDATE_DUE",
+        groupByLine: 38,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2756\n-- \nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * AMT/ABS(AMT) AS CPFEE,\n  FLOOR(ABS(AMT) * CPRATE * 0.1) * AMT/ABS(AMT) AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2756\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * AMT/ABS(AMT) AS CPFEE,\n  FLOOR(ABS(AMT) * CPRATE * 0.1) * AMT/ABS(AMT) AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_PAYCOIN:23\n-- SUM(CPFEE)·SUM(CPVAT)는 결과를 더하는 단계이며 금액 합산 후 요율을 다시 적용하지 않습니다.\n-- GROUP BY ( CASE WHEN B.ISSUBPAY = '1' THEN ISNULL(A.SUBCPID, A.CPID) ELSE A.CPID END ), A.CPID , LEFT(TDATE,6), ITEMCODE, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD,  B_SFLAG, PDATE_DUE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;",
   },
   {
     code: 'PAYPAL-SCHOOL',
@@ -1255,6 +1978,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '51401',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1277,11 +2005,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3306,
+        stage: '거래 계산',
+        active: true,
         note: '원천 CUST_TOTL_FEE 공급가액 계산 후 VAT 0 처리입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_PAL',
+        line: 26,
+        stage: '집계 입력',
+        active: false,
+        note: '원금은 AMT+CPFEE+CPVAT 합계로 복원하고 지급액은 SUM(AMT)를 사용합니다. 수수료 재계산은 아닙니다.',
+        hash: '734ab6d8d441e079bec3a4e07eead37253456bd8a21221c4567d8082c5ac071e',
+        groupBy:
+          'GROUP BY A.CPID , LEFT(TDATE,6), ITEMCODE, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD,  B_SFLAG, PDATE_DUE',
+        groupByLine: 37,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3306\n-- 원천 CUST_TOTL_FEE 공급가액 계산 후 VAT 0 처리입니다.\nSELECT\n  ROUND(B.CUST_TOTL_FEE/1.1, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3306\n-- 원천 CUST_TOTL_FEE 공급가액 계산 후 VAT 0 처리입니다.\nSELECT\n  ROUND(B.CUST_TOTL_FEE/1.1, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  0 AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_PAL:26\n-- 원금은 AMT+CPFEE+CPVAT 합계로 복원하고 지급액은 SUM(AMT)를 사용합니다. 수수료 재계산은 아닙니다.\n-- GROUP BY A.CPID , LEFT(TDATE,6), ITEMCODE, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD,  B_SFLAG, PDATE_DUE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;',
   },
   {
     code: 'SAMSUNGWALLET-MONEY',
@@ -1289,6 +2030,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12801',
     detailServiceCode: '01',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1311,11 +2057,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3039,
+        stage: '거래 계산',
+        active: true,
         note: 'ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE',
+        line: 34,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.',
+        hash: '06250cc0eff7314cbe6e853004dcfa93e4655556e5706dd2ce15e1db9204386b',
+        groupBy:
+          "GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period",
+        groupByLine: 45,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3039\n-- ICODE·금액 매핑은 상품별로 다릅니다. 쿠폰은 DISCOUNTAMOUNT, 나머지는 TRXAMOUNT를 사용합니다.\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_ALLIANCE:34\n-- SERVICECODE=12801. EXT2·상위/하위 가맹점·월·요율·주기별로 CPFEE와 CPVAT를 합산합니다.\n-- GROUP BY EXT2, case when c.isSubPay = '1' then isnull(a.subcpid, a.cpid) else a.cpid end, a.cpid, left(TDATE, 6), a.cprate, a.period\n-- SELECT\n--   sum(ISNULL(CPFEE, 0)) AS CPFEE,\n--   SUM(ISNULL(CPVAT,0)) AS CPVAT;",
   },
   {
     code: 'SELF-BASE-SCNT-EXCL',
@@ -1323,6 +2082,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'verified',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1345,11 +2109,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 308,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 288,
+        stage: '기본·초과요금 준비',
+        active: false,
+        note: '집계 건수를 기본 제공 건수와 초과 건수로 나눈 뒤 RAMT_F1·RAMT_F2를 준비합니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_cauth_publish:308\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  RAMT_F1 + RAMT_F2 AS CPFEE,\n  FLOOR((RAMT_F1 + RAMT_F2) * 0.1) AS CPVAT;',
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:308\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  RAMT_F1 + RAMT_F2 AS CPFEE,\n  FLOOR((RAMT_F1 + RAMT_F2) * 0.1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공\n\n-- 기본·초과요금 준비\n-- ADMINPROC.dbo.job_cauth_publish:288\n-- 집계 건수를 기본 제공 건수와 초과 건수로 나눈 뒤 RAMT_F1·RAMT_F2를 준비합니다.\n-- , CNT_T_F2 = CASE WHEN CNT_S-B.OFFER_CNT > 0 THEN CNT_S-B.OFFER_CNT ELSE 0 END \t\n-- \t\tFROM ACCOUNT..TCAUTH_DEMAND_TEMP A\n-- \t\t\tJOIN TELEDITOTHER..T_FIXED_CHARGE B\n-- \t\t\tON A.CHARGE_TYPE = B.CHARGE_TYPE \n-- \t\t\tAND A.SUB_TYPE = B.SUB_TYPE\n-- \t\tWHERE A.SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tAND A.BILLING_TYPE = 'F'\n-- \n-- \t\tUPDATE A\n-- \t\tSET RAMT_F1 = CASE WHEN CNT_T_F1 > 0 THEN B.BASIC_COST ELSE 0 END \n-- \t\t--\t, RAMT_F2 = CASE WHEN CNT_T_F2 > 0 THEN CNT_T_F2 * B.EXCESS_COST ELSE 0 END \n-- \t\t\t, RAMT_F2 = CASE WHEN CNT_T_F2 > 0 THEN CONVERT(NUMERIC(18,2),B.EXCESS_COST) ELSE 0 END * CNT_T_F2\t\t\t\t\n-- \t\tFROM ACCOUNT..TCAUTH_DEMAND_TEMP A\n-- \t\t\tJOIN TELEDITOTHER..T_FIXED_CHARGE B\n-- \t\t\tON A.CHARGE_TYPE = B.CHARGE_TYPE \n-- \t\t\tAND A.SUB_TYPE = B.SUB_TYPE\n-- \t\tWHERE A.SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tAND A.BILLING_TYPE = 'F'\n-- \n-- \t\tUPDATE ACCOUNT..TCAUTH_DEMAND_TEMP\n-- \t\tSET RAMT = RAMT_F1 + RAMT_F2\n-- \t\t\t, VAMT = FLOOR((RAMT_F1 + RAMT_F2) * 0.1)\n-- \t\tWHERE SDATE LIKE LEFT(@SDATE,6)+'%'",
   },
   {
     code: 'SELF-BASE-SCNT-ZERO',
@@ -1357,6 +2141,12 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'conditional',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+      unresolved: 'VAMT=0은 SP의 면세 CPID 목록에 해당할 때만 적용합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1379,17 +2169,39 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 308,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 351,
+        stage: '면세 후처리',
+        active: true,
         note: '면세 후처리',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 288,
+        stage: '기본·초과요금 준비',
+        active: false,
+        note: '집계 건수를 기본 제공 건수와 초과 건수로 나눈 뒤 RAMT_F1·RAMT_F2를 준비합니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_cauth_publish:308\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  RAMT_F1 + RAMT_F2 AS CPFEE,\n  FLOOR((RAMT_F1 + RAMT_F2) * 0.1) AS CPVAT;\n\n-- ADMINPROC.dbo.job_cauth_publish:351\n-- 면세 후처리\nSELECT\n  0 AS CPVAT;',
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 확인 필요: VAMT=0은 SP의 면세 CPID 목록에 해당할 때만 적용합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:308\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\n-- 면세 후처리\n-- ADMINPROC.dbo.job_cauth_publish:351\n-- 면세 후처리\nSELECT\n  RAMT_F1 + RAMT_F2 AS CPFEE,\n  0 AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공\n\n-- 기본·초과요금 준비\n-- ADMINPROC.dbo.job_cauth_publish:288\n-- 집계 건수를 기본 제공 건수와 초과 건수로 나눈 뒤 RAMT_F1·RAMT_F2를 준비합니다.\n-- , CNT_T_F2 = CASE WHEN CNT_S-B.OFFER_CNT > 0 THEN CNT_S-B.OFFER_CNT ELSE 0 END \t\n-- \t\tFROM ACCOUNT..TCAUTH_DEMAND_TEMP A\n-- \t\t\tJOIN TELEDITOTHER..T_FIXED_CHARGE B\n-- \t\t\tON A.CHARGE_TYPE = B.CHARGE_TYPE \n-- \t\t\tAND A.SUB_TYPE = B.SUB_TYPE\n-- \t\tWHERE A.SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tAND A.BILLING_TYPE = 'F'\n-- \n-- \t\tUPDATE A\n-- \t\tSET RAMT_F1 = CASE WHEN CNT_T_F1 > 0 THEN B.BASIC_COST ELSE 0 END \n-- \t\t--\t, RAMT_F2 = CASE WHEN CNT_T_F2 > 0 THEN CNT_T_F2 * B.EXCESS_COST ELSE 0 END \n-- \t\t\t, RAMT_F2 = CASE WHEN CNT_T_F2 > 0 THEN CONVERT(NUMERIC(18,2),B.EXCESS_COST) ELSE 0 END * CNT_T_F2\t\t\t\t\n-- \t\tFROM ACCOUNT..TCAUTH_DEMAND_TEMP A\n-- \t\t\tJOIN TELEDITOTHER..T_FIXED_CHARGE B\n-- \t\t\tON A.CHARGE_TYPE = B.CHARGE_TYPE \n-- \t\t\tAND A.SUB_TYPE = B.SUB_TYPE\n-- \t\tWHERE A.SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tAND A.BILLING_TYPE = 'F'\n-- \n-- \t\tUPDATE ACCOUNT..TCAUTH_DEMAND_TEMP\n-- \t\tSET RAMT = RAMT_F1 + RAMT_F2\n-- \t\t\t, VAMT = FLOOR((RAMT_F1 + RAMT_F2) * 0.1)\n-- \t\tWHERE SDATE LIKE LEFT(@SDATE,6)+'%'",
   },
   {
     code: 'SELF-BASE-TCNT-EXCL',
@@ -1397,6 +2209,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'verified',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1419,11 +2236,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 308,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 288,
+        stage: '기본·초과요금 준비',
+        active: false,
+        note: '집계 건수를 기본 제공 건수와 초과 건수로 나눈 뒤 RAMT_F1·RAMT_F2를 준비합니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_cauth_publish:308\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  RAMT_F1 + RAMT_F2 AS CPFEE,\n  FLOOR((RAMT_F1 + RAMT_F2) * 0.1) AS CPVAT;',
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:308\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  RAMT_F1 + RAMT_F2 AS CPFEE,\n  FLOOR((RAMT_F1 + RAMT_F2) * 0.1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공\n\n-- 기본·초과요금 준비\n-- ADMINPROC.dbo.job_cauth_publish:288\n-- 집계 건수를 기본 제공 건수와 초과 건수로 나눈 뒤 RAMT_F1·RAMT_F2를 준비합니다.\n-- , CNT_T_F2 = CASE WHEN CNT_S-B.OFFER_CNT > 0 THEN CNT_S-B.OFFER_CNT ELSE 0 END \t\n-- \t\tFROM ACCOUNT..TCAUTH_DEMAND_TEMP A\n-- \t\t\tJOIN TELEDITOTHER..T_FIXED_CHARGE B\n-- \t\t\tON A.CHARGE_TYPE = B.CHARGE_TYPE \n-- \t\t\tAND A.SUB_TYPE = B.SUB_TYPE\n-- \t\tWHERE A.SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tAND A.BILLING_TYPE = 'F'\n-- \n-- \t\tUPDATE A\n-- \t\tSET RAMT_F1 = CASE WHEN CNT_T_F1 > 0 THEN B.BASIC_COST ELSE 0 END \n-- \t\t--\t, RAMT_F2 = CASE WHEN CNT_T_F2 > 0 THEN CNT_T_F2 * B.EXCESS_COST ELSE 0 END \n-- \t\t\t, RAMT_F2 = CASE WHEN CNT_T_F2 > 0 THEN CONVERT(NUMERIC(18,2),B.EXCESS_COST) ELSE 0 END * CNT_T_F2\t\t\t\t\n-- \t\tFROM ACCOUNT..TCAUTH_DEMAND_TEMP A\n-- \t\t\tJOIN TELEDITOTHER..T_FIXED_CHARGE B\n-- \t\t\tON A.CHARGE_TYPE = B.CHARGE_TYPE \n-- \t\t\tAND A.SUB_TYPE = B.SUB_TYPE\n-- \t\tWHERE A.SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tAND A.BILLING_TYPE = 'F'\n-- \n-- \t\tUPDATE ACCOUNT..TCAUTH_DEMAND_TEMP\n-- \t\tSET RAMT = RAMT_F1 + RAMT_F2\n-- \t\t\t, VAMT = FLOOR((RAMT_F1 + RAMT_F2) * 0.1)\n-- \t\tWHERE SDATE LIKE LEFT(@SDATE,6)+'%'",
   },
   {
     code: 'SELF-SLIDE-SCNT-EXCL',
@@ -1431,6 +2268,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'verified',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1453,11 +2295,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 315,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 321,
+        stage: '구간요금 집계',
+        active: false,
+        note: '청구 상세의 RAMT를 DEMAND_NUM별로 합산한 B.RAMT를 사용합니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_cauth_publish:315\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  B.RAMT AS CPFEE,\n  FLOOR(B.RAMT * 0.1) AS CPVAT;',
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:315\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  B.RAMT AS CPFEE,\n  FLOOR(B.RAMT * 0.1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공\n\n-- 구간요금 집계\n-- ADMINPROC.dbo.job_cauth_publish:321\n-- 청구 상세의 RAMT를 DEMAND_NUM별로 합산한 B.RAMT를 사용합니다.\n-- SELECT DEMAND_NUM, SUM(RAMT) RAMT, COUNT(*) CNT\n-- \t\t\tFROM ACCOUNT..TCAUTH_DEMAND_DETAILS\n-- \t\t\tWHERE SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tGROUP BY DEMAND_NUM",
   },
   {
     code: 'SELF-SLIDE-SCNT-ZERO',
@@ -1465,6 +2327,12 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'conditional',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+      unresolved: 'VAMT=0은 SP의 면세 CPID 목록에 해당할 때만 적용합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1487,17 +2355,39 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 315,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 351,
+        stage: '면세 후처리',
+        active: true,
         note: '면세 후처리',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 321,
+        stage: '구간요금 집계',
+        active: false,
+        note: '청구 상세의 RAMT를 DEMAND_NUM별로 합산한 B.RAMT를 사용합니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_cauth_publish:315\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  B.RAMT AS CPFEE,\n  FLOOR(B.RAMT * 0.1) AS CPVAT;\n\n-- ADMINPROC.dbo.job_cauth_publish:351\n-- 면세 후처리\nSELECT\n  0 AS CPVAT;',
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 확인 필요: VAMT=0은 SP의 면세 CPID 목록에 해당할 때만 적용합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:315\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\n-- 면세 후처리\n-- ADMINPROC.dbo.job_cauth_publish:351\n-- 면세 후처리\nSELECT\n  B.RAMT AS CPFEE,\n  0 AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공\n\n-- 구간요금 집계\n-- ADMINPROC.dbo.job_cauth_publish:321\n-- 청구 상세의 RAMT를 DEMAND_NUM별로 합산한 B.RAMT를 사용합니다.\n-- SELECT DEMAND_NUM, SUM(RAMT) RAMT, COUNT(*) CNT\n-- \t\t\tFROM ACCOUNT..TCAUTH_DEMAND_DETAILS\n-- \t\t\tWHERE SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tGROUP BY DEMAND_NUM",
   },
   {
     code: 'SELF-SLIDE-TCNT-EXCL',
@@ -1505,6 +2395,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'verified',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1527,11 +2422,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 315,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 321,
+        stage: '구간요금 집계',
+        active: false,
+        note: '청구 상세의 RAMT를 DEMAND_NUM별로 합산한 B.RAMT를 사용합니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+      },
     ],
-    sql: '-- ADMINPROC.dbo.job_cauth_publish:315\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  B.RAMT AS CPFEE,\n  FLOOR(B.RAMT * 0.1) AS CPVAT;',
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:315\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  B.RAMT AS CPFEE,\n  FLOOR(B.RAMT * 0.1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공\n\n-- 구간요금 집계\n-- ADMINPROC.dbo.job_cauth_publish:321\n-- 청구 상세의 RAMT를 DEMAND_NUM별로 합산한 B.RAMT를 사용합니다.\n-- SELECT DEMAND_NUM, SUM(RAMT) RAMT, COUNT(*) CNT\n-- \t\t\tFROM ACCOUNT..TCAUTH_DEMAND_DETAILS\n-- \t\t\tWHERE SDATE LIKE LEFT(@SDATE,6)+'%'\n-- \t\t\tGROUP BY DEMAND_NUM",
   },
   {
     code: 'SELF-STANDARD-SCNT-EXCL',
@@ -1539,6 +2454,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'verified',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1561,11 +2481,23 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 273,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
     ],
-    sql: "-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;",
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공",
   },
   {
     code: 'SELF-STANDARD-SCNT-INCL',
@@ -1573,6 +2505,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'conditional',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+      unresolved:
+        'ROUNDDOWN=Y의 십원 단위 총액 재분리와 VAT 포함 상품은 동일 조건으로 확정하지 않습니다. 실제 계약 매핑을 확인해야 합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1595,17 +2534,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 273,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 341,
+        stage: '조건부 후처리',
+        active: false,
         note: 'ROUNDDOWN=Y 후처리 참고. VAT 포함 상품과의 적용 조건은 별도 확인이 필요합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
     ],
-    sql: "-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- ADMINPROC.dbo.job_cauth_publish:341\n-- ROUNDDOWN=Y 후처리 참고. VAT 포함 상품과의 적용 조건은 별도 확인이 필요합니다.\nSELECT\n  ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPFEE,\n  ROUND( VAMT + RAMT,-1 , 1) - ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPVAT;",
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 확인 필요: ROUNDDOWN=Y의 십원 단위 총액 재분리와 VAT 포함 상품은 동일 조건으로 확정하지 않습니다. 실제 계약 매핑을 확인해야 합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- 조건부 후처리\n-- ADMINPROC.dbo.job_cauth_publish:341\n-- ROUNDDOWN=Y 후처리 참고. VAT 포함 상품과의 적용 조건은 별도 확인이 필요합니다.\n-- SELECT\n--   ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPFEE,\n--   ROUND( VAMT + RAMT,-1 , 1) - ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공",
   },
   {
     code: 'SELF-STANDARD-TCNT-EXCL',
@@ -1613,6 +2566,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'verified',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1635,11 +2593,23 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 273,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
     ],
-    sql: "-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;",
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공",
   },
   {
     code: 'SELF-STANDARD-TCNT-INCL',
@@ -1647,6 +2617,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'conditional',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+      unresolved:
+        'ROUNDDOWN=Y의 십원 단위 총액 재분리와 VAT 포함 상품은 동일 조건으로 확정하지 않습니다. 실제 계약 매핑을 확인해야 합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1669,17 +2646,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 273,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 341,
+        stage: '조건부 후처리',
+        active: false,
         note: 'ROUNDDOWN=Y 후처리 참고. VAT 포함 상품과의 적용 조건은 별도 확인이 필요합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
     ],
-    sql: "-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- ADMINPROC.dbo.job_cauth_publish:341\n-- ROUNDDOWN=Y 후처리 참고. VAT 포함 상품과의 적용 조건은 별도 확인이 필요합니다.\nSELECT\n  ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPFEE,\n  ROUND( VAMT + RAMT,-1 , 1) - ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPVAT;",
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 확인 필요: ROUNDDOWN=Y의 십원 단위 총액 재분리와 VAT 포함 상품은 동일 조건으로 확정하지 않습니다. 실제 계약 매핑을 확인해야 합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- 조건부 후처리\n-- ADMINPROC.dbo.job_cauth_publish:341\n-- ROUNDDOWN=Y 후처리 참고. VAT 포함 상품과의 적용 조건은 별도 확인이 필요합니다.\n-- SELECT\n--   ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPFEE,\n--   ROUND( VAMT + RAMT,-1 , 1) - ROUND(ROUND( VAMT + RAMT, -1, 1)/1.1, 0, 1) AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공",
   },
   {
     code: 'SELF-STANDARD-TCNT-ZERO',
@@ -1687,6 +2678,12 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12001',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'count-aggregate',
+      status: 'conditional',
+      summary: '가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.',
+      unresolved: 'VAMT=0은 SP의 면세 CPID 목록에 해당할 때만 적용합니다.',
+    },
     settlement: {
       paymentMethod: 'OFFSET',
       feeCollection: 'PRE',
@@ -1709,17 +2706,31 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 273,
+        stage: '집계 후 청구 계산',
+        active: true,
         note: 'ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
       {
         name: 'ADMINPROC.dbo.job_cauth_publish',
         line: 351,
+        stage: '면세 후처리',
+        active: true,
         note: '면세 후처리',
         hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
       },
+      {
+        name: 'ADMINPROC.dbo.job_cauth_publish',
+        line: 86,
+        stage: '건수 집계',
+        active: false,
+        note: 'V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.',
+        hash: 'a2c0db1415152cfb810f2ed722b386c4f2d9e62cdbbcb8562ac7a486c79bc6c3',
+        groupBy: 'GROUP BY MERCHANTID',
+        groupByLine: 139,
+      },
     ],
-    sql: "-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  FLOOR(FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) * .1) AS CPVAT;\n\n-- ADMINPROC.dbo.job_cauth_publish:351\n-- 면세 후처리\nSELECT\n  0 AS CPVAT;",
+    sql: "-- 가맹점·청구기간별 건수를 먼저 집계한 뒤 일반·기본·구간 요금과 VAT를 계산합니다.\n\n-- 확인 필요: VAMT=0은 SP의 면세 CPID 목록에 해당할 때만 적용합니다.\n\n-- 집계 후 청구 계산\n-- ADMINPROC.dbo.job_cauth_publish:273\n-- ASIS 본인확인 11502 청구 SP. 건수·구간·기본요금 계산은 앞 단계에서 준비합니다.\n-- 면세 후처리\n-- ADMINPROC.dbo.job_cauth_publish:351\n-- 면세 후처리\nSELECT\n  FLOOR((CASE WHEN A.CNT_TYPE = 'S' THEN A.CNT_S ELSE A.CNT_S + A.CNT_F END -A.CNT_R) * B.COST) AS CPFEE,\n  0 AS CPVAT;\n\n-- 건수 집계\n-- ADMINPROC.dbo.job_cauth_publish:86\n-- V_AUTH의 성공·시도 건수를 MERCHANTID별로 집계해 TCAUTH_DEMAND_TEMP에 넣습니다. 거래마다 수수료를 산출하는 방식이 아닙니다.\n-- GROUP BY MERCHANTID\n-- ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0) [CNT_S],\n-- \t\t\tISNULL(SUM(SKTAUTHCNT+KTAUTHCNT+LGTAUTHCNT),0) - ISNULL(SUM(CASE WHEN DEMANDTYPE = 'S' THEN 1 END),0)\t\t\t\t [CNT_F], --시도-성공",
   },
   {
     code: 'SPCTLIMTCARD-BASIC',
@@ -1727,6 +2738,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12204',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1749,11 +2765,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2885,
+        stage: '거래 계산',
+        active: true,
         note: '',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_LECREDIT',
+        line: 55,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=12204. 기존 CPFEE·CPVAT·JAMT를 합산합니다. 일부 가맹점 VAT 조정은 별도 지급 행입니다.',
+        hash: 'dc99c16388d5519d4a936024648df9a5061a5260fa5e558a8404dc54a34da8ba',
+        groupBy:
+          'GROUP BY CPID, LEFT(TDATE,6), CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE',
+        groupByLine: 64,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2885\n-- \nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: '-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2885\nSELECT\n  ROUND(ABS(AMT) * CPRATE, 0) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_LECREDIT:55\n-- SERVICECODE=12204. 기존 CPFEE·CPVAT·JAMT를 합산합니다. 일부 가맹점 VAT 조정은 별도 지급 행입니다.\n-- GROUP BY CPID, LEFT(TDATE,6), CPRATE, B_FLAG, B_SFLAG, PAY_FLAG, PAY_SFLAG, PERIOD, PDATE_DUE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;',
   },
   {
     code: 'VACCOUNT-BASIC',
@@ -1761,6 +2790,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '12502',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1783,11 +2817,23 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2044,
+        stage: '거래 계산',
+        active: true,
         note: '일반/비일반 SUBTYPE에 따른 수수료 분기. +200 및 예외 조건을 확인하세요.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_VACCOUNT',
+        line: 26,
+        stage: '집계 입력',
+        active: false,
+        note: '입금·출금은 AMT 부호 조건별로 따로 집계합니다. CPID별 제외 조건도 적용합니다.',
+        hash: 'a00863a93dae4211507cebff2390b52678af9a30880597fe6a8bd42b81891daf',
+        groupBy: 'GROUP BY SERVICECODE, CPID, LEFT(TDATE, 6), CPRATE, PERIOD',
+        groupByLine: 41,
+      },
     ],
-    sql: "-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2044\n-- 일반/비일반 SUBTYPE에 따른 수수료 분기. +200 및 예외 조건을 확인하세요.\nSELECT\n  CASE WHEN A.SUBTYPE = '001' THEN B.AUTHRATE -- 일반 거래 건 \r\n\t\t\t\t\t\t\t\tELSE B.AUTHRATE + 200 END AS CPFEE,\n  CASE WHEN A.SUBTYPE = '001' THEN FLOOR(B.AUTHRATE * 0.1) -- 일반 거래 건 \r\n\t\t\t\t\t\t\t\tELSE FLOOR((B.AUTHRATE + 200) * 0.1) END AS CPVAT;",
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2044\n-- 일반/비일반 SUBTYPE에 따른 수수료 분기. +200 및 예외 조건을 확인하세요.\nSELECT\n  CASE WHEN A.SUBTYPE = '001' THEN B.AUTHRATE -- 일반 거래 건 \r\n\t\t\t\t\t\t\t\tELSE B.AUTHRATE + 200 END AS CPFEE,\n  CASE WHEN A.SUBTYPE = '001' THEN FLOOR(B.AUTHRATE * 0.1) -- 일반 거래 건 \r\n\t\t\t\t\t\t\t\tELSE FLOOR((B.AUTHRATE + 200) * 0.1) END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_VACCOUNT:26\n-- 입금·출금은 AMT 부호 조건별로 따로 집계합니다. CPID별 제외 조건도 적용합니다.\n-- GROUP BY SERVICECODE, CPID, LEFT(TDATE, 6), CPRATE, PERIOD\n-- SELECT\n--   sum(CPFEE) AS CPFEE,\n--   sum(CPVAT) AS CPVAT;",
   },
   {
     code: 'VISACYBERSOURCE-BASIC',
@@ -1795,6 +2841,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '50802',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'conditional',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+      unresolved:
+        '승인기준 계약 CPID 목록·통화 조건에 해당하는 집계 경로입니다. 다른 계약까지 일반화하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1817,11 +2870,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 3250,
+        stage: '거래 계산',
+        active: true,
         note: 'VAT 포함 금액을 올림한 값과 수수료 올림 값의 차액입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_MCA',
+        line: 26,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=50802, EXTRA=KRW의 승인기준 계약 가맹점 분기입니다.',
+        hash: 'ae4c8ba7afaaec4ec5a69cd52ddd13afbb3b632c1b72c27916f2c70aba66adb3',
+        groupBy:
+          'GROUP BY A.CPID , LEFT(TDATE,6), ITEMCODE, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD,  B_SFLAG, PDATE_DUE',
+        groupByLine: 39,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3250\n-- VAT 포함 금액을 올림한 값과 수수료 올림 값의 차액입니다.\nSELECT\n  CEILING(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  (CEILING(ABS(AMT) * (CPRATE+ CPRATE*0.1)) - CEILING(ABS(AMT) * CPRATE)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;',
+    sql: '-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 확인 필요: 승인기준 계약 CPID 목록·통화 조건에 해당하는 집계 경로입니다. 다른 계약까지 일반화하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:3250\n-- VAT 포함 금액을 올림한 값과 수수료 올림 값의 차액입니다.\nSELECT\n  CEILING(ABS(AMT) * CPRATE) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPFEE,\n  (CEILING(ABS(AMT) * (CPRATE+ CPRATE*0.1)) - CEILING(ABS(AMT) * CPRATE)) * CASE WHEN AMT < 0 THEN (-1) ELSE 1 END AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_MCA:26\n-- SERVICECODE=50802, EXTRA=KRW의 승인기준 계약 가맹점 분기입니다.\n-- GROUP BY A.CPID , LEFT(TDATE,6), ITEMCODE, CPRATE, B_FLAG, PAY_FLAG, PAY_SFLAG, PERIOD,  B_SFLAG, PDATE_DUE\n-- SELECT\n--   SUM(CPFEE) AS CPFEE,\n--   SUM(CPVAT) AS CPVAT;',
   },
   {
     code: 'WECHAT-OFFLINE',
@@ -1829,6 +2895,13 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '50415',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'transaction',
+      status: 'unverified',
+      summary:
+        '50415 거래 계산과 최종 바통 지급 이관은 확인했지만 최초 집계 입력식은 확인하지 못했습니다.',
+      unresolved: '50415의 최초 집계 입력식 미확인. 50418의 집계 SP를 재사용하지 않습니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1851,11 +2924,21 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_3',
         line: 2671,
+        stage: '거래 계산',
+        active: true,
         note: 'ASIS 서비스 12101, SUB_SERVICECODE=50415에 해당하는 바통 일반 분기입니다.',
         hash: 'a77f2ac097c4811a836700f66e155b92e777bde6a9c225413511344e891554c6',
       },
+      {
+        name: 'ACCOUNT.dbo.SP_TPAYNOTE_TOTAL',
+        line: 560,
+        stage: '최종 이관 · 참고',
+        active: false,
+        note: 'PY→50415 매핑으로 기존 ACCOUNT.TPAYNOTE_BARTONG 지급 결과를 이관합니다. 50418 전용 REGMON_BARTONG과 혼동하지 않습니다.',
+        hash: 'fa2b5a3a4ec22a09404adc8d8737997d7f3a2c350dcd3bae99b6995609844504',
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2671\n-- ASIS 서비스 12101, SUB_SERVICECODE=50415에 해당하는 바통 일반 분기입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * AMT/ABS(AMT) AS CPFEE,\n  FLOOR(ABS(AMT) * CPRATE * 0.1) * AMT/ABS(AMT) AS CPVAT;',
+    sql: "-- 50415 거래 계산과 최종 바통 지급 이관은 확인했지만 최초 집계 입력식은 확인하지 못했습니다.\n\n-- 확인 필요: 50415의 최초 집계 입력식 미확인. 50418의 집계 SP를 재사용하지 않습니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_3:2671\n-- ASIS 서비스 12101, SUB_SERVICECODE=50415에 해당하는 바통 일반 분기입니다.\nSELECT\n  FLOOR(ABS(AMT) * CPRATE) * AMT/ABS(AMT) AS CPFEE,\n  FLOOR(ABS(AMT) * CPRATE * 0.1) * AMT/ABS(AMT) AS CPVAT;\n\n-- 최종 이관 · 참고\n-- ACCOUNT.dbo.SP_TPAYNOTE_TOTAL:560\n-- PY→50415 매핑으로 기존 ACCOUNT.TPAYNOTE_BARTONG 지급 결과를 이관합니다. 50418 전용 REGMON_BARTONG과 혼동하지 않습니다.\n-- select  DISTINCT  CASE A.B_FLAG WHEN 'E' THEN '10602'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'GK' THEN '10602'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'PC' THEN '51001'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'PY' THEN '50415'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'T' THEN '10101'\n-- \t\t\t\t\t\t\t\t\t\t\t\tWHEN 'TC' THEN '10101' END  [SERVICECODE] ,\n-- \t'03' [PLFCODE] , --바통\n-- \tA.CPID [CPID]  ,\n--     NULL [SubCPID]  ,\n-- \tA.PDATE [pDate] ,\n-- \t'DP' [PayType] ,\n-- \tLEFT(A.PDATE, 6) [in_regmon] ,\n-- \tA.SDATE [sdate] ,\n-- \tA.EDATE [edate] ,\n-- \tA.mamt [mamt]   ,\n-- \tA.mamt_a [mamt_a]  ,\n-- \tA.mamt_r [mamt_r]  ,\n-- \tA.AMT [amt]  ,\n-- \tA.ramt [ramt]  ,\n-- \tA.ramt_a [ramt_a]  ,\n-- \tA.ramt_r [ramt_r]  ,\n-- \tA.vamt [vamt]  ,\n-- \tA.jamt [jamt]  ,\n-- \tA.jamt_a [jamt_a]  ,\n-- \tA.jamt_r [jamt_r]  ,\n-- \tNULL [paynum] ,\n-- \tB.bankcode [BANKCODE] ,\n-- \tB.ACCOUNT_ENC [ACCOUNT_ENC] ,\n-- \tB.depositor [DEPOSITOR]  ,\n-- \tA.remark [remark]\n-- from account..tpaynote_bartong  a INNER join PAYOUT..tpaylist b\n-- on a.cpid = b.cpid and a.pdate = b.p_date\n-- \t\tand a.jamt_r = b.amt AND B.B_FLAG = 'X'",
   },
   {
     code: 'WECHAT-SCHOOL-QR',
@@ -1863,6 +2946,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '50601',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1885,11 +2973,24 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_IN_BILL',
         line: 588,
+        stage: '거래 계산',
+        active: true,
         note: 'CLIENTTYPE=campus이면 원천 CHARGE를 수수료로 이관하며 VAT는 0입니다.',
         hash: '7c06cf455026b7cf5c4c089deefd3df9c04588aad29b58993f2fb02acefb543b',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_WECHAT',
+        line: 27,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=50601·50602. 원천에서 이관한 CHARGE/FEE를 합산합니다.',
+        hash: 'c0d327983cf2089376e92a410d3d3b9b3b045b22e8bda61c8cdb27b8dbf31ce3',
+        groupBy:
+          'GROUP BY SERVICECODE,b_flag, cpid, left(TDATE, 6), CPRATE, pay_flag, pay_sflag, PERIOD',
+        groupByLine: 36,
+      },
     ],
-    sql: "-- JUNGSAN.dbo.JOB_IN_BILL:588\n-- CLIENTTYPE=campus이면 원천 CHARGE를 수수료로 이관하며 VAT는 0입니다.\nSELECT\n  case when a.CLIENTTYPE ='campus' then a.CHARGE  end AS CPFEE,\n  case when a.CLIENTTYPE ='campus' then 0  end AS CPVAT;",
+    sql: "-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_IN_BILL:588\n-- CLIENTTYPE=campus이면 원천 CHARGE를 수수료로 이관하며 VAT는 0입니다.\nSELECT\n  case when a.CLIENTTYPE ='campus' then a.CHARGE  end AS CPFEE,\n  case when a.CLIENTTYPE ='campus' then 0  end AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_WECHAT:27\n-- SERVICECODE=50601·50602. 원천에서 이관한 CHARGE/FEE를 합산합니다.\n-- GROUP BY SERVICECODE,b_flag, cpid, left(TDATE, 6), CPRATE, pay_flag, pay_sflag, PERIOD\n-- SELECT\n--   sum(CPFEE) AS CPFEE,\n--   sum(CPVAT) AS CPVAT;",
   },
   {
     code: 'WECHAT-SCHOOL-WMP',
@@ -1897,6 +2998,11 @@ export const PRODUCT_EXAMPLES = [
     serviceCode: '50602',
     detailServiceCode: '00',
     engine: 'COMMON',
+    calculation: {
+      kind: 'sum-results',
+      status: 'verified',
+      summary: '거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.',
+    },
     settlement: {
       paymentMethod: 'PAYOUT',
       feeCollection: 'PRE',
@@ -1919,10 +3025,23 @@ export const PRODUCT_EXAMPLES = [
       {
         name: 'JUNGSAN.dbo.JOB_IN_BILL',
         line: 605,
+        stage: '거래 계산',
+        active: true,
         note: 'INSERT의 CPFEE/CPVAT 위치에 대응하는 원문 SELECT 표현식입니다. 원천 FEE를 그대로 이관합니다.',
         hash: '7c06cf455026b7cf5c4c089deefd3df9c04588aad29b58993f2fb02acefb543b',
       },
+      {
+        name: 'JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_WECHAT',
+        line: 27,
+        stage: '집계 입력',
+        active: false,
+        note: 'SERVICECODE=50601·50602. 원천에서 이관한 CHARGE/FEE를 합산합니다.',
+        hash: 'c0d327983cf2089376e92a410d3d3b9b3b045b22e8bda61c8cdb27b8dbf31ce3',
+        groupBy:
+          'GROUP BY SERVICECODE,b_flag, cpid, left(TDATE, 6), CPRATE, pay_flag, pay_sflag, PERIOD',
+        groupByLine: 36,
+      },
     ],
-    sql: '-- JUNGSAN.dbo.JOB_IN_BILL:605\n-- INSERT의 CPFEE/CPVAT 위치에 대응하는 원문 SELECT 표현식입니다. 원천 FEE를 그대로 이관합니다.\nSELECT\n  A.FEE AS CPFEE,\n  0 AS CPVAT;',
+    sql: '-- 거래별 수수료·VAT 계산 후 그 결과를 합산해 집계 테이블에 입력합니다.\n\n-- 거래 계산\n-- JUNGSAN.dbo.JOB_IN_BILL:605\n-- INSERT의 CPFEE/CPVAT 위치에 대응하는 원문 SELECT 표현식입니다. 원천 FEE를 그대로 이관합니다.\nSELECT\n  A.FEE AS CPFEE,\n  0 AS CPVAT;\n\n-- 집계 입력\n-- JUNGSAN.dbo.JOB_TB_BILL_STATUS_4_REGMON_WECHAT:27\n-- SERVICECODE=50601·50602. 원천에서 이관한 CHARGE/FEE를 합산합니다.\n-- GROUP BY SERVICECODE,b_flag, cpid, left(TDATE, 6), CPRATE, pay_flag, pay_sflag, PERIOD\n-- SELECT\n--   sum(CPFEE) AS CPFEE,\n--   sum(CPVAT) AS CPVAT;',
   },
 ];

@@ -1,8 +1,9 @@
 import { $, make } from './dom.js';
-import { PRODUCT_EXAMPLES, PRODUCT_SNAPSHOT_DATE } from '../product-examples.js';
+import { PRODUCT_SNAPSHOT_DATE } from '../product-examples.js';
 import { productByCode } from '../catalog.js';
 import { describeField } from '../domain.js';
 import { createTabs } from './workflow.js';
+import { createProductPicker } from './catalog.js';
 import {
   ASIS_FIELDS,
   MAX_ASIS_ROWS,
@@ -57,10 +58,10 @@ export function createVerification() {
     return createVerificationPanel(panel, { aggregate: index === 1 });
   });
   return {
-    loadInput(product, row) {
+    loadInput(product, input) {
       const index = needsAggregation(product) ? 1 : 0;
       tabs.select(index);
-      controllers[index].loadInput(product, row);
+      controllers[index].loadInput(product, input);
     },
   };
 }
@@ -94,8 +95,11 @@ function createVerificationPanel(root, { aggregate }) {
     $('asis-add-row').disabled = rows.length >= MAX_ASIS_ROWS;
     $('asis-row-count').textContent = `입력 ${rows.length}건`;
   }
-  for (const product of PRODUCT_EXAMPLES)
-    $('asis-product').append(new Option(`${product.code} · ${product.name}`, product.code));
+  const picker = createProductPicker({
+    service: $('asis-service'),
+    select: $('asis-product'),
+    products: () => [...availableProducts.values()],
+  });
 
   function updateProduct() {
     const product = selectedProduct();
@@ -105,13 +109,15 @@ function createVerificationPanel(root, { aggregate }) {
         status: product.expected[key] === null ? 'unknown' : 'known',
       });
     $('asis-product-info').textContent = product
-      ? `${product.name} · ${fieldLabel('FEE_TYPE_DVCD')} · 수수료 ${fieldLabel('FEE_SMT_CALC_BASE_DVCD')} / VAT ${product.expected.VAT_DVCD === 'ZERO' ? '0원 (면세)' : fieldLabel('VAT_SMT_CALC_BASE_DVCD')} · ${product.source === 'analysis' ? '현재 수식 분석 설정' : `${PRODUCT_SNAPSHOT_DATE} DB 설정`}${product.engine !== 'COMMON' ? ' · 특이 계산 미지원' : ''}`
+      ? `${product.name} · ${fieldLabel('FEE_TYPE_DVCD')} · 수수료 ${fieldLabel('FEE_SMT_CALC_BASE_DVCD')} / VAT ${product.expected.VAT_DVCD === 'ZERO' ? '0원 (면세)' : fieldLabel('VAT_SMT_CALC_BASE_DVCD')} · ${['analysis', 'draft'].includes(product.source) ? '직접 판단한 상품 설정' : `${PRODUCT_SNAPSHOT_DATE} DB 설정`}${product.engine !== 'COMMON' ? ' · 특이 계산 미지원' : ''}`
       : '검증할 상품을 선택하세요. SQL 분석 없이 AS-IS 데이터만 입력해도 돼요.';
-    $('asis-scope-help').textContent = aggregate
-      ? '입력한 거래 전체를 합산해요. 같은 가맹점·정산기간·요율의 거래를 넣어 주세요.'
-      : needsAggregation(product)
-        ? '각 행을 독립된 정산 단위로 계산해요. 합산 상품의 거래 원장은 합산 검증 탭에서 확인하세요.'
-        : '거래마다 계산해 AS-IS 결과와 비교해요.';
+    $('asis-scope-help').textContent = !product
+      ? ''
+      : aggregate
+        ? '같은 가맹점·정산기간·요율의 거래를 합산해요.'
+        : needsAggregation(product)
+          ? '각 행을 독립된 정산 단위로 계산해요. 거래 원장은 합산 검증을 사용하세요.'
+          : '';
     renderInputs();
     invalidate();
   }
@@ -215,7 +221,7 @@ function createVerificationPanel(root, { aggregate }) {
     if (rows.some((row) => row.targetAmount)) $('asis-show-target').checked = true;
     if (!selectedProduct()) {
       const codes = [...new Set(rows.map((row) => row.productCode).filter(Boolean))];
-      if (codes.length === 1 && productByCode.has(codes[0])) $('asis-product').value = codes[0];
+      if (codes.length === 1 && availableProducts.has(codes[0])) picker.setValue(codes[0]);
       else if (codes.length > 1) $('asis-row-products').checked = true;
     }
     $('asis-import-info').textContent = `${rows.length}행`;
@@ -231,8 +237,8 @@ function createVerificationPanel(root, { aggregate }) {
     // When no product was chosen, use a single input product to select fixed/rate columns correctly.
     const firstMapped = mapAsisRows(table, mapping);
     const codes = [...new Set(firstMapped.map((row) => row.productCode).filter(Boolean))];
-    if (!selectedProduct() && codes.length === 1 && productByCode.has(codes[0])) {
-      $('asis-product').value = codes[0];
+    if (!selectedProduct() && codes.length === 1 && availableProducts.has(codes[0])) {
+      picker.setValue(codes[0]);
       mapping = detectAsisMapping(table.headers, selectedProduct());
     }
     renderMapping();
@@ -346,7 +352,7 @@ function createVerificationPanel(root, { aggregate }) {
   };
   $('asis-sample').onclick = () => {
     fileRevision++;
-    $('asis-product').value = 'OPENBANKING-RATE';
+    picker.setValue('OPENBANKING-RATE');
     $('asis-rate-unit').value = 'ratio';
     $('asis-row-products').checked = false;
     $('asis-paste').value = OPENBANKING_ASIS_SAMPLE;
@@ -470,14 +476,11 @@ function createVerificationPanel(root, { aggregate }) {
   };
   updateProduct();
   return {
-    loadInput(product, row) {
+    loadInput(product, input) {
       fileRevision++;
-      if (!availableProducts.has(product.code)) {
-        $('asis-product').append(new Option(`${product.code} · ${product.name}`, product.code));
-      }
       availableProducts.set(product.code, product);
-      $('asis-product').value = product.code;
-      rows = [structuredClone(row)];
+      picker.setValue(product.code);
+      rows = structuredClone(Array.isArray(input) ? input : [input]);
       sourceTable = null;
       mapping = {};
       pendingPaste = false;
@@ -487,9 +490,9 @@ function createVerificationPanel(root, { aggregate }) {
       $('asis-filter').value = 'all';
       $('asis-row-products').checked = false;
       $('asis-rate-unit').value = 'ratio';
-      $('asis-show-target').checked = false;
-      $('asis-compare').checked = ['asisFee', 'asisVat', 'asisPayout'].some((key) =>
-        row[key]?.trim(),
+      $('asis-show-target').checked = rows.some((row) => row.targetAmount);
+      $('asis-compare').checked = rows.some((row) =>
+        ['asisFee', 'asisVat', 'asisPayout'].some((key) => row[key]?.trim()),
       );
       renderMapping();
       updateProduct();
