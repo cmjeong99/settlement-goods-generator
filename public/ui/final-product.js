@@ -54,6 +54,7 @@ export function createFinalProduct({ onChange }) {
       $('copy-success').hidden = true;
     },
     celebrate(complete = false, format = 'tsv') {
+      const identity = draft().name;
       const success = $('copy-success');
       success.classList.remove('is-celebrating');
       success.hidden = false;
@@ -67,7 +68,7 @@ export function createFinalProduct({ onChange }) {
             : '현재 상품 표를 복사했어요';
       $('copy-success-description').textContent =
         format === 'sql'
-          ? '현재 상품의 코드·이름과 계산 설정을 반영했어요.'
+          ? `${identity?.name ?? ''} (${identity?.code ?? ''})의 INSERT 쿼리예요.`
           : complete
             ? '복사했어요. 필요한 곳에 붙여넣으세요.'
             : '';

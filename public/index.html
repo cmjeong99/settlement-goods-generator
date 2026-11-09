@@ -364,12 +364,12 @@
               <label
                 >상품코드<input
                   id="final-code"
-                  maxlength="128"
+                  maxlength="100"
                   placeholder="상품코드 (선택)"
                   disabled
               /></label>
               <label
-                >상품명<input id="final-name" maxlength="200" placeholder="상품명 (선택)" disabled
+                >상품명<input id="final-name" maxlength="100" placeholder="상품명 (선택)" disabled
               /></label>
             </div>
             <div id="product-table-final"></div>
@@ -380,6 +380,7 @@
                 INSERT를 복사할 수 있어요.
               </p>
               <div id="insert-required" class="column-options"></div>
+              <p id="insert-service-name" role="status" aria-live="polite"></p>
               <details>
                 <summary>통화·계산 엔진 등 추가 정보</summary>
                 <p>빈 항목은 INSERT에서 생략하고 DB 기본값을 사용해요.</p>
@@ -387,8 +388,12 @@
               </details>
             </details>
             <p id="final-errors" class="action-hint" role="status" aria-live="polite"></p>
-            <details class="naming-area supporting-details">
+            <details class="naming-area supporting-details" open>
               <summary>이름 추천</summary>
+              <p class="section-hint">
+                등록한 서비스 정보로 이름을 추천해요. 추천 항목을 선택하면 위 상품코드·상품명과
+                복사할 INSERT에 반영돼요.
+              </p>
               <div class="name-actions">
                 <label for="description"
                   >서비스명 또는 설명 <span class="muted">(선택)</span

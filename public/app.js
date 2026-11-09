@@ -126,6 +126,11 @@ function syncActions() {
       ? `INSERT 복사: ${insertErrors.join(' ')}`
       : '';
   $('suggest-name').disabled = !usable || draft.errors.length > 0;
+  for (const button of $('names').children)
+    button.setAttribute(
+      'aria-pressed',
+      String(draft.name?.code === button.dataset.code && draft.name?.name === button.dataset.name),
+    );
   $('name-help').dataset.kind = namingError ? 'error' : 'info';
   $('name-help').textContent =
     namingError ||
@@ -286,14 +291,20 @@ function suggestProductNames() {
       columns: columns(),
       description: $('description').value,
       fields: result.fields,
+      registration: finalProduct.draft().registration,
     });
     $('names-panel').hidden = false;
     $('names').replaceChildren();
     for (const candidate of candidates) {
       const button = make('button');
+      button.dataset.code = candidate.code;
+      button.dataset.name = candidate.name;
       button.setAttribute(
         'aria-pressed',
-        String(finalProduct.draft().name?.code === candidate.code),
+        String(
+          finalProduct.draft().name?.code === candidate.code &&
+            finalProduct.draft().name?.name === candidate.name,
+        ),
       );
       button.append(
         make('strong', candidate.name),

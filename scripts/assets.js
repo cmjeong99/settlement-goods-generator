@@ -25,6 +25,7 @@ export const browserAssets = Object.freeze([
   'final-product.js',
   'product-table.js',
   'product-insert.js',
+  'service-catalog.js',
   'ui/insert-registration.js',
   'rounding-policy.js',
   'product-examples.js',
