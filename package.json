@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "vendor:sync": "node scripts/sync-editor-vendor.js",
     "start": "node --env-file-if-exists=.env server.js",
     "test": "node --test",
     "build": "node scripts/build.js",
@@ -17,5 +18,9 @@
   },
   "devDependencies": {
     "prettier": "3.9.10"
+  },
+  "dependencies": {
+    "prismjs": "1.30.0",
+    "sql-formatter": "15.9.0"
   }
 }

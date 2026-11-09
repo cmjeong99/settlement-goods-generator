@@ -1,6 +1,6 @@
 import { analyze } from './analyzer.js';
 import { FIELDS, explainCalculation } from './domain.js';
-import { exportProductTable } from './product-table.js';
+import { exportProductTable, productInsertErrors } from './product-table.js';
 import { EXAMPLES } from './examples.js';
 import { suggestNames } from './naming.js';
 import { $, make, observeTableOverflow } from './ui/dom.js';
@@ -14,8 +14,10 @@ import { createFinalProduct } from './ui/final-product.js';
 import { createDecisionReview } from './ui/decision-review.js';
 import { createProductTable } from './ui/product-table.js';
 import { createHistory } from './ui/history.js';
+import { createSqlEditor } from './ui/sql-editor.js';
 
 const syncTableOverflow = observeTableOverflow();
+const sqlEditor = createSqlEditor({ onMessage: message });
 const workflow = createWorkflow({
   onStepChange(step) {
     progressTable.mount(step);
@@ -116,6 +118,13 @@ function syncActions() {
   $('analyze').disabled = !$('sql').value.trim();
   const draft = finalProduct.draft();
   $('markdown').disabled = $('tsv').disabled = !r || draft.errors.length > 0;
+  const insertErrors = productInsertErrors(draft.result, draft.name);
+  $('copy-insert').disabled = !r || draft.errors.length > 0 || insertErrors.length > 0;
+  $('copy-hint').textContent = !r
+    ? '분석 결과가 나오면 복사할 수 있어요.'
+    : insertErrors.length
+      ? `INSERT 복사: ${insertErrors.join(' ')}`
+      : '';
   $('suggest-name').disabled = !usable || draft.errors.length > 0;
   $('name-help').dataset.kind = namingError ? 'error' : 'info';
   $('name-help').textContent =
@@ -140,6 +149,7 @@ function syncLines() {
   const count = $('sql').value.split('\n').length;
   $('gutter').textContent = Array.from({ length: count }, (_, i) => i + 1).join('\n');
   $('input-info').textContent = `${count}행 · ${$('sql').value.length.toLocaleString()}자`;
+  sqlEditor.sync();
 }
 $('sql').addEventListener('input', () => {
   if (productByCode.get($('example').value)?.inputScope) $('input-scope').value = 'row';
@@ -158,9 +168,6 @@ for (const id of ['fee-column', 'vat-column'])
     resetResults();
     message('컬럼명이 바뀌었어요. 수식을 다시 분석해 주세요.');
   });
-$('sql').addEventListener('scroll', () => {
-  $('gutter').scrollTop = $('sql').scrollTop;
-});
 $('input-scope').onchange = () => {
   resetResults();
   message('입력 기준이 바뀌었어요. 수식을 다시 분석해 주세요.');
@@ -242,6 +249,7 @@ function render() {
 async function copy(format) {
   const draft = finalProduct.draft();
   if (!draft.result || draft.errors.length) return;
+  if (format === 'sql' && productInsertErrors(draft.result, draft.name).length) return;
   const copiedRevision = finalProduct.revision;
   const historyContext = { sql: $('sql').value, tests: quickVerification.history };
   finalProduct.clearCelebration();
@@ -253,7 +261,7 @@ async function copy(format) {
       return;
     }
     workflow.setSummary(3, '복사 완료');
-    finalProduct.celebrate(completedProduct());
+    finalProduct.celebrate(completedProduct(), format);
     message(historyError, historyError ? 'error' : 'info');
   } catch {
     message(
@@ -264,6 +272,7 @@ async function copy(format) {
 }
 $('markdown').onclick = () => copy('markdown');
 $('tsv').onclick = () => copy('tsv');
+$('copy-insert').onclick = () => copy('sql');
 function suggestProductNames() {
   if ($('suggest-name').disabled || !base()) return;
   namingError = '';

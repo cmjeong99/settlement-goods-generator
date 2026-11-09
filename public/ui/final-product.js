@@ -49,18 +49,24 @@ export function createFinalProduct({ onChange }) {
     clearCelebration() {
       $('copy-success').hidden = true;
     },
-    celebrate(complete = false) {
+    celebrate(complete = false, format = 'tsv') {
       const success = $('copy-success');
       success.classList.remove('is-celebrating');
       success.hidden = false;
       void success.offsetWidth;
       if (complete) success.classList.add('is-celebrating');
-      $('copy-success-title').textContent = complete
-        ? '다날 정산 상품을 만들었어요!'
-        : '현재 상품 표를 복사했어요';
-      $('copy-success-description').textContent = complete
-        ? '복사했어요. 필요한 곳에 붙여넣으세요.'
-        : '';
+      $('copy-success-title').textContent =
+        format === 'sql'
+          ? 'INSERT 쿼리를 복사했어요'
+          : complete
+            ? '다날 정산 상품을 만들었어요!'
+            : '현재 상품 표를 복사했어요';
+      $('copy-success-description').textContent =
+        format === 'sql'
+          ? '현재 상품의 코드·이름과 계산 설정을 반영했어요.'
+          : complete
+            ? '복사했어요. 필요한 곳에 붙여넣으세요.'
+            : '';
       success.scrollIntoView({ block: 'nearest' });
     },
     setName(name) {

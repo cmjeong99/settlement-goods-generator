@@ -64,21 +64,39 @@
                 </div>
               </div>
               <p class="sr-only" id="sql-hint">
-                수수료·부가세 계산식을 붙여 넣거나 예제를 선택하세요.
+                수수료·부가세 계산식을 붙여 넣거나 예제를 선택하세요. SQL 정렬 단축키는 Ctrl 또는
+                Command + Shift + F입니다.
               </p>
               <div class="editor-meta">
                 <span class="editor-language">MSSQL</span
                 ><span class="sr-only">SQL 실행·DB 연결 없이 분석해요.</span>
+                <div class="tools">
+                  <button id="undo-format-sql" type="button" class="text-button" hidden>
+                    정렬 되돌리기
+                  </button>
+                  <button id="format-sql" type="button" title="Ctrl / ⌘ + Shift + F" disabled>
+                    SQL 정렬
+                  </button>
+                </div>
               </div>
               <div class="editor">
                 <pre id="gutter" aria-hidden="true">1</pre>
-                <textarea
-                  id="sql"
-                  aria-label="MSSQL 수식 입력"
-                  aria-describedby="sql-hint"
-                  spellcheck="false"
-                  placeholder="CPFEE = ROUND(ABS(AMT) * CPRATE, 0)&#10;, CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1)"
-                ></textarea>
+                <div class="sql-surface">
+                  <pre
+                    id="sql-highlight"
+                    aria-hidden="true"
+                  ><code id="sql-highlight-code"></code></pre>
+                  <textarea
+                    id="sql"
+                    aria-label="MSSQL 수식 입력"
+                    aria-describedby="sql-hint"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    autocomplete="off"
+                    wrap="off"
+                    placeholder="CPFEE = ROUND(ABS(AMT) * CPRATE, 0)&#10;, CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1)"
+                  ></textarea>
+                </div>
               </div>
               <div class="editor-footer">
                 <div>
@@ -389,6 +407,9 @@
                 <button id="tsv" class="primary" aria-describedby="copy-hint" disabled>
                   엑셀용 복사</button
                 ><button id="markdown" aria-describedby="copy-hint" disabled>Markdown 복사</button>
+                <button id="copy-insert" aria-describedby="copy-hint" disabled>
+                  INSERT 쿼리 복사
+                </button>
               </div>
               <p id="copy-hint" class="copy-hint">분석 결과가 나오면 복사할 수 있어요.</p>
             </div>
@@ -638,6 +659,9 @@
         ><span>검토용 설정 코드예요. 상품을 DB에 직접 등록하지 않아요.</span>
       </footer>
     </main>
+    <script src="./vendor/prism-core.min.js" data-manual></script>
+    <script src="./vendor/prism-sql.min.js"></script>
+    <script src="./vendor/sql-formatter.min.js"></script>
     <script type="module" src="./app.js"></script>
   </body>
 </html>

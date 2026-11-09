@@ -256,7 +256,7 @@ textarea::placeholder {
 }
 .editor {
   display: flex;
-  height: 210px;
+  height: 330px;
   background: #fff;
   padding-top: 16px;
   overflow: hidden;
@@ -273,7 +273,7 @@ textarea::placeholder {
   user-select: none;
   overflow: hidden;
   font:
-    14px/26px Consolas,
+    17px/30px Consolas,
     monospace;
 }
 textarea {
@@ -290,6 +290,93 @@ textarea {
   color: var(--ink);
   white-space: pre;
   tab-size: 2;
+}
+.sql-surface {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+#sql,
+#sql-highlight {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0 16px 24px;
+  font:
+    17px/30px Consolas,
+    'Malgun Gothic',
+    monospace;
+  font-variant-ligatures: none;
+  letter-spacing: normal;
+  white-space: pre;
+  tab-size: 2;
+  overflow: auto;
+}
+#sql-highlight {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  color: var(--ink);
+}
+#sql-highlight code {
+  font: inherit;
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+#sql {
+  position: relative;
+  display: block;
+  color: transparent;
+  caret-color: var(--ink);
+  -webkit-text-fill-color: transparent;
+}
+#sql::placeholder {
+  -webkit-text-fill-color: #68717f;
+}
+#sql::selection {
+  background: #b8d5ff80;
+}
+#sql-highlight .token.comment {
+  color: #64716b;
+}
+#sql-highlight .token.keyword,
+#sql-highlight .token.boolean {
+  color: #7b31a3;
+}
+#sql-highlight .token.function {
+  color: #075eb5;
+}
+#sql-highlight .token.string {
+  color: #a33821;
+}
+#sql-highlight .token.number {
+  color: #087567;
+}
+#sql-highlight .token.variable,
+#sql-highlight .token.identifier {
+  color: #805417;
+}
+#sql-highlight .token.operator,
+#sql-highlight .token.punctuation {
+  color: #536174;
+}
+.editor-meta button {
+  min-height: 34px;
+  padding: 5px 10px;
+  font-size: 13px;
+}
+@media (forced-colors: active) {
+  #sql {
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
+  #sql-highlight {
+    visibility: hidden;
+  }
 }
 .advanced-input {
   padding: 12px 24px;
@@ -651,7 +738,7 @@ td {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   font:
-    13px/1.9 Consolas,
+    15px/1.9 Consolas,
     'Malgun Gothic',
     monospace;
   background: var(--soft);
@@ -900,7 +987,7 @@ footer {
     margin: 14px 16px;
   }
   .editor {
-    height: 250px;
+    height: 300px;
   }
   textarea {
     font-size: 13px;

@@ -4,6 +4,12 @@ export const browserAssets = Object.freeze([
   'index.html',
   'styles.css',
   'app.js',
+  'sql-tools.js',
+  'ui/sql-editor.js',
+  'vendor/prism-core.min.js',
+  'vendor/prism-sql.min.js',
+  'vendor/sql-formatter.min.js',
+  'vendor/LICENSES.md',
   'parser.js',
   'analyzer.js',
   'update-pairs.js',
@@ -40,4 +46,5 @@ export const contentTypes = Object.freeze({
   html: 'text/html; charset=utf-8',
   js: 'text/javascript; charset=utf-8',
   css: 'text/css; charset=utf-8',
+  md: 'text/plain; charset=utf-8',
 });

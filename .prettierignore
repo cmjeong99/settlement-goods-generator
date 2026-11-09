@@ -3,5 +3,6 @@ node_modules/
 artifacts/
 public/confluence-macro.html
 package-lock.json
+public/vendor/
 .env
 .env.*

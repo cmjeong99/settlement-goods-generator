@@ -47,5 +47,36 @@ export function productTable(result, name) {
 }
 
 export function exportProductTable(result, format, name) {
+  if (format === 'sql') {
+    const errors = productInsertErrors(result, name);
+    if (errors.length) throw new Error(errors.join(' '));
+    const literal = (value) => `'${String(value).replace(/'/g, "''")}'`;
+    const values = [
+      literal(name.code.trim()),
+      literal(name.name.trim()),
+      ...FIELDS.map(([key, , options]) => {
+        const cell = result.fields[key];
+        if (cell.status === 'not-applicable') return 'NULL';
+        return options ? literal(cell.value) : String(cell.value);
+      }),
+    ];
+    // Oracle statement execution expects SQL without a client-side terminator.
+    return `INSERT INTO TB_SSI_MERC_SMT_GDS_M (\n  ${PRODUCT_COLUMNS.map(([key]) => key).join(',\n  ')}\n) VALUES (\n  ${values.join(',\n  ')}\n)`;
+  }
   return exportRow(result, format, name ?? { code: '', name: '' });
+}
+
+export function productInsertErrors(result, name) {
+  if (!result) return ['수식을 먼저 분석해 주세요.'];
+  const errors = [];
+  if (!name?.code?.trim() || !name?.name?.trim()) errors.push('상품코드와 상품명을 입력해 주세요.');
+  const pending = FIELDS.filter(([key, , options]) => {
+    const cell = result.fields[key];
+    if (cell?.status === 'not-applicable') return false;
+    if (cell?.status !== 'known') return true;
+    return options ? !options.includes(cell.value) : !Number.isFinite(cell.value) || cell.value < 0;
+  });
+  if (pending.length)
+    errors.push(`다음 설정을 확정해 주세요: ${pending.map(([, label]) => label).join(', ')}.`);
+  return errors;
 }
