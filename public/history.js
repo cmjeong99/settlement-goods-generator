@@ -1,11 +1,13 @@
 import { FIELDS } from './domain.js';
+import { INSERT_FIELDS, normalizeRegistration } from './product-insert.js';
 
 export const HISTORY_KEY = 'danal.settlement.history.v1';
 export const HISTORY_LIMIT = 50;
 
-export function historySnapshot({ result, name }, { sql, tests = [] }) {
+export function historySnapshot({ result, name, registration }, { sql, tests = [] }) {
   return {
     name: name ? { code: name.code, name: name.name } : null,
+    ...(registration ? { registration: normalizeRegistration(registration) } : {}),
     sql,
     inputScope: result.inputScope ?? 'row',
     fields: Object.fromEntries(
@@ -30,6 +32,13 @@ function validEntry(entry) {
     ['row', 'settlement'].includes(entry.inputScope) &&
     (entry.name === null ||
       (entry.name && typeof entry.name.code === 'string' && typeof entry.name.name === 'string')) &&
+    (entry.registration === undefined ||
+      (entry.registration &&
+        !Array.isArray(entry.registration) &&
+        Object.entries(entry.registration).every(([key, value]) => {
+          const field = INSERT_FIELDS.find(([column]) => column === key);
+          return field && typeof value === 'string' && Array.from(value).length <= field[2];
+        }))) &&
     entry.fields &&
     FIELDS.every(([key, , values]) => {
       const cell = entry.fields[key];

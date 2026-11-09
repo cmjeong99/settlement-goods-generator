@@ -410,6 +410,22 @@ summary:hover {
   gap: 7px;
   font-size: 14px;
 }
+.insert-registration {
+  margin: 16px 24px;
+}
+.insert-registration p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 8px 0;
+}
+.insert-registration .column-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  margin-bottom: 16px;
+}
+.insert-registration .column-options label {
+  min-width: 0;
+}
 .editor-footer {
   padding: 16px 24px;
   display: flex;

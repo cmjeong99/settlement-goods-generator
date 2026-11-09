@@ -118,7 +118,7 @@ function syncActions() {
   $('analyze').disabled = !$('sql').value.trim();
   const draft = finalProduct.draft();
   $('markdown').disabled = $('tsv').disabled = !r || draft.errors.length > 0;
-  const insertErrors = productInsertErrors(draft.result, draft.name);
+  const insertErrors = productInsertErrors(draft.result, draft.name, draft.registration);
   $('copy-insert').disabled = !r || draft.errors.length > 0 || insertErrors.length > 0;
   $('copy-hint').textContent = !r
     ? '분석 결과가 나오면 복사할 수 있어요.'
@@ -249,12 +249,15 @@ function render() {
 async function copy(format) {
   const draft = finalProduct.draft();
   if (!draft.result || draft.errors.length) return;
-  if (format === 'sql' && productInsertErrors(draft.result, draft.name).length) return;
+  if (format === 'sql' && productInsertErrors(draft.result, draft.name, draft.registration).length)
+    return;
   const copiedRevision = finalProduct.revision;
   const historyContext = { sql: $('sql').value, tests: quickVerification.history };
   finalProduct.clearCelebration();
   try {
-    await navigator.clipboard.writeText(exportProductTable(draft.result, format, draft.name));
+    await navigator.clipboard.writeText(
+      exportProductTable(draft.result, format, draft.name, draft.registration),
+    );
     const historyError = productHistory.save(draft, historyContext);
     if (finalProduct.revision !== copiedRevision) {
       message('복사 요청 후 상품이 변경됐어요. 수정한 최종값을 다시 복사해 주세요.');

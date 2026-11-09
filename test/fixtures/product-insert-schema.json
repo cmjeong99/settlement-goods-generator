@@ -1,0 +1,330 @@
+{
+  "table": "TB_SSI_MERC_SMT_GDS_M",
+  "checkedAt": "2026-11-09",
+  "columns": [
+    {
+      "column": "SMT_GDS_CD",
+      "type": "VARCHAR2",
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "SMT_GDS_NM",
+      "type": "VARCHAR2",
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "SRVC_CD",
+      "type": "VARCHAR2",
+      "length": 5,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "DTLS_SRVC_CD",
+      "type": "VARCHAR2",
+      "length": 5,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "SMT_TRGT_BASE_DVCD",
+      "type": "VARCHAR2",
+      "length": 20,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "SMT_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "FRIM_BASE_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "TRFS_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "FEE_TYPE_DVCD",
+      "type": "VARCHAR2",
+      "length": 5,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "MIN_FEE_SETP_YN",
+      "type": "VARCHAR2",
+      "length": 1,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "VAT_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "FEE_SMT_CALC_BASE_DVCD",
+      "type": "VARCHAR2",
+      "length": 5,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "FEE_SMT_CALC_MHOD_DVCD",
+      "type": "VARCHAR2",
+      "length": 15,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "FEE_SMT_CALC_UNIT_VAL",
+      "type": "NUMBER",
+      "length": 0,
+      "precision": 3,
+      "scale": 0,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "VAT_CALC_TRGT_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "VAT_SMT_CALC_BASE_DVCD",
+      "type": "VARCHAR2",
+      "length": 5,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "VAT_SMT_CALC_MHOD_DVCD",
+      "type": "VARCHAR2",
+      "length": 15,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "VAT_SMT_CALC_UNIT_VAL",
+      "type": "NUMBER",
+      "length": 0,
+      "precision": 3,
+      "scale": 0,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "ABS_PROCS_YN",
+      "type": "VARCHAR2",
+      "length": 1,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "SIGN_APLY_LOCT_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "CANC_FEE_PLCY_DVCD",
+      "type": "VARCHAR2",
+      "length": 20,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "FEE_RCVG_DVCD",
+      "type": "VARCHAR2",
+      "length": 5,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": "'PRE'"
+    },
+    {
+      "column": "PAYM_MHOD_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "MERC_PMT_CURN_CD",
+      "type": "VARCHAR2",
+      "length": 3,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": "'KRW'"
+    },
+    {
+      "column": "ORCM_APRV_CURN_CD",
+      "type": "VARCHAR2",
+      "length": 3,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": "'KRW'"
+    },
+    {
+      "column": "ORCM_SMT_CURN_CD",
+      "type": "VARCHAR2",
+      "length": 3,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": "'KRW'"
+    },
+    {
+      "column": "MERC_SMT_CURN_CD",
+      "type": "VARCHAR2",
+      "length": 3,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": "'KRW'"
+    },
+    {
+      "column": "EXRT_APLY_PNTM_DVCD",
+      "type": "VARCHAR2",
+      "length": 10,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "CALC_ENGE_DVCD",
+      "type": "VARCHAR2",
+      "length": 20,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "RMK",
+      "type": "VARCHAR2",
+      "length": 4000,
+      "precision": null,
+      "scale": null,
+      "nullable": true,
+      "defaultValue": null
+    },
+    {
+      "column": "FRST_REG_DTTM",
+      "type": "TIMESTAMP(6)",
+      "length": 0,
+      "precision": null,
+      "scale": 6,
+      "nullable": false,
+      "defaultValue": "SYSTIMESTAMP"
+    },
+    {
+      "column": "FRST_REG_USER_ID",
+      "type": "VARCHAR2",
+      "length": 30,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "FRST_REG_PROG_NM",
+      "type": "VARCHAR2",
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "LAST_CHNG_DTTM",
+      "type": "TIMESTAMP(6)",
+      "length": 0,
+      "precision": null,
+      "scale": 6,
+      "nullable": false,
+      "defaultValue": "SYSTIMESTAMP"
+    },
+    {
+      "column": "LAST_CHNG_USER_ID",
+      "type": "VARCHAR2",
+      "length": 30,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    },
+    {
+      "column": "LAST_CHNG_PROG_NM",
+      "type": "VARCHAR2",
+      "length": 100,
+      "precision": null,
+      "scale": null,
+      "nullable": false,
+      "defaultValue": null
+    }
+  ]
+}

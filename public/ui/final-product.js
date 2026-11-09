@@ -1,15 +1,19 @@
 import { $ } from './dom.js';
 import { buildFinalProduct } from '../final-product.js';
+import { createInsertRegistration } from './insert-registration.js';
 
 export function createFinalProduct({ onChange }) {
   let source = null,
     overrides = {},
     revision = 0;
-  const draft = () =>
-    buildFinalProduct(source, overrides, {
+  const registration = createInsertRegistration({ onChange: () => changed('registration') });
+  const draft = () => ({
+    ...buildFinalProduct(source, overrides, {
       code: $('final-code').value,
       name: $('final-name').value,
-    });
+    }),
+    registration: registration.read(),
+  });
   function preview() {
     $('copy-success').hidden = true;
     const current = draft();
@@ -82,6 +86,7 @@ export function createFinalProduct({ onChange }) {
       $('final-code').value = product?.code ?? '';
       $('final-name').value = product?.name ?? '';
       $('final-code').disabled = $('final-name').disabled = !source;
+      registration.setProduct(!!source, product);
       preview();
     },
   };

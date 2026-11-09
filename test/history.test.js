@@ -28,6 +28,18 @@ function fixture() {
   return { data, storage, options, snapshot, draft };
 }
 
+test('등록 정보도 독립된 이력에 보관하고 서비스나 등록자가 달라지면 새 이력으로 남긴다', () => {
+  const { storage, options, draft } = fixture();
+  draft.registration = { SRVC_CD: '10603', REG_USER_ID: 'tester' };
+  const history = createHistoryStore(storage, options);
+  history.add(historySnapshot(draft, { sql: 'SELECT 1' }));
+  draft.registration.SRVC_CD = '10602';
+  assert.equal(history.read()[0].registration.SRVC_CD, '10603');
+  history.add(historySnapshot(draft, { sql: 'SELECT 1' }));
+  assert.equal(history.read().length, 2);
+  assert.equal(history.read()[0].registration.REG_USER_ID, 'tester');
+});
+
 test('복사 시점의 최종 설정과 수식을 독립된 이력으로 저장하고 새 인스턴스에서도 읽는다', () => {
   const { storage, options, snapshot, draft } = fixture();
   const history = createHistoryStore(storage, options);

@@ -1,6 +1,7 @@
 import { $, make } from './dom.js';
 import { HISTORY_KEY, createHistoryStore, historySnapshot } from '../history.js';
 import { PRODUCT_COLUMNS, productTable } from '../product-table.js';
+import { INSERT_FIELDS } from '../product-insert.js';
 
 export function createHistory() {
   function store() {
@@ -50,6 +51,14 @@ export function createHistory() {
           table.append(head, body);
           scroll.append(table);
           detail.append(scroll);
+          const registration = INSERT_FIELDS.filter(([key]) => entry.registration?.[key]);
+          if (registration.length) {
+            const info = make('details', undefined, 'history-source');
+            info.append(make('summary', 'INSERT 등록 정보'));
+            for (const [key, label] of registration)
+              info.append(make('p', `${label}: ${entry.registration[key]}`));
+            detail.append(info);
+          }
           const sql = make('details', undefined, 'history-source');
           sql.append(make('summary', '수식'), make('pre', entry.sql));
           detail.append(sql);

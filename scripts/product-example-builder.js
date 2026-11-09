@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { extract, lineAt } from '../public/parser.js';
 import { FIELDS } from '../public/domain.js';
+import { INSERT_FIELDS } from '../public/product-insert.js';
 import { calculationForProduct } from './product-calculation-map.js';
 
 export function buildProductExamples(products, procedures) {
@@ -126,6 +127,12 @@ export function buildProductExamples(products, procedures) {
       ...(inputScope ? { inputScope } : {}),
       calculation,
       settlement: { paymentMethod: product.PAYM_MHOD_DVCD, feeCollection: product.FEE_RCVG_DVCD },
+      registration: Object.fromEntries(
+        INSERT_FIELDS.filter(([key]) => key !== 'REG_USER_ID').map(([key]) => [
+          key,
+          product[key] ?? null,
+        ]),
+      ),
       expected: Object.fromEntries(
         FIELDS.map(([key, , values]) => [
           key,
