@@ -13,6 +13,8 @@ npm start
 
 접속: `http://127.0.0.1:4317` · 검사: `npm run check`
 
+브라우저 회귀 검사는 `scripts/browser-smoke.js`의 `runBrowserSmoke(page, { baseURL })`에 Playwright Page를 전달해 실행합니다. 테스트 상태·INSERT 미리보기·상품 변경 매핑·통화 필터·CSV·키보드·모바일·파일 읽기 경합 등 31개 동작을 확인합니다. 새 브라우저 컨텍스트와 가상 클립보드를 사용해 기존 이력과 실제 클립보드를 건드리지 않습니다. Playwright MCP를 사용하는 경우 `node scripts/browser-smoke.js --print-code http://127.0.0.1:4317`이 `browser_run_code_unsafe` 도구에 넘길 JSON 인수를 출력합니다. 배포 URL도 같은 방식으로 확인할 수 있습니다.
+
 ## 사용
 
 **수식 → 상품 설정 → 예시 테스트 → 완성·복사**
