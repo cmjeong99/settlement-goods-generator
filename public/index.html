@@ -252,6 +252,31 @@
                         </p>
                         <div id="calculation-explanation" class="calculation-prose"></div>
                       </section>
+                      <details id="product-comparison" class="product-comparison" hidden>
+                        <summary id="product-comparison-title">DB 상품 설정 대조</summary>
+                        <p>
+                          DB와 다른 항목을 위에 모았어요. 현재 표에서 설정을 바꾸면 대조 결과도 함께
+                          바뀌어요. DB 값은 자동으로 덮어쓰지 않아요.
+                        </p>
+                        <div
+                          class="table-scroll"
+                          tabindex="0"
+                          role="region"
+                          aria-label="DB 설정과 현재 상품 설정 대조"
+                        >
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>항목</th>
+                                <th>DB 설정</th>
+                                <th>현재 설정</th>
+                                <th>대조</th>
+                              </tr>
+                            </thead>
+                            <tbody id="product-comparison-rows"></tbody>
+                          </table>
+                        </div>
+                      </details>
                       <details id="review-details" class="supporting-details">
                         <summary>근거·추가 검토</summary>
                         <details id="product-context" class="panel catalog-panel" hidden>
@@ -264,26 +289,6 @@
                             단계예요. 조인·거래 필터·앞 단계 결과는 별도로 확인하세요.
                           </p>
                           <ul id="product-references"></ul>
-                        </details>
-                        <details id="product-comparison" class="details-block" hidden>
-                          <summary id="product-comparison-title">DB 상품 설정 대조</summary>
-                          <p>
-                            조회한 DB 설정과 현재 선택한 구문의 분석 결과를 비교해요. 미확정 값과
-                            차이가 있는 값은 자동으로 바꾸지 않아요.
-                          </p>
-                          <div class="table-scroll">
-                            <table>
-                              <thead>
-                                <tr>
-                                  <th>항목</th>
-                                  <th>DB 설정</th>
-                                  <th>수식 분석</th>
-                                  <th>대조</th>
-                                </tr>
-                              </thead>
-                              <tbody id="product-comparison-rows"></tbody>
-                            </table>
-                          </div>
                         </details>
                         <details id="notices-panel" class="details-block" hidden>
                           <summary id="notices-title">계산 전에 확인할 점</summary>

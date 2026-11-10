@@ -66,7 +66,6 @@ export function createProductPicker({ service, select, products, examples = {} }
 
 export function renderProductContext(product, result) {
   $('product-context').hidden = !product;
-  $('product-comparison').hidden = !product || !result;
   if (!product) return;
   $('product-title').textContent = `${product.name} · ${product.code}`;
   $('product-source').textContent =
@@ -89,30 +88,73 @@ export function renderProductContext(product, result) {
       return item;
     }),
   );
-  if (!result) return;
+}
+
+let comparisonSource = null;
+export function renderProductComparison(product, result, source = result) {
+  const panel = $('product-comparison');
+  panel.hidden = !product || !result;
+  if (!product || !result) {
+    comparisonSource = null;
+    return;
+  }
   const comparisons = compareProduct(product, result);
   const differences = comparisons.filter((row) => row.status === 'different').length;
   const unconfirmed = comparisons.filter((row) => row.status === 'unconfirmed').length;
-  $('product-comparison-title').textContent =
-    `DB 상품 설정 대조 · 차이 ${differences}개 · 미확정 ${unconfirmed}개`;
+  const state = differences ? 'different' : unconfirmed ? 'unconfirmed' : 'match';
+  panel.dataset.state = state;
+  if (comparisonSource !== source) panel.open = differences > 0;
+  comparisonSource = source;
+  const title = $('product-comparison-title');
+  title.replaceChildren(
+    make('span', 'DB 상품 설정 대조'),
+    make(
+      'strong',
+      differences ? `차이 ${differences}개` : unconfirmed ? '차이 없음' : '모두 일치',
+      'comparison-count',
+    ),
+    make('span', unconfirmed ? `미확정 ${unconfirmed}개` : '', 'comparison-pending'),
+  );
+  title.setAttribute(
+    'aria-label',
+    `DB 상품 설정 대조. 차이 ${differences}개. 미확정 ${unconfirmed}개.`,
+  );
+  const priority = { different: 0, unconfirmed: 1, match: 2, 'not-applicable': 2 };
   $('product-comparison-rows').replaceChildren(
-    ...comparisons.map((item) => {
-      const row = make('tr');
-      row.append(
-        make('th', item.label),
-        make('td', item.expected === null ? 'NULL' : String(item.expected)),
-        make('td', display(item.actual)),
-        make(
-          'td',
-          {
-            match: '일치',
-            different: '차이 있음',
-            unconfirmed: '미확정',
-            'not-applicable': '미적용',
-          }[item.status],
-        ),
-      );
-      return row;
-    }),
+    ...comparisons
+      .sort((left, right) => priority[left.status] - priority[right.status])
+      .map((item) => {
+        const row = make('tr');
+        row.dataset.status = item.status;
+        row.dataset.field = item.key;
+        const heading = make('th', item.label);
+        heading.scope = 'row';
+        heading.append(make('small', item.key, 'comparison-column'));
+        const expected = make('td');
+        expected.append(
+          make('code', item.expected === null ? 'NULL' : String(item.expected), 'comparison-value'),
+        );
+        const actual = make('td');
+        const value =
+          item.actual.status === 'not-applicable' ? 'NULL (미적용)' : display(item.actual);
+        actual.append(
+          make('code', `${item.status === 'different' ? '→ ' : ''}${value}`, 'comparison-value'),
+        );
+        const status = make('td');
+        status.append(
+          make(
+            'span',
+            {
+              match: '일치',
+              different: '차이 있음',
+              unconfirmed: '미확정',
+              'not-applicable': '일치 · 미적용',
+            }[item.status],
+            'comparison-badge',
+          ),
+        );
+        row.append(heading, expected, actual, status);
+        return row;
+      }),
   );
 }

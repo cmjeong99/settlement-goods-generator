@@ -28,7 +28,9 @@ export function compareProduct(product, result) {
     const expected = product.expected[key];
     const status =
       cell.status === 'not-applicable'
-        ? 'not-applicable'
+        ? expected === null
+          ? 'not-applicable'
+          : 'different'
         : cell.status === 'known'
           ? cell.value === expected
             ? 'match'

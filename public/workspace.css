@@ -190,6 +190,105 @@ header {
   border-radius: 8px;
   background: #f8faff;
 }
+.product-comparison {
+  margin: 0 22px 22px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+.product-comparison[data-state='different'] {
+  border-color: var(--selected-border);
+  border-left: 4px solid var(--action);
+}
+.product-comparison > summary {
+  font-size: 15px;
+}
+.comparison-count {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: #f0f3f8;
+  color: var(--muted);
+  font-size: 12px;
+}
+.product-comparison[data-state='different'] .comparison-count {
+  background: var(--selected);
+  color: var(--action);
+}
+.comparison-pending {
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.product-comparison > p {
+  margin: 10px 0 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.product-comparison table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.product-comparison th,
+.product-comparison td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.product-comparison thead th {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  background: #f7f9fc;
+}
+.comparison-column {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font:
+    10px/1.5 Consolas,
+    monospace;
+  font-weight: 400;
+}
+.comparison-value {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.comparison-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 5px;
+  color: var(--muted);
+  background: #f0f3f8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.product-comparison tr[data-status='different'] > * {
+  background: var(--selected);
+}
+.product-comparison tr[data-status='different'] > th {
+  box-shadow: inset 3px 0 var(--action);
+}
+.product-comparison tr[data-status='different'] > td:nth-child(3) {
+  font-weight: 700;
+  color: var(--action);
+}
+.product-comparison tr[data-status='different'] .comparison-badge {
+  color: white;
+  background: var(--action);
+  font-weight: 600;
+}
+@media (max-width: 600px) {
+  .product-comparison {
+    margin: 0 16px 16px;
+    padding: 12px;
+  }
+}
 .registration-nullable-field {
   min-width: 0;
 }

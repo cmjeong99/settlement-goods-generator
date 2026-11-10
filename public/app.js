@@ -6,7 +6,7 @@ import { suggestNames } from './naming.js';
 import { $, make, observeTableOverflow } from './ui/dom.js';
 import { renderExplanation } from './ui/views.js';
 import { productByCode } from './catalog.js';
-import { populateExamples, renderProductContext } from './ui/catalog.js';
+import { populateExamples, renderProductContext, renderProductComparison } from './ui/catalog.js';
 import { createVerification } from './ui/verification.js';
 import { createWorkflow } from './ui/workflow.js';
 import { createQuickVerification } from './ui/quick-verification.js';
@@ -104,6 +104,7 @@ function syncDraft({ preserveSourceInputs = false } = {}) {
   const r = base(),
     draft = finalProduct.draft();
   renderExplanation(draft.result);
+  renderProductComparison(productByCode.get($('example').value), draft.result, r);
   if (r && draft.result) {
     $('final-understanding').replaceChildren(
       ...explainCalculation(draft.result).map((text) => make('p', text)),

@@ -33,6 +33,33 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
   try {
     await page.goto(baseURL);
     await page.locator('#example').selectOption('OPENBANKING-RATE');
+    const comparison = page.locator('#product-comparison');
+    check(
+      await comparison.evaluate((element) => element.parentElement.id !== 'review-details'),
+      'DB comparison is visible outside supporting details',
+    );
+    await page.locator('[data-workflow-nav="0"]').click();
+    await page.locator('#example').selectOption('OPENBANKING-FIXED');
+    check(
+      (await comparison.evaluate((element) => element.open)) &&
+        (await comparison.getAttribute('data-state')) === 'different',
+      'DB differences open automatically for a new product',
+    );
+    await page.locator('[data-workflow-nav="0"]').click();
+    await page.locator('#example').selectOption('OPENBANKING-RATE');
+    await page.locator('[data-product-field="SIGN_APLY_LOCT_DVCD"]').click();
+    await page.locator('[data-decision-field="SIGN_APLY_LOCT_DVCD"]').selectOption('AFTER');
+    check(
+      (await page.locator('#product-comparison-rows tr').first().getAttribute('data-field')) ===
+        'SIGN_APLY_LOCT_DVCD' &&
+        (await page.locator('#product-comparison-title').textContent()).includes('차이 1개'),
+      'edited DB mismatch moves to the top and updates count',
+    );
+    await page.locator('[data-decision-field="SIGN_APLY_LOCT_DVCD"]').selectOption('NONE');
+    check(
+      (await comparison.getAttribute('data-state')) === 'match',
+      'restoring DB value clears mismatch immediately',
+    );
     const step = (index) => page.locator(`[data-workflow-nav="${index}"]`).click();
     const quick = page.locator('#quick-dashboard');
     const quickMetric = (key) =>
@@ -340,6 +367,12 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
     check(
       applied.text.includes('반영') && applied.color === 'rgb(9, 105, 239)',
       'rounding success uses Danal blue feedback',
+    );
+    check(
+      (await page
+        .locator('#product-comparison-rows tr[data-field="FEE_SMT_CALC_UNIT_VAL"]')
+        .getAttribute('data-status')) === 'different',
+      'NULL selection is compared against the DB value',
     );
     await step(2);
     await open(page.locator('#quick-options'));
