@@ -7,6 +7,7 @@
   --action: #0969ef;
   --action-hover: #0958d9;
   --selected: #eff5ff;
+  --selected-border: #a8c9fa;
   --ink: #253041;
   --line: #e4e8ec;
   --muted: #647180;
@@ -341,7 +342,7 @@ textarea {
   background: #b8d5ff80;
 }
 #sql-highlight .token.comment {
-  color: #64716b;
+  color: #68717f;
 }
 #sql-highlight .token.keyword,
 #sql-highlight .token.boolean {
@@ -354,7 +355,7 @@ textarea {
   color: #a33821;
 }
 #sql-highlight .token.number {
-  color: #087567;
+  color: #1c5eb8;
 }
 #sql-highlight .token.variable,
 #sql-highlight .token.identifier {
@@ -1217,7 +1218,7 @@ footer {
   gap: 16px;
   margin: 0 24px 20px;
   padding: 24px;
-  border: 1px solid #a8c9fa;
+  border: 1px solid var(--selected-border);
   border-radius: 6px;
   background: var(--selected);
   overflow: hidden;
@@ -1717,7 +1718,7 @@ footer {
   display: none;
 }
 #product-test-state[data-state='match'] {
-  color: #155d38;
+  color: var(--action);
 }
 #product-test-state[data-state='stale'],
 #product-test-state[data-state='mismatch'] {
@@ -1792,11 +1793,11 @@ footer {
 }
 #product-progress td[data-state='chosen'],
 #product-progress td[data-state='named'] {
-  background: #edf7f0;
-  box-shadow: inset 0 3px #75b389;
+  background: var(--selected);
+  box-shadow: inset 0 3px var(--selected-border);
 }
 #product-progress td[data-state='chosen'] .product-cell-status {
-  color: #155d38;
+  color: var(--action);
 }
 #product-progress td[data-state='unused'],
 #product-progress td[data-state='empty'] {
@@ -2091,7 +2092,7 @@ footer {
   background: #fff4f1;
 }
 #quick-results tr[data-match='true'] td:last-child {
-  color: #155d38;
+  color: var(--action);
   font-weight: 700;
 }
 .product-readiness {
