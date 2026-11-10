@@ -368,7 +368,7 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       history = [];
       dirty = !newSource && changed;
       updateReportState();
-      if (newSource) {
+      if (newSource && !context?.preserveSourceInputs) {
         $('quick-options').open = false;
         $('quick-source-panel').open = false;
         manual.clear();

@@ -341,6 +341,52 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
       applied.text.includes('반영') && applied.color === 'rgb(9, 105, 239)',
       'rounding success uses Danal blue feedback',
     );
+    await step(2);
+    await open(page.locator('#quick-options'));
+    await open(page.locator('#quick-source-panel'));
+    const manualSource = page.locator('[data-source-index="0"][data-source-column="AMT"]');
+    await manualSource.fill('7777');
+    await step(3);
+    await page.locator('#final-code').fill('FORMAT-KEEP');
+    await page.locator('#final-name').fill('정렬 보존 상품');
+    await page.locator('#insert-SRVC_CD').fill('11111');
+    await page.locator('#insert-REG_USER_ID').fill('format-user');
+    await step(0);
+    const originalSql = await page.locator('#sql').inputValue();
+    await page.locator('#format-sql').click();
+    check(
+      (await page.locator('#example').inputValue()) === 'OPENBANKING-RATE',
+      'SQL formatting keeps selected DB product',
+    );
+    check(
+      (await page.locator('#final-name').inputValue()) === '정렬 보존 상품' &&
+        (await page.locator('#insert-SRVC_CD').inputValue()) === '11111' &&
+        (await page.locator('#insert-REG_USER_ID').inputValue()) === 'format-user',
+      'SQL formatting preserves identity and registration edits',
+    );
+    check(
+      (await page.locator('[data-product-field="FEE_SMT_CALC_UNIT_VAL"] strong').textContent()) ===
+        'NULL' && (await manualSource.inputValue()) === '7777',
+      'SQL formatting preserves decisions and manual test bindings',
+    );
+    await page.locator('#analyze').click();
+    check(
+      (await page.locator('#final-code').inputValue()) === 'FORMAT-KEEP',
+      'unchanged SQL reanalysis keeps edits',
+    );
+    await step(0);
+    await page.locator('#undo-format-sql').click();
+    check(
+      (await page.locator('#sql').inputValue()) === originalSql &&
+        (await page.locator('#final-name').inputValue()) === '정렬 보존 상품',
+      'format undo restores text without losing edits',
+    );
+    await page.locator('#sql').fill(originalSql + '\n-- 직접 수정');
+    check(
+      (await page.locator('#example').inputValue()) === '' &&
+        (await page.locator('#copy-insert').isDisabled()),
+      'manual SQL editing still invalidates analysis',
+    );
     check(errors.length === 0, 'no browser runtime errors');
     return { baseURL, passed: checks.length, checks };
   } finally {

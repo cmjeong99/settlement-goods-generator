@@ -19,7 +19,7 @@ import { renderWorkspaceSummary } from './ui/workspace-summary.js';
 import { highlightSql } from './sql-tools.js';
 
 const syncTableOverflow = observeTableOverflow();
-const sqlEditor = createSqlEditor({ onMessage: message });
+const sqlEditor = createSqlEditor({ onMessage: message, onTransform: transformSql });
 const workflow = createWorkflow({
   onStepChange(step) {
     progressTable.mount(step);
@@ -62,6 +62,7 @@ let results = [];
 let index = 0;
 let namingError = '';
 let previewSql = null;
+let lastAnalysis = '';
 const base = () => results[index];
 const columns = () => ({
   feeColumn: $('fee-column').value,
@@ -99,7 +100,7 @@ function renderReadiness() {
   renderWorkspaceSummary(draft.result, draft.name, state, draft.settingErrors);
   syncTableOverflow();
 }
-function syncDraft() {
+function syncDraft({ preserveSourceInputs = false } = {}) {
   const r = base(),
     draft = finalProduct.draft();
   renderExplanation(draft.result);
@@ -114,7 +115,7 @@ function syncDraft() {
     draft.result,
     productByCode.get($('example').value),
     draft.settingErrors,
-    { registration: draft.registration, identity: draft.name },
+    { registration: draft.registration, identity: draft.name, preserveSourceInputs },
   );
   renderReadiness();
 }
@@ -165,6 +166,7 @@ function syncActions() {
         : '확인된 설정이 없어요. 수식이나 컬럼명을 확인해 주세요.');
 }
 function resetResults() {
+  lastAnalysis = '';
   results = [];
   index = 0;
 
@@ -226,13 +228,28 @@ $('clear').onclick = () => {
   $('sql').focus();
 };
 $('analyze').onclick = run;
-function run() {
-  resetResults();
+function run({ preserveEdits = false, focus = true } = {}) {
+  const signature = JSON.stringify([$('sql').value, columns(), $('example').value]);
+  if (!preserveEdits && base() && lastAnalysis === signature) {
+    if (focus) workflow.go(1, { focus: true });
+    return;
+  }
+  const previousIndex = index;
+  if (!preserveEdits) resetResults();
   const outcome = analyze($('sql').value, columns());
   results = outcome.results;
+  if (preserveEdits) index = Math.min(previousIndex, Math.max(0, results.length - 1));
+  lastAnalysis = signature;
   message(outcome.errors.join(' '), outcome.errors.length ? 'error' : 'info');
-  render();
-  if (base()) workflow.go(1, { focus: true });
+  render({ preserveEdits });
+  if (base() && focus) workflow.go(1, { focus: true });
+}
+function transformSql() {
+  const retained = !!base();
+  syncLines();
+  if (retained) run({ preserveEdits: true, focus: false });
+  else resetResults();
+  return retained;
 }
 $('blocks').onchange = () => {
   index = Number($('blocks').value);
@@ -254,12 +271,12 @@ function evidence(key) {
   progressTable.select(key);
   decisions.open(key);
 }
-function render() {
+function render({ preserveEdits = false } = {}) {
   const r = base();
-  finalProduct.setResult(r, productByCode.get($('example').value));
+  finalProduct.setResult(r, productByCode.get($('example').value), { preserveEdits });
   renderProductContext(productByCode.get($('example').value), r);
   workflow.setAvailable(!!r);
-  syncDraft();
+  syncDraft({ preserveSourceInputs: preserveEdits });
   syncActions();
   $('result-empty').hidden = !!r;
   $('result-content').hidden = !r;

@@ -79,8 +79,14 @@ export function createFinalProduct({ onChange }) {
       $('final-name').value = name?.name ?? '';
       changed('identity');
     },
-    setResult(result, product) {
+    setResult(result, product, { preserveEdits = false } = {}) {
       if (source === result) return;
+      if (preserveEdits && source && result) {
+        source = result;
+        revision++;
+        preview();
+        return;
+      }
       source = result;
       overrides = {};
       revision++;

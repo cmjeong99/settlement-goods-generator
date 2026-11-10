@@ -1,7 +1,7 @@
 import { $ } from './dom.js';
 import { formatSql, highlightSql } from '../sql-tools.js';
 
-export function createSqlEditor({ onMessage }) {
+export function createSqlEditor({ onMessage, onTransform }) {
   const input = $('sql'),
     surface = $('sql-highlight'),
     code = $('sql-highlight-code'),
@@ -27,7 +27,9 @@ export function createSqlEditor({ onMessage }) {
     input.focus({ preventScroll: true });
     input.setRangeText(value, 0, input.value.length, 'start');
     if (selection) input.setSelectionRange(...selection);
+    if (onTransform) return onTransform();
     input.dispatchEvent(new Event('input', { bubbles: true }));
+    return false;
   }
   function formatInput() {
     if (format.disabled || input.matches(':disabled')) return;
@@ -51,20 +53,28 @@ export function createSqlEditor({ onMessage }) {
       onMessage('이미 정렬된 SQL이에요.');
       return;
     }
-    replace(formatted);
+    const retained = replace(formatted);
     previous = snapshot;
     undo.hidden = false;
-    onMessage('SQL을 정렬했어요. 수식을 다시 분석해 주세요.');
+    onMessage(
+      retained
+        ? 'SQL을 정렬하고 다시 분석했어요. 상품 설정·등록 정보·테스트 입력은 유지했어요. 예시는 다시 테스트해 주세요.'
+        : 'SQL을 정렬했어요. 수식을 다시 분석해 주세요.',
+    );
   }
   format.onclick = formatInput;
   undo.onclick = () => {
     if (!previous) return;
     const snapshot = previous;
-    replace(snapshot.text, snapshot.selection);
+    const retained = replace(snapshot.text, snapshot.selection);
     input.scrollTop = snapshot.scrollTop;
     input.scrollLeft = snapshot.scrollLeft;
     syncScroll();
-    onMessage('정렬 전 SQL로 되돌렸어요.');
+    onMessage(
+      retained
+        ? '정렬 전 SQL로 되돌리고 다시 분석했어요. 상품 설정과 입력값은 유지했어요.'
+        : '정렬 전 SQL로 되돌렸어요.',
+    );
   };
   input.addEventListener('input', () => {
     previous = null;
