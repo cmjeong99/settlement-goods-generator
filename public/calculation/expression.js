@@ -10,6 +10,54 @@ const compare = (left, right) =>
     ? numeric(left).compare(numeric(right))
     : String(left).localeCompare(String(right));
 
+const integerBounds = {
+  TINYINT: [0n, 255n],
+  SMALLINT: [-32768n, 32767n],
+  INT: [-2147483648n, 2147483647n],
+  BIGINT: [-9223372036854775808n, 9223372036854775807n],
+};
+function sqlInteger(value, type = 'INT') {
+  value.sqlInteger = true;
+  value.sqlIntegerType = type;
+  return value;
+}
+function retainType(value, original) {
+  if (original.sqlInteger) sqlInteger(value, original.sqlIntegerType);
+  if (Number.isInteger(original.sqlScale)) value.sqlScale = original.sqlScale;
+  if (Number.isInteger(original.sqlPrecision)) value.sqlPrecision = original.sqlPrecision;
+  return value;
+}
+function checkInteger(value, type) {
+  const [minimum, maximum] = integerBounds[type];
+  if (value.compare(new Decimal(minimum)) < 0 || value.compare(new Decimal(maximum)) > 0)
+    throw new Error(`${type} 범위를 벗어났어요. 원문 타입과 입력값을 확인해 주세요.`);
+  return sqlInteger(value, type);
+}
+function checkDecimal(value, precision, scale) {
+  if (precision < 1 || precision > 38 || scale < 0 || scale > precision)
+    throw new Error(
+      'DECIMAL·NUMERIC의 전체 자릿수는 1~38, 소수 자릿수는 전체 자릿수 이하여야 해요.',
+    );
+  if (value.abs().compare(new Decimal(10n ** BigInt(precision - scale))) >= 0)
+    throw new Error(
+      `DECIMAL(${precision},${scale}) 범위를 벗어났어요. 원문 타입과 입력값을 확인해 주세요.`,
+    );
+  value.sqlScale = scale;
+  value.sqlPrecision = precision;
+  return value;
+}
+function mathResult(
+  value,
+  original,
+  { precision = original.sqlPrecision, scale = original.sqlScale } = {},
+) {
+  if (original.sqlInteger)
+    return checkInteger(value, original.sqlIntegerType === 'BIGINT' ? 'BIGINT' : 'INT');
+  return Number.isInteger(precision) && Number.isInteger(scale)
+    ? checkDecimal(value, precision, scale)
+    : value;
+}
+
 export function referencedColumns(formulas) {
   const names = new Set();
   const visit = (node) => {
@@ -38,7 +86,7 @@ function evaluate(node, rows, row, budget) {
   const run = (child) => evaluate(child, rows, row, budget);
   if (node.kind === 'number') {
     const value = Decimal.parse(node.value);
-    value.sqlInteger = /^\d+$/.test(node.value) && value.n <= 2147483647n;
+    if (/^\d+$/.test(node.value) && value.n <= 2147483647n) sqlInteger(value);
     return value;
   }
   if (node.kind === 'string') return node.value;
@@ -62,8 +110,7 @@ function evaluate(node, rows, row, budget) {
     const value = run(node.arg);
     if (value === null) return null;
     const calculated = node.op === '-' ? numeric(value).neg() : numeric(value);
-    calculated.sqlInteger = value.sqlInteger;
-    return calculated;
+    return retainType(calculated, value);
   }
   if (node.kind === 'case') {
     const base = node.base ? run(node.base) : null;
@@ -124,27 +171,50 @@ function evaluate(node, rows, row, budget) {
     if (node.op === '-') calculated = first.sub(second);
     if (node.op === '*') calculated = first.mul(second);
     if (node.op === '/') calculated = integer ? first.div(second).round('DOWN') : first.div(second);
-    if (calculated) {
-      calculated.sqlInteger = integer;
-      return calculated;
-    }
-    if (node.op === '%') return first.sub(first.div(second).round('DOWN').mul(second));
+    if (node.op === '%') calculated = first.sub(first.div(second).round('DOWN').mul(second));
+    if (calculated)
+      return integer
+        ? sqlInteger(
+            calculated,
+            [first, second].some((value) => value.sqlIntegerType === 'BIGINT') ? 'BIGINT' : 'INT',
+          )
+        : calculated;
   }
   if (node.kind !== 'call') throw new Error(`지원하지 않는 수식이에요: ${node.kind}`);
   if (aggregateNames.includes(node.name)) {
     if (aggregate(node.args[0])) throw new Error('집계 함수 안의 집계 함수는 지원하지 않아요.');
-    if (node.name === 'COUNT' && node.args[0].kind === 'star') return Decimal.parse(rows.length);
+    if (node.name === 'COUNT' && node.args[0].kind === 'star')
+      return sqlInteger(Decimal.parse(rows.length));
     const values = rows
       .map((item) => evaluate(node.args[0], [item], item, budget))
       .filter((value) => value !== null);
-    if (node.name === 'COUNT') return Decimal.parse(values.length);
+    if (node.name === 'COUNT') return sqlInteger(Decimal.parse(values.length));
     if (!values.length) return null;
     if (node.name === 'MAX' || node.name === 'MIN')
       return values.reduce((left, right) =>
         compare(left, right) * (node.name === 'MAX' ? 1 : -1) > 0 ? left : right,
       );
-    const sum = values.reduce((sum, value) => sum.add(numeric(value)), Decimal.parse('0'));
-    return node.name === 'AVG' ? sum.div(values.length) : sum;
+    const allIntegers = values.every((value) => value.sqlInteger);
+    const integerType = values.some((value) => value.sqlIntegerType === 'BIGINT')
+      ? 'BIGINT'
+      : 'INT';
+    const sum = values.reduce((sum, value) => {
+      const next = sum.add(numeric(value));
+      return allIntegers ? checkInteger(next, integerType) : next;
+    }, Decimal.parse('0'));
+    if (allIntegers)
+      return checkInteger(
+        node.name === 'AVG' ? sum.div(values.length).round('DOWN') : sum,
+        integerType,
+      );
+    const scale = values.every((value) => Number.isInteger(value.sqlScale))
+      ? Math.max(...values.map((value) => value.sqlScale), node.name === 'AVG' ? 6 : 0)
+      : null;
+    const calculated = node.name === 'AVG' ? sum.div(values.length) : sum;
+    if (scale !== null) checkDecimal(sum, 38, scale);
+    return scale === null
+      ? calculated
+      : checkDecimal(calculated.round('HALF_UP', Decimal.unit(scale)), 38, scale);
   }
   if (node.name === 'ISNULL' || node.name === 'COALESCE') {
     for (const arg of node.args) {
@@ -168,23 +238,34 @@ function evaluate(node, rows, row, budget) {
     return String(values[0]).slice(-count || Infinity);
   }
   const value = numeric(values[0]);
-  if (node.name === 'ABS') return value.abs();
-  if (node.name === 'SIGN') return Decimal.parse(value.sign());
-  if (node.name === 'FLOOR') return value.round('SIGNED_DOWN');
-  if (node.name === 'CEILING') return value.round('CEILING');
+  if (node.name === 'ABS') {
+    const absolute = value.abs();
+    return mathResult(absolute, value, { precision: 38 });
+  }
+  if (node.name === 'SIGN') return mathResult(Decimal.parse(value.sign()), value, { scale: 0 });
+  if (node.name === 'FLOOR') return mathResult(value.round('SIGNED_DOWN'), value, { scale: 0 });
+  if (node.name === 'CEILING') return mathResult(value.round('CEILING'), value, { scale: 0 });
   if (node.name === 'ROUND')
-    return value.round(
-      values[2] && numeric(values[2]).sign() !== 0 ? 'DOWN' : 'HALF_UP',
-      Decimal.unit(Number(numeric(values[1]).toString())),
+    return mathResult(
+      value.round(
+        values[2] && numeric(values[2]).sign() !== 0 ? 'DOWN' : 'HALF_UP',
+        Decimal.unit(Number(numeric(values[1]).toString())),
+      ),
+      value,
     );
   if (node.name === 'CAST' || node.name === 'CONVERT') {
     if (/^(BIGINT|INT|SMALLINT|TINYINT)$/.test(node.type)) {
-      const integer = value.round('DOWN');
-      integer.sqlInteger = true;
-      return integer;
+      if (typeof values[0] === 'string' && !/^[+-]?\d+$/.test(values[0].trim()))
+        throw new Error(`${node.type}로 변환할 정수 문자열을 확인해 주세요.`);
+      return checkInteger(value.round('DOWN'), node.type);
     }
-    const type = node.type.match(/^(?:NUMERIC|DECIMAL)\((\d+),(\d+)\)$/);
-    if (type) return value.round('HALF_UP', Decimal.unit(Number(type[2])));
+    const type = node.type.match(/^(?:NUMERIC|DECIMAL)(?:\((\d+)(?:,(\d+))?\))?$/);
+    if (type) {
+      const precision = Number(type[1] ?? 18),
+        scale = Number(type[2] ?? 0);
+      checkDecimal(Decimal.parse('0'), precision, scale);
+      return checkDecimal(value.round('HALF_UP', Decimal.unit(scale)), precision, scale);
+    }
     throw new Error(`${node.type} 타입 변환은 실제 DB에서 확인해 주세요.`);
   }
   throw new Error(`${node.name} 함수는 아직 계산 검증을 지원하지 않아요.`);

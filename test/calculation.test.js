@@ -113,6 +113,64 @@ test('CASE·IN·RIGHT·NULL·집계가 포함된 카드와 본인확인 표현�
   assert.deepEqual(evaluate('NULLIF(AMT,0)', [{ AMT: '0' }]), [null]);
 });
 
+test('정수 함수·집계 이후 나눗셈에서도 SQL 정수 타입을 유지한다', () => {
+  for (const expression of ['ABS(5)/2', 'FLOOR(5)/2', 'CEILING(5)/2', 'ROUND(5,0)/2', '(5%3)/2'])
+    assert.deepEqual(
+      evaluate(expression, [{}]),
+      [expression.includes('%') ? '1' : '2'],
+      expression,
+    );
+  const rows = [{ AMT: '1' }, { AMT: '2' }, { AMT: '2' }];
+  assert.deepEqual(evaluate('COUNT(*)/2', rows), ['1']);
+  assert.deepEqual(evaluate('COUNT(AMT)/2', rows), ['1']);
+  assert.deepEqual(evaluate('SUM(CAST(AMT AS INT))/2', rows), ['2']);
+  assert.deepEqual(evaluate('AVG(CAST(AMT AS INT))', rows), ['1']);
+  assert.deepEqual(evaluate('AVG(CAST(AMT AS INT))', [{ AMT: '-1' }, { AMT: '-2' }]), ['-1']);
+  assert.deepEqual(evaluate('AVG(CAST(AMT AS DECIMAL(18,2)))', rows), ['1.666667']);
+  assert.deepEqual(evaluate('ABS(5.0)/2', [{}]), ['2.5']);
+  assert.deepEqual(evaluate('ABS(CAST(-32768 AS SMALLINT))', [{}]), ['32768']);
+  assert.deepEqual(evaluate('ROUND(CAST(255 AS TINYINT),-1)', [{}]), ['260']);
+});
+
+test('정수 CAST와 SUM의 타입 범위를 넘으면 계산 불가로 처리한다', () => {
+  for (const expression of [
+    'CAST(256 AS TINYINT)',
+    'CAST(-1 AS TINYINT)',
+    'CAST(32768 AS SMALLINT)',
+    'CAST(2147483648 AS INT)',
+    'CAST(9223372036854775808 AS BIGINT)',
+    'ABS(CAST(-2147483648 AS INT))',
+  ])
+    assert.throws(() => evaluate(expression, [{}]), /범위를 벗어났어요/, expression);
+  assert.deepEqual(evaluate('CAST(255 AS TINYINT)', [{}]), ['255']);
+  assert.deepEqual(evaluate('CAST(-9223372036854775808 AS BIGINT)', [{}]), [
+    '-9223372036854775808',
+  ]);
+  assert.throws(() => evaluate("CAST('1.2' AS INT)", [{}]), /정수 문자열/);
+  assert.throws(
+    () => evaluate('SUM(CAST(AMT AS INT))', [{ AMT: '2147483647' }, { AMT: '1' }]),
+    /범위를 벗어났어요/,
+  );
+  assert.deepEqual(evaluate('SUM(CAST(AMT AS BIGINT))', [{ AMT: '2147483647' }, { AMT: '1' }]), [
+    '2147483648',
+  ]);
+});
+
+test('DECIMAL 정밀도·소수 자릿수와 반올림 후 범위를 검증한다', () => {
+  for (const expression of [
+    'CAST(1 AS DECIMAL(0,0))',
+    'CAST(1 AS DECIMAL(39,0))',
+    'CAST(1 AS DECIMAL(3,4))',
+  ])
+    assert.throws(() => evaluate(expression, [{}]), /자릿수/, expression);
+  for (const expression of ['CAST(1000 AS DECIMAL(3,0))', 'CAST(99.999 AS DECIMAL(4,2))'])
+    assert.throws(() => evaluate(expression, [{}]), /범위를 벗어났어요/, expression);
+  assert.deepEqual(evaluate('CAST(99.994 AS DECIMAL(4,2))', [{}]), ['99.99']);
+  assert.deepEqual(evaluate('CAST(1.5 AS DECIMAL)', [{}]), ['2']);
+  assert.deepEqual(evaluate('CAST(1.5 AS DECIMAL(3))', [{}]), ['2']);
+  assert.throws(() => evaluate('ROUND(CAST(748.58 AS DECIMAL(5,2)),-3)', [{}]), /범위를/);
+});
+
 test('별칭이 다른 입력과 갱신 전 수수료 참조는 독립된 값으로 취급한다', () => {
   const r = result('UPDATE A SET CPFEE=FLOOR(A.AMT*A.CPRATE),CPVAT=FLOOR(A.CPFEE*0.1)');
   assert.deepEqual(referencedColumns(r.formulas), ['A.AMT', 'A.CPFEE', 'A.CPRATE']);
