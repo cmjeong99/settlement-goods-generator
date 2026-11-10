@@ -1,4 +1,4 @@
-import { FIELDS } from './domain.js';
+import { FIELDS, NULL_OVERRIDE } from './domain.js';
 import { INSERT_FIELDS, normalizeRegistration } from './product-insert.js';
 
 export const HISTORY_KEY = 'danal.settlement.history.v1';
@@ -37,7 +37,11 @@ function validEntry(entry) {
         !Array.isArray(entry.registration) &&
         Object.entries(entry.registration).every(([key, value]) => {
           const field = INSERT_FIELDS.find(([column]) => column === key);
-          return field && typeof value === 'string' && Array.from(value).length <= field[2];
+          return (
+            field &&
+            typeof value === 'string' &&
+            (value === NULL_OVERRIDE ? !field[3] : Array.from(value).length <= field[2])
+          );
         }))) &&
     entry.fields &&
     FIELDS.every(([key, , values]) => {

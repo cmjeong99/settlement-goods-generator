@@ -6,6 +6,8 @@ import { INSERT_FIELDS } from '../public/product-insert.js';
 import { analyze } from '../public/analyzer.js';
 import { tokenize } from '../public/parser.js';
 import { EXAMPLES } from '../public/examples.js';
+import { FIELDS, NULL_OVERRIDE, NULLABLE_FIELDS, explainCalculation } from '../public/domain.js';
+import { verifyCalculation } from '../public/calculation/verify.js';
 import { buildFinalProduct } from '../public/final-product.js';
 import { PRODUCT_EXAMPLES } from '../public/product-examples.js';
 
@@ -31,6 +33,68 @@ function inserted(sql) {
   assert.equal(values.length, columns.length);
   return Object.fromEntries(columns.map((column, i) => [column, values[i]]));
 }
+
+test('NULL 선택 가능 컬럼은 실제 DB의 nullable 계산 컬럼과 일치한다', () => {
+  assert.deepEqual(
+    [...NULLABLE_FIELDS].sort(),
+    schema.columns
+      .filter((c) => c.nullable && FIELDS.some(([key]) => key === c.column))
+      .map((c) => c.column)
+      .sort(),
+  );
+});
+
+test('절대값 N·부호 위치 NULL을 확정하면 INSERT와 음수 예시 계산이 가능하다', () => {
+  const original = analyze(
+    'SELECT ROUND(AMT * RATE, 0) AS CPFEE, ROUND(AMT * RATE * 0.1, 0) AS CPVAT',
+  ).results[0];
+  const deferred = buildFinalProduct(original, {
+    ABS_PROCS_YN: 'N',
+    SIGN_APLY_LOCT_DVCD: '__defer__',
+  });
+  assert.throws(
+    () => exportProductTable(deferred.result, 'sql', name, registration()),
+    /부호 적용 위치/,
+  );
+  const draft = buildFinalProduct(original, {
+    ABS_PROCS_YN: 'N',
+    SIGN_APLY_LOCT_DVCD: NULL_OVERRIDE,
+  });
+  const row = inserted(exportProductTable(draft.result, 'sql', name, registration()));
+  assert.equal(row.SIGN_APLY_LOCT_DVCD.kind, 'id');
+  assert.equal(row.SIGN_APLY_LOCT_DVCD.value, 'NULL');
+  assert.equal(row.ABS_PROCS_YN.value, 'N');
+  assert.match(explainCalculation(draft.result)[2], /NULL\(미적용\)/);
+  assert.doesNotMatch(explainCalculation(draft.result)[2], /확정할 수 없어요/);
+  const verified = verifyCalculation(original, [{ AMT: '-9900', RATE: '0.015' }], {
+    fields: draft.result.fields,
+    amountColumn: 'AMT',
+    feeValue: '0.015',
+  });
+  assert.deepEqual(verified.errors, []);
+  assert.ok(verified.comparisons.every((c) => c.settingsMatch));
+});
+
+test('선택 등록 정보의 NULL은 DB 기본값 생략·문자열 NULL과 구분한다', () => {
+  const row = inserted(
+    exportProductTable(source(), 'sql', name, {
+      ...registration(),
+      FEE_RCVG_DVCD: NULL_OVERRIDE,
+      MERC_PMT_CURN_CD: NULL_OVERRIDE,
+      RMK: 'NULL',
+    }),
+  );
+  for (const key of ['FEE_RCVG_DVCD', 'MERC_PMT_CURN_CD']) {
+    assert.equal(row[key].value, 'NULL');
+    assert.equal(row[key].kind, 'id');
+  }
+  assert.equal(row.RMK.kind, 'string');
+  assert.equal(row.RMK.value, 'NULL');
+  assert.throws(
+    () => exportProductTable(source(), 'sql', name, { ...registration(), SRVC_CD: NULL_OVERRIDE }),
+    /NULL로 지정할 수 없어요/,
+  );
+});
 
 test('INSERT는 사용자 최종값·따옴표와 필수 등록·변경 정보를 함께 내보낸다', () => {
   const original = source();

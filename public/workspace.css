@@ -190,6 +190,21 @@ header {
   border-radius: 8px;
   background: #f8faff;
 }
+.registration-nullable-field {
+  min-width: 0;
+}
+.null-toggle {
+  min-height: 30px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.null-toggle[aria-pressed='true'] {
+  color: var(--action);
+  background: var(--selected);
+  border-color: var(--selected-border);
+}
 .review-explanation > h3 {
   font-size: 16px;
   margin-bottom: 4px;

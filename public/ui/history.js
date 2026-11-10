@@ -2,6 +2,7 @@ import { $, make } from './dom.js';
 import { HISTORY_KEY, createHistoryStore, historySnapshot } from '../history.js';
 import { PRODUCT_COLUMNS, productTable } from '../product-table.js';
 import { INSERT_FIELDS } from '../product-insert.js';
+import { NULL_OVERRIDE } from '../domain.js';
 
 export function createHistory() {
   function store() {
@@ -56,7 +57,12 @@ export function createHistory() {
             const info = make('details', undefined, 'history-source');
             info.append(make('summary', 'INSERT 등록 정보'));
             for (const [key, label] of registration)
-              info.append(make('p', `${label}: ${entry.registration[key]}`));
+              info.append(
+                make(
+                  'p',
+                  `${label}: ${entry.registration[key] === NULL_OVERRIDE ? 'NULL' : entry.registration[key]}`,
+                ),
+              );
             detail.append(info);
           }
           const sql = make('details', undefined, 'history-source');

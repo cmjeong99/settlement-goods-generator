@@ -1,4 +1,4 @@
-import { FIELDS } from './domain.js';
+import { FIELDS, NULL_OVERRIDE, NULLABLE_FIELDS } from './domain.js';
 
 export function buildFinalProduct(source, overrides = {}, identity = {}) {
   if (!source)
@@ -9,6 +9,21 @@ export function buildFinalProduct(source, overrides = {}, identity = {}) {
   for (const [key, label, values] of FIELDS) {
     const raw = String(overrides[key] ?? '').trim();
     if (!raw) continue;
+    if (raw === NULL_OVERRIDE) {
+      if (!NULLABLE_FIELDS.includes(key)) {
+        errors.push(`${label}은 NULL로 지정할 수 없어요.`);
+        continue;
+      }
+      fields[key] = {
+        value: null,
+        status: 'not-applicable',
+        source: 'user',
+        evidence: [],
+        reason: '사용자가 NULL(미적용)로 지정한 값입니다.',
+      };
+      changedFields.push(key);
+      continue;
+    }
     if (raw === '__defer__') {
       fields[key] = {
         value: null,

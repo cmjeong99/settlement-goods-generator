@@ -1,4 +1,4 @@
-import { FIELDS } from './domain.js';
+import { FIELDS, NULL_OVERRIDE, NULLABLE_FIELDS } from './domain.js';
 
 // DAON_SMT_OWNER.TB_SSI_MERC_SMT_GDS_M, checked against ALL_TAB_COLUMNS 2026-11-09.
 export const INSERT_FIELDS = [
@@ -20,14 +20,6 @@ export const INSERT_FIELDS = [
   ['RMK', '비고', 4000, false],
   ['REG_USER_ID', '등록자 ID', 30, true, '본인의 등록자 ID'],
 ];
-const requiredSettings = new Set([
-  'FRIM_BASE_DVCD',
-  'FEE_TYPE_DVCD',
-  'FEE_SMT_CALC_BASE_DVCD',
-  'VAT_DVCD',
-  'VAT_CALC_TRGT_DVCD',
-  'ABS_PROCS_YN',
-]);
 const text = (value) => String(value ?? '').trim();
 
 export function normalizeRegistration(registration = {}) {
@@ -45,6 +37,10 @@ export function productInsertErrors(result, name, registration = {}) {
     if (Array.from(text(value)).length > 100) errors.push(`${label}은 100자 이하로 입력해 주세요.`);
   for (const [key, label, maxLength, required] of INSERT_FIELDS) {
     const value = text(registration[key]);
+    if (value === NULL_OVERRIDE) {
+      if (required) errors.push(`${label}은 NULL로 지정할 수 없어요.`);
+      continue;
+    }
     if (required && !value) errors.push(`${label}: 값을 입력해 주세요.`);
     if (Array.from(value).length > maxLength)
       errors.push(`${label}은 ${maxLength}자 이하로 입력해 주세요.`);
@@ -53,7 +49,7 @@ export function productInsertErrors(result, name, registration = {}) {
   }
   const pending = FIELDS.filter(([key, , options]) => {
     const cell = result.fields[key];
-    if (cell?.status === 'not-applicable') return requiredSettings.has(key);
+    if (cell?.status === 'not-applicable') return !NULLABLE_FIELDS.includes(key);
     if (cell?.status !== 'known') return true;
     return options ? !options.includes(cell.value) : !Number.isFinite(cell.value) || cell.value < 0;
   });
@@ -86,7 +82,7 @@ export function exportProductInsert(result, name, registration = {}) {
       ];
     }),
     ...INSERT_FIELDS.filter(([key]) => key !== 'REG_USER_ID' && text(registration[key])).map(
-      ([key]) => [key, literal(registration[key])],
+      ([key]) => [key, registration[key] === NULL_OVERRIDE ? 'NULL' : literal(registration[key])],
     ),
     ['FRST_REG_DTTM', 'SYSTIMESTAMP'],
     ['FRST_REG_USER_ID', literal(registration.REG_USER_ID)],

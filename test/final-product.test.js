@@ -3,9 +3,35 @@ import assert from 'node:assert/strict';
 import { buildFinalProduct } from '../public/final-product.js';
 import { analyze } from '../public/analyzer.js';
 import { EXAMPLES } from '../public/examples.js';
-import { exportRow } from '../public/domain.js';
+import { exportRow, NULL_OVERRIDE, NULLABLE_FIELDS } from '../public/domain.js';
+import { productTable } from '../public/product-table.js';
 
 const source = () => analyze(EXAMPLES['오픈뱅킹 정률']).results[0];
+
+test('NULL 선택은 미확정과 구분해 확정하고 필수 계산 컬럼에는 허용하지 않는다', () => {
+  const original = source(),
+    before = structuredClone(original);
+  for (const key of NULLABLE_FIELDS) {
+    const draft = buildFinalProduct(original, { [key]: NULL_OVERRIDE });
+    assert.deepEqual(draft.errors, []);
+    assert.equal(draft.result.fields[key].value, null);
+    assert.equal(draft.result.fields[key].status, 'not-applicable');
+    const cell = productTable(draft.result).cells.find((cell) => cell.key === key);
+    assert.equal(cell.value, 'NULL');
+    assert.equal(cell.status, 'chosen');
+  }
+  const deferred = buildFinalProduct(original, { SIGN_APLY_LOCT_DVCD: '__defer__' });
+  assert.equal(
+    productTable(deferred.result).cells.find((c) => c.key === 'SIGN_APLY_LOCT_DVCD').status,
+    'pending',
+  );
+  for (const key of ['FRIM_BASE_DVCD', 'ABS_PROCS_YN', 'FEE_SMT_CALC_BASE_DVCD']) {
+    const invalid = buildFinalProduct(original, { [key]: NULL_OVERRIDE });
+    assert.match(invalid.errors.join(' '), /NULL로 지정할 수 없어요/);
+    assert.deepEqual(invalid.result.fields[key], original.fields[key]);
+  }
+  assert.deepEqual(original, before);
+});
 
 test('최종 수정값과 상품명을 복사하되 분석 원본과 근거는 보존한다', () => {
   const original = source(),

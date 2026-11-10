@@ -2,9 +2,23 @@ import { $, make } from './dom.js';
 import { INSERT_FIELDS, normalizeRegistration } from '../product-insert.js';
 import { PRODUCT_EXAMPLES } from '../product-examples.js';
 import { SERVICES, detailServiceOptions, resolveServiceIdentity } from '../service-catalog.js';
+import { NULL_OVERRIDE } from '../domain.js';
 
 export function createInsertRegistration({ onChange }) {
   const inputs = new Map();
+  const nullButtons = new Map(),
+    nullSelections = new Map();
+  let available = false;
+  function syncNullChoice(key) {
+    const selected = nullSelections.has(key);
+    const input = inputs.get(key),
+      button = nullButtons.get(key);
+    input.disabled = !available || selected;
+    input.placeholder = selected ? 'NULL (미적용)' : '선택';
+    button.disabled = !available;
+    button.setAttribute('aria-pressed', String(selected));
+    button.textContent = selected ? 'NULL 선택됨 · 해제' : 'NULL 지정';
+  }
   let authorError;
   function syncAuthor() {
     const input = inputs.get('REG_USER_ID');
@@ -77,18 +91,53 @@ export function createInsertRegistration({ onChange }) {
       input.setAttribute('aria-describedby', authorError.id);
       control.replaceChildren(title, input);
       $('insert-author').append(control, authorError);
-    } else $(required ? 'insert-required' : 'insert-optional').append(control);
+    } else if (!required) {
+      const field = make('div', undefined, 'registration-nullable-field');
+      const button = make('button', 'NULL 지정', 'null-toggle');
+      button.type = 'button';
+      button.dataset.nullField = key;
+      button.setAttribute('aria-label', `${label} NULL 선택`);
+      button.disabled = true;
+      button.onclick = () => {
+        if (nullSelections.has(key)) {
+          input.value = nullSelections.get(key);
+          nullSelections.delete(key);
+        } else {
+          nullSelections.set(key, input.value);
+          input.value = '';
+        }
+        syncNullChoice(key);
+        onChange();
+      };
+      nullButtons.set(key, button);
+      field.append(control, button);
+      $('insert-optional').append(field);
+    } else $('insert-required').append(control);
   }
   return {
     read() {
       return normalizeRegistration(
-        Object.fromEntries([...inputs].map(([key, input]) => [key, input.value])),
+        Object.fromEntries(
+          [...inputs].map(([key, input]) => [
+            key,
+            nullSelections.has(key) ? NULL_OVERRIDE : input.value,
+          ]),
+        ),
       );
     },
-    setProduct(available, product) {
+    setProduct(nextAvailable, product) {
+      available = nextAvailable;
+      nullSelections.clear();
       for (const [key, input] of inputs) {
         if (key !== 'REG_USER_ID') input.value = product?.registration?.[key] ?? '';
         input.disabled = !available;
+        if (nullButtons.has(key)) {
+          if (input.value === NULL_OVERRIDE) {
+            input.value = '';
+            nullSelections.set(key, '');
+          }
+          syncNullChoice(key);
+        }
       }
       syncService();
       syncAuthor();

@@ -9,6 +9,7 @@ import {
 import { analyze } from '../public/analyzer.js';
 import { EXAMPLES } from '../public/examples.js';
 import { buildFinalProduct } from '../public/final-product.js';
+import { NULL_OVERRIDE } from '../public/domain.js';
 
 function fixture() {
   const data = new Map();
@@ -38,6 +39,21 @@ test('등록 정보도 독립된 이력에 보관하고 서비스나 등록자�
   history.add(historySnapshot(draft, { sql: 'SELECT 1' }));
   assert.equal(history.read().length, 2);
   assert.equal(history.read()[0].registration.REG_USER_ID, 'tester');
+});
+
+test('명시적 NULL 선택을 계산 설정과 짧은 통화 컬럼의 이력에도 보존한다', () => {
+  const { storage, options, draft } = fixture();
+  const selected = buildFinalProduct(
+    draft.result,
+    { SIGN_APLY_LOCT_DVCD: NULL_OVERRIDE },
+    draft.name,
+  );
+  selected.registration = { MERC_PMT_CURN_CD: NULL_OVERRIDE };
+  createHistoryStore(storage, options).add(historySnapshot(selected, { sql: 'SELECT 1' }));
+  const saved = createHistoryStore(storage).read()[0];
+  assert.equal(saved.fields.SIGN_APLY_LOCT_DVCD.value, null);
+  assert.equal(saved.fields.SIGN_APLY_LOCT_DVCD.status, 'not-applicable');
+  assert.equal(saved.registration.MERC_PMT_CURN_CD, NULL_OVERRIDE);
 });
 
 test('복사 시점의 최종 설정과 수식을 독립된 이력으로 저장하고 새 인스턴스에서도 읽는다', () => {

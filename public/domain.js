@@ -20,19 +20,33 @@ export const FIELDS = [
   ['ABS_PROCS_YN', '절대값 처리', ['Y', 'N']],
   ['SIGN_APLY_LOCT_DVCD', '부호 적용 위치', ['BEFORE', 'AFTER', 'NONE']],
 ];
+export const NULL_OVERRIDE = '__null__';
+// Nullable calculation columns in TB_SSI_MERC_SMT_GDS_M (2026-11-09 schema).
+export const NULLABLE_FIELDS = Object.freeze([
+  'FEE_SMT_CALC_MHOD_DVCD',
+  'FEE_SMT_CALC_UNIT_VAL',
+  'VAT_SMT_CALC_BASE_DVCD',
+  'VAT_SMT_CALC_MHOD_DVCD',
+  'VAT_SMT_CALC_UNIT_VAL',
+  'SIGN_APLY_LOCT_DVCD',
+]);
 export const display = (cell) =>
   cell?.value ??
   (cell?.status === 'custom'
     ? '별도 계산 필요'
     : cell?.status === 'not-applicable'
-      ? '미적용'
+      ? cell.source === 'user'
+        ? 'NULL'
+        : '미적용'
       : '미확정');
 export function describeField(key, cell) {
   if (cell?.value === null || cell?.value === undefined)
     return cell?.status === 'custom'
       ? '따로 계산해야 해요'
       : cell?.status === 'not-applicable'
-        ? '사용하지 않아요'
+        ? cell.source === 'user'
+          ? 'NULL로 지정했어요'
+          : '사용하지 않아요'
         : '수식만으로 알 수 없어요';
   if (key.endsWith('_UNIT_VAL')) return `${cell.value === 0 ? 1 : cell.value}원 단위`;
   if (key === 'ABS_PROCS_YN')
@@ -73,6 +87,8 @@ export function explainCalculation(result) {
     const key = `${prefix}_SMT_CALC_MHOD_DVCD`,
       method = value(key);
     if (fields[key]?.status === 'custom') return `${subject}의 단수 처리는 별도 계산이 필요해요.`;
+    if (fields[key]?.status === 'not-applicable')
+      return `${subject}의 반올림·절사 방식은 NULL(미적용)이에요.`;
     if (method === null) return `${subject}의 반올림·절사 방식은 추가 확인이 필요해요.`;
     if (method === 'NONE') return `${subject}에 별도 반올림이나 절사는 적용하지 않아요.`;
     const unit = value(`${prefix}_SMT_CALC_UNIT_VAL`);
@@ -84,7 +100,7 @@ export function explainCalculation(result) {
       HALF_DOWN: '정확히 절반이면 버리는 방식으로 반올림해요',
       SIGNED_DOWN: '음수도 더 작은 값이 되도록 내려요',
     };
-    return `${subject}는 ${unitText}${actions[method] ?? '단수 처리를 해요'}.${unit === null ? ' 계산 단위는 추가 확인이 필요해요.' : ''}`;
+    return `${subject}는 ${unitText}${actions[method] ?? '단수 처리를 해요'}.${unit === null ? (fields[`${prefix}_SMT_CALC_UNIT_VAL`]?.status === 'not-applicable' ? ' 계산 단위는 NULL(미적용)이에요.' : ' 계산 단위는 추가 확인이 필요해요.') : ''}`;
   };
   const fee = [];
   const base = value('FRIM_BASE_DVCD'),
@@ -148,6 +164,8 @@ export function explainCalculation(result) {
           : '부가세를 어떤 금액으로 계산하는지는 추가 확인이 필요해요.',
       );
     vat.push(rounding('부가세', 'VAT'));
+    if (fields.VAT_SMT_CALC_BASE_DVCD?.status === 'not-applicable')
+      vat.push('부가세 계산 기준은 NULL(미적용)이에요.');
     if (
       vatCycle === 'EACH' &&
       result.formulas?.vat?.kind === 'call' &&
@@ -172,6 +190,8 @@ export function explainCalculation(result) {
     );
   else if (position === 'BEFORE') sign.push('원래 거래금액의 부호를 반올림·절사 전에 적용해요.');
   else if (position === 'AFTER') sign.push('원래 거래금액의 부호를 반올림·절사 후에 적용해요.');
+  else if (fields.SIGN_APLY_LOCT_DVCD?.status === 'not-applicable')
+    sign.push('부호 적용 위치는 NULL(미적용)이에요.');
   else sign.push('별도의 부호 처리 위치는 수식만으로 확정할 수 없어요.');
   return [fee.join(' '), vat.join(' '), sign.join(' ')];
 }

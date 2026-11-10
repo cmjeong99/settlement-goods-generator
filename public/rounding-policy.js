@@ -1,5 +1,6 @@
 import { Decimal } from './calculation/decimal.js';
 import { cleanNumber } from './calculation/asis-data.js';
+import { NULL_OVERRIDE, NULLABLE_FIELDS } from './domain.js';
 
 export const ROUNDING_METHODS = [
   ['DOWN', '절사'],
@@ -24,7 +25,12 @@ export function unitCode(text) {
   return value === 1 ? 0 : value;
 }
 export function readRoundingPolicy(fields, prefix) {
-  const value = (key) => (fields[key]?.status === 'known' ? fields[key].value : null);
+  const value = (key) =>
+    fields[key]?.status === 'known'
+      ? fields[key].value
+      : fields[key]?.status === 'not-applicable' && NULLABLE_FIELDS.includes(key)
+        ? NULL_OVERRIDE
+        : null;
   return {
     method: value(`${prefix}_SMT_CALC_MHOD_DVCD`),
     unit: value(`${prefix}_SMT_CALC_UNIT_VAL`),
@@ -35,19 +41,29 @@ export function roundingChanges(fields, prefix, policy) {
   const values = {
     [`${prefix}_SMT_CALC_MHOD_DVCD`]: policy.method,
     [`${prefix}_SMT_CALC_BASE_DVCD`]: policy.base,
-    ...(policy.method !== 'NONE' ? { [`${prefix}_SMT_CALC_UNIT_VAL`]: policy.unit } : {}),
+    ...(policy.unit === NULL_OVERRIDE || !['NONE', NULL_OVERRIDE].includes(policy.method)
+      ? { [`${prefix}_SMT_CALC_UNIT_VAL`]: policy.unit }
+      : {}),
   };
   return Object.fromEntries(
     Object.entries(values)
       .filter(
         ([key, value]) =>
-          value !== null && (fields[key]?.status !== 'known' || fields[key].value !== value),
+          value !== null &&
+          (value === NULL_OVERRIDE
+            ? NULLABLE_FIELDS.includes(key) && fields[key]?.status !== 'not-applicable'
+            : fields[key]?.status !== 'known' || fields[key].value !== value),
       )
       .map(([key, value]) => [key, String(value)]),
   );
 }
 export function roundingPreview(policy, text) {
-  if (!policy.method || (policy.method !== 'NONE' && policy.unit === null)) return null;
+  if (
+    !policy.method ||
+    policy.method === NULL_OVERRIDE ||
+    (policy.method !== 'NONE' && [null, NULL_OVERRIDE].includes(policy.unit))
+  )
+    return null;
   const value = Decimal.parse(cleanNumber(text)).abs();
   const unit = policy.method === 'NONE' || policy.unit === 0 ? '1' : String(policy.unit);
   return {

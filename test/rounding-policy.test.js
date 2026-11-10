@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { analyze } from '../public/analyzer.js';
 import { EXAMPLES } from '../public/examples.js';
 import { buildFinalProduct } from '../public/final-product.js';
+import { NULL_OVERRIDE } from '../public/domain.js';
 import {
   unitCode,
   readRoundingPolicy,
@@ -55,6 +56,37 @@ test('단수 처리 없음은 미사용 단위를 새로 확정하거나 덮어�
   assert.deepEqual(readRoundingPolicy(unknown, 'FEE'), { method: null, unit: null, base: null });
   assert.deepEqual(roundingChanges(unknown, 'FEE', { method: null, unit: null, base: null }), {});
   assert.equal(roundingPreview({ method: 'DOWN', unit: null }, '148.5'), null);
+});
+
+test('방식·단위·VAT 기준의 명시적 NULL을 미선택이나 코드 NONE으로 바꾸지 않는다', () => {
+  const source = analyze(EXAMPLES['오픈뱅킹 정률']).results[0];
+  const changes = roundingChanges(source.fields, 'VAT', {
+    method: NULL_OVERRIDE,
+    unit: NULL_OVERRIDE,
+    base: NULL_OVERRIDE,
+  });
+  assert.deepEqual(changes, {
+    VAT_SMT_CALC_MHOD_DVCD: NULL_OVERRIDE,
+    VAT_SMT_CALC_BASE_DVCD: NULL_OVERRIDE,
+    VAT_SMT_CALC_UNIT_VAL: NULL_OVERRIDE,
+  });
+  const draft = buildFinalProduct(source, changes);
+  assert.deepEqual(draft.errors, []);
+  assert.deepEqual(readRoundingPolicy(draft.result.fields, 'VAT'), {
+    method: NULL_OVERRIDE,
+    unit: NULL_OVERRIDE,
+    base: NULL_OVERRIDE,
+  });
+  assert.deepEqual(
+    roundingChanges(draft.result.fields, 'VAT', readRoundingPolicy(draft.result.fields, 'VAT')),
+    {},
+  );
+  assert.equal(roundingPreview({ method: NULL_OVERRIDE, unit: NULL_OVERRIDE }, '148.5'), null);
+  assert.equal(roundingPreview({ method: 'DOWN', unit: NULL_OVERRIDE }, '148.5'), null);
+  assert.deepEqual(
+    roundingChanges(source.fields, 'FEE', { method: 'NONE', unit: NULL_OVERRIDE, base: 'EACH' }),
+    { FEE_SMT_CALC_MHOD_DVCD: 'NONE', FEE_SMT_CALC_UNIT_VAL: NULL_OVERRIDE },
+  );
 });
 
 test('양수와 음수 예시로 절사·반올림·올림의 차이를 보여준다', () => {

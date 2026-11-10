@@ -1,5 +1,5 @@
 import { $, make } from './dom.js';
-import { FIELDS, display, describeField } from '../domain.js';
+import { FIELDS, display, describeField, NULL_OVERRIDE, NULLABLE_FIELDS } from '../domain.js';
 import { proofNodes } from './views.js';
 import { createRoundingEditor } from './rounding-editor.js';
 
@@ -66,12 +66,13 @@ export function createDecisionReview({ onDecide, onSetFields }) {
     if (values)
       control.append(
         new Option(
-          original.status === 'known'
+          ['known', 'not-applicable'].includes(original.status)
             ? `수식 도출값 사용 · ${display(original)}`
             : '미확정 · 선택하세요',
           '',
         ),
         ...values.map((value) => new Option(`${describeField(key, { value })} · ${value}`, value)),
+        ...(NULLABLE_FIELDS.includes(key) ? [new Option('NULL (미적용)', NULL_OVERRIDE)] : []),
         new Option('판단 보류', '__defer__'),
       );
     else {

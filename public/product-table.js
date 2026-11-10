@@ -31,7 +31,9 @@ export function productTable(result, name) {
               ? 'context'
               : 'inferred'
           : cell.status === 'not-applicable'
-            ? 'unused'
+            ? cell.source === 'user'
+              ? 'chosen'
+              : 'unused'
             : 'pending',
     };
   });

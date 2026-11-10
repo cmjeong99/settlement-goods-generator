@@ -8,6 +8,7 @@ import {
   unitCode,
 } from '../rounding-policy.js';
 import { proofNodes } from './views.js';
+import { NULL_OVERRIDE, NULLABLE_FIELDS } from '../domain.js';
 
 export function createRoundingEditor({ onApply, onClose }) {
   let prefix = 'FEE',
@@ -19,18 +20,20 @@ export function createRoundingEditor({ onApply, onClose }) {
     sample = '148.5',
     unitError = false;
   function update() {
+    const noRounding = ['NONE', NULL_OVERRIDE].includes(policy.method);
     for (const [value, button] of refs.methods)
       button.setAttribute('aria-pressed', String(policy.method === value));
     for (const [value, button] of refs.units) {
       button.setAttribute('aria-pressed', String(policy.unit === value));
-      button.disabled = policy.method === 'NONE';
+      button.disabled = noRounding && value !== NULL_OVERRIDE;
+      button.hidden = noRounding && value !== NULL_OVERRIDE;
     }
     for (const [value, button] of refs.bases)
       button.setAttribute('aria-pressed', String(policy.base === value));
-    refs.custom.disabled = policy.method === 'NONE';
-    refs.unitRow.hidden = policy.method === 'NONE';
-    refs.custom.setAttribute('aria-invalid', String(unitError && policy.method !== 'NONE'));
-    if (policy.method === 'NONE') refs.error.textContent = '';
+    refs.custom.disabled = noRounding;
+    refs.customDetails.hidden = noRounding;
+    refs.custom.setAttribute('aria-invalid', String(unitError && !noRounding));
+    if (noRounding) refs.error.textContent = '';
     else if (unitError) refs.error.textContent = '단위를 0보다 큰 금액으로 입력해 주세요.';
     const method =
       {
@@ -39,10 +42,29 @@ export function createRoundingEditor({ onApply, onClose }) {
         CEILING: '올려요',
         HALF_DOWN: '절반이면 버려요',
         SIGNED_DOWN: '음수도 아래로 내려요',
+        [NULL_OVERRIDE]: 'NULL(미적용)',
       }[policy.method] || '처리 방식을 선택하세요';
     const unit =
-      policy.unit === null ? '단위 미선택' : `${policy.unit === 0 ? 1 : policy.unit}원 단위`;
-    refs.sentence.textContent = `${prefix === 'FEE' ? '수수료' : '부가세'}: ${policy.base === 'SUM' ? '합산 후 계산' : policy.base === 'EACH' ? '건별 계산' : '계산 기준 미확정'} · ${policy.method === 'NONE' ? '단수 처리 안 함' : `${unit}로 ${method}`}`;
+      policy.unit === NULL_OVERRIDE
+        ? '단위 NULL(미적용)'
+        : policy.unit === null
+          ? '단위 미선택'
+          : `${policy.unit === 0 ? 1 : policy.unit}원 단위`;
+    const baseLabel =
+      policy.base === NULL_OVERRIDE
+        ? '계산 기준 NULL(미적용)'
+        : policy.base === 'SUM'
+          ? '합산 후 계산'
+          : policy.base === 'EACH'
+            ? '건별 계산'
+            : '계산 기준 미확정';
+    const methodLabel =
+      policy.method === NULL_OVERRIDE
+        ? '반올림·절사 방식 NULL(미적용)'
+        : policy.method === 'NONE'
+          ? '단수 처리 안 함'
+          : `${unit}로 ${method}`;
+    refs.sentence.textContent = `${prefix === 'FEE' ? '수수료' : '부가세'}: ${baseLabel} · ${methodLabel}`;
     refs.note.hidden = !(prefix === 'VAT' && draft.fields.VAT_DVCD?.value === 'ZERO');
     refs.note.textContent = '부가세 0원 · 단수 처리 미적용';
     try {
@@ -54,8 +76,8 @@ export function createRoundingEditor({ onApply, onClose }) {
     }
     refs.apply.disabled =
       !Object.keys(roundingChanges(draft.fields, prefix, policy)).length ||
-      (unitError && policy.method !== 'NONE') ||
-      !!(policy.method && policy.method !== 'NONE' && policy.unit === null);
+      (unitError && !noRounding) ||
+      !!(policy.method && !noRounding && policy.unit === null);
   }
   function open(nextPrefix, source, current) {
     prefix = nextPrefix;
@@ -96,6 +118,23 @@ export function createRoundingEditor({ onApply, onClose }) {
       panel.append(field);
       return choices;
     };
+    const nullChoice = (property, suffix, choices, buttons) => {
+      const key = `${prefix}_SMT_CALC_${suffix}`;
+      if (!NULLABLE_FIELDS.includes(key)) return;
+      const button = make('button', 'NULL (미적용)');
+      button.type = 'button';
+      button.dataset.nullField = key;
+      button.onclick = () => {
+        policy[property] = NULL_OVERRIDE;
+        if (property === 'unit') {
+          unitError = false;
+          refs.custom.value = '';
+        }
+        update();
+      };
+      buttons.push([NULL_OVERRIDE, button]);
+      choices.append(button);
+    };
     const bases = group('기준');
     for (const [value, label] of [
       ['EACH', '건별'],
@@ -112,6 +151,7 @@ export function createRoundingEditor({ onApply, onClose }) {
       refs.bases.push([value, button]);
       bases.append(button);
     }
+    nullChoice('base', 'BASE_DVCD', bases, refs.bases);
     const methods = group('방식'),
       advanced = make('details', undefined, 'rounding-advanced');
     advanced.open = ['HALF_DOWN', 'SIGNED_DOWN'].includes(policy.method);
@@ -130,6 +170,7 @@ export function createRoundingEditor({ onApply, onClose }) {
       refs.methods.push([value, button]);
       (index < 4 ? methods : extra).append(button);
     });
+    nullChoice('method', 'MHOD_DVCD', methods, refs.methods);
     methods.append(advanced);
     const units = group('단위');
     refs.unitRow = units.parentElement;
@@ -147,16 +188,21 @@ export function createRoundingEditor({ onApply, onClose }) {
       refs.units.push([value, button]);
       units.append(button);
     }
+    nullChoice('unit', 'UNIT_VAL', units, refs.units);
     const customDetails = make('details', undefined, 'rounding-custom-details'),
       custom = make('label', undefined, 'rounding-custom');
     customDetails.open =
-      policy.unit !== null && !ROUNDING_UNITS.some(([value]) => value === policy.unit);
+      ![null, NULL_OVERRIDE].includes(policy.unit) &&
+      !ROUNDING_UNITS.some(([value]) => value === policy.unit);
+    refs.customDetails = customDetails;
     customDetails.append(make('summary', '직접 입력'));
     custom.append(make('span', '원'));
     refs.custom = make('input');
     refs.custom.inputMode = 'decimal';
     refs.custom.maxLength = 120;
-    refs.custom.value = policy.unit === null ? '' : String(policy.unit === 0 ? 1 : policy.unit);
+    refs.custom.value = [null, NULL_OVERRIDE].includes(policy.unit)
+      ? ''
+      : String(policy.unit === 0 ? 1 : policy.unit);
     refs.custom.setAttribute('aria-label', '처리 단위 직접 지정');
     refs.custom.oninput = () => {
       try {
@@ -234,7 +280,9 @@ export function createRoundingEditor({ onApply, onClose }) {
         policy = next;
         unitError = false;
         signature = nextSignature;
-        refs.custom.value = policy.unit === null ? '' : String(policy.unit === 0 ? 1 : policy.unit);
+        refs.custom.value = [null, NULL_OVERRIDE].includes(policy.unit)
+          ? ''
+          : String(policy.unit === 0 ? 1 : policy.unit);
         update();
       }
     },
