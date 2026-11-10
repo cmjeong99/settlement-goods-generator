@@ -289,6 +289,26 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
         (await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)),
       'large aggregate results survive charting and mobile layout',
     );
+    await page.locator('#product-workspace-tab').click();
+    await page.locator('[data-workflow-nav="1"]').click();
+    await page.locator('#edit-calculation').click();
+    await open(page.locator('.rounding-custom-details'));
+    await page.getByLabel('처리 단위 직접 지정').fill('0');
+    check(await page.locator('#rounding-apply').isDisabled(), 'invalid rounding unit blocks apply');
+    await page.locator('#code-proof [data-null-field="FEE_SMT_CALC_UNIT_VAL"]').click();
+    check(
+      (await page.locator('#code-proof .field-error').textContent()) === '',
+      'NULL unit clears previous input error',
+    );
+    await page.locator('#rounding-apply').click();
+    const applied = await page.locator('#code-proof .rounding-feedback').evaluate((element) => ({
+      text: element.textContent,
+      color: getComputedStyle(element).color,
+    }));
+    check(
+      applied.text.includes('반영') && applied.color === 'rgb(9, 105, 239)',
+      'rounding success uses Danal blue feedback',
+    );
     check(errors.length === 0, 'no browser runtime errors');
     return { baseURL, passed: checks.length, checks };
   } finally {

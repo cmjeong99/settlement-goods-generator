@@ -33,8 +33,9 @@ export function createRoundingEditor({ onApply, onClose }) {
     refs.custom.disabled = noRounding;
     refs.customDetails.hidden = noRounding;
     refs.custom.setAttribute('aria-invalid', String(unitError && !noRounding));
-    if (noRounding) refs.error.textContent = '';
-    else if (unitError) refs.error.textContent = '단위를 0보다 큰 금액으로 입력해 주세요.';
+    refs.error.textContent =
+      unitError && !noRounding ? '단위를 0보다 큰 금액으로 입력해 주세요.' : '';
+    refs.feedback.textContent = '';
     const method =
       {
         DOWN: '절사해요',
@@ -247,13 +248,16 @@ export function createRoundingEditor({ onApply, onClose }) {
     refs.error = make('p', undefined, 'field-error');
     refs.error.setAttribute('role', 'status');
     panel.append(refs.error);
+    refs.feedback = make('p', undefined, 'rounding-feedback');
+    refs.feedback.setAttribute('role', 'status');
+    panel.append(refs.feedback);
     refs.apply = make('button', '적용', 'primary');
     refs.apply.type = 'button';
     refs.apply.id = 'rounding-apply';
     refs.apply.onclick = () => {
       onApply(roundingChanges(draft.fields, prefix, policy));
-      refs.error.textContent = '적용됨';
       update();
+      refs.feedback.textContent = '설정에 반영했어요.';
     };
     panel.append(refs.apply);
     const evidence = make('details', undefined, 'rounding-proof');

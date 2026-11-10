@@ -227,6 +227,14 @@ header {
   color: var(--muted);
   font-size: 11px;
 }
+.rounding-feedback {
+  color: var(--action);
+  font-size: 13px;
+  margin: 8px 0;
+}
+.rounding-feedback:empty {
+  display: none;
+}
 .nullable-column-hint {
   display: block;
   margin-top: 4px;
