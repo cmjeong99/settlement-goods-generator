@@ -112,6 +112,7 @@ function syncDraft() {
     draft.result,
     productByCode.get($('example').value),
     draft.settingErrors,
+    { registration: draft.registration, identity: draft.name },
   );
   renderReadiness();
 }

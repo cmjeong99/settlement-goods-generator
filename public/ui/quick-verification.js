@@ -7,19 +7,18 @@ import {
 import { cleanNumber } from '../calculation/asis-data.js';
 import { quickDashboard } from '../calculation/dashboard.js';
 import { createDashboard } from './dashboard.js';
+import { currentProductContext, commonCalculationErrors } from '../calculation/product-context.js';
 import {
   rememberSample,
   sampleTestState,
   SAMPLE_HISTORY_LIMIT,
 } from '../calculation/sample-session.js';
 
-export function verificationProduct(result, dbProduct) {
+export function verificationProduct(result, dbProduct, context) {
   if (!result) return null;
   return {
-    ...dbProduct,
+    ...currentProductContext(dbProduct, context),
     code: dbProduct ? `DRAFT-${dbProduct.code}` : 'CURRENT-ANALYSIS',
-    name: dbProduct ? `${dbProduct.name} · 내 설정` : '내 상품 설정',
-    engine: dbProduct?.engine ?? 'COMMON',
     source: 'draft',
     expected: Object.fromEntries(
       Object.entries(result.fields).map(([key, field]) => [
@@ -204,6 +203,7 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
         sourceRows,
         feeValue,
         engine: product.engine,
+        contextErrors: commonCalculationErrors(product),
         expected,
       });
       const table = make('table'),
@@ -323,20 +323,23 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
     get history() {
       return structuredClone(history);
     },
-    setResult(result, currentDraft, dbProduct, errors = []) {
-      const next = verificationProduct(currentDraft, dbProduct);
+    setResult(result, currentDraft, dbProduct, errors = [], context) {
+      const next = verificationProduct(currentDraft, dbProduct, context);
       const nextSignature = JSON.stringify([
         result?.formulas,
         next?.expected,
         next?.engine,
+        next?.settlement,
+        commonCalculationErrors(next),
         errors,
       ]);
+      product = next;
+      dashboard.setTitle(next?.name);
       if (source === result && signature === nextSignature) return;
       const changed = history.length > 0 || state.status === 'stale',
         newSource = source !== result;
       source = result;
       draft = currentDraft;
-      product = next;
       signature = nextSignature;
       settingErrors = errors;
       history = [];

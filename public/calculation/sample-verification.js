@@ -51,7 +51,7 @@ function originalInput(source, sourceRows) {
 export function compareSample(
   source,
   draft,
-  { rows, sourceRows, feeValue, expected = {}, engine = 'COMMON' },
+  { rows, sourceRows, feeValue, expected = {}, engine = 'COMMON', contextErrors = [] },
 ) {
   if (!rows.length || rows.length > 100 || rows.length !== sourceRows.length)
     throw new Error('원문과 상품에 같은 건수의 예시를 입력해 주세요.');
@@ -64,6 +64,7 @@ export function compareSample(
   }
   let calculation = null;
   try {
+    if (contextErrors.length) throw new Error(contextErrors.join(' '));
     calculation = calculateSettings(draft.fields, rows, {
       amountColumn: 'amount',
       targetAmountColumn: 'targetAmount',

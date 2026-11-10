@@ -244,6 +244,11 @@ export function createDashboard(root) {
   };
   render();
   return {
+    setTitle(title) {
+      if (!model || !title || model.title === title) return;
+      model = { ...model, title };
+      render();
+    },
     update(next) {
       model = next;
       page = 0;

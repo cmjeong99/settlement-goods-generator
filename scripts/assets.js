@@ -47,6 +47,7 @@ export const browserAssets = Object.freeze([
   'calculation/verify.js',
   'calculation/sample-verification.js',
   'calculation/sample-session.js',
+  'calculation/product-context.js',
   'calculation/asis-data.js',
   'calculation/reconciliation.js',
 ]);

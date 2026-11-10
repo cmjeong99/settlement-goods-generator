@@ -1,6 +1,7 @@
 import { Decimal } from './decimal.js';
 import { calculateSettings } from './verify.js';
 import { cleanNumber, MAX_ASIS_ROWS, asCsv } from './asis-data.js';
+import { commonCalculationErrors } from './product-context.js';
 
 export const RECONCILIATION_LABELS = {
   match: '일치',
@@ -90,6 +91,8 @@ export function reconcileAsis(
         throw new Error('합산 상품의 검증 단위를 선택해 주세요.');
       if (selectedProduct.engine !== 'COMMON')
         throw new Error('특이 계산기 상품은 아직 이 화면에서 계산할 수 없어요.');
+      const contextErrors = commonCalculationErrors(selectedProduct);
+      if (contextErrors.length) throw new Error(contextErrors.join(' '));
       if (
         needsAggregation(selectedProduct) &&
         selectedProduct.expected.ABS_PROCS_YN === 'Y' &&
