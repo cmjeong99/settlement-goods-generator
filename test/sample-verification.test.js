@@ -31,6 +31,27 @@ test('원문 수식과 현재 판단한 설정을 동일한 취소 예시에서 
   assert.deepEqual(source, original);
 });
 
+test('빠른 테스트도 합산 단위의 승인·취소 혼합을 막고 0원 거래는 허용한다', () => {
+  const source = openbanking();
+  const draft = buildFinalProduct(source, {
+    FEE_SMT_CALC_BASE_DVCD: 'SUM',
+    VAT_SMT_CALC_BASE_DVCD: 'SUM',
+    SIGN_APLY_LOCT_DVCD: 'AFTER',
+  }).result;
+  const options = (amounts) => ({
+    rows: amounts.map((amount) => ({ amount, count: '1' })),
+    sourceRows: amounts.map((AMT) => ({ AMT, CPRATE: '0.015' })),
+    feeValue: '0.015',
+  });
+  const mixed = compareSample(source, draft, options(['10000', '-10000']));
+  assert.equal(mixed.status, 'unavailable');
+  assert.equal(mixed.breakdown, null);
+  assert.ok(mixed.errors.some((error) => error.includes('승인과 취소')));
+  const zero = compareSample(source, draft, options(['10000', '0']));
+  assert.equal(zero.breakdown.fee, '150');
+  assert.equal(zero.status, 'match');
+});
+
 test('수식에서 알 수 없는 건수 기준은 사용자가 선택해야 설정 계산이 가능하다', () => {
   const source = analyze(EXAMPLES['오픈뱅킹 정액']).results[0];
   const options = {

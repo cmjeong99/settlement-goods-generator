@@ -242,6 +242,29 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
       (await panel.locator('[data-field="amount"]').inputValue()) === '40000',
       'newest file wins',
     );
+    await page.locator('#verification-sum-tab').click();
+    const sumPanel = page.locator('#verification-sum-panel');
+    await sumPanel
+      .locator('[data-verification="asis-product"]')
+      .selectOption('BOOKNLIFEGIFT-BASIC');
+    await open(sumPanel.locator('[data-verification="asis-import-panel"]'));
+    await sumPanel.locator('[data-verification="asis-paste"]').fill('10000\t0.015\n0\t0.015');
+    await sumPanel.locator('[data-verification="asis-run"]').click();
+    check(
+      (await sumPanel
+        .locator('[data-verification="asis-result-rows"] tr')
+        .first()
+        .getAttribute('data-status')) !== 'error',
+      'zero amount does not invalidate aggregate approval',
+    );
+    await sumPanel.locator('[data-field="amount"]').nth(1).fill('-10000');
+    await sumPanel.locator('[data-verification="asis-run"]').click();
+    check(
+      (
+        await sumPanel.locator('[data-verification="asis-calculation-rows"]').textContent()
+      ).includes('승인과 취소'),
+      'aggregate approval/cancel mixture is explained',
+    );
     check(errors.length === 0, 'no browser runtime errors');
     return { baseURL, passed: checks.length, checks };
   } finally {

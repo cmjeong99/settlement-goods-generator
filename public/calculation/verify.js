@@ -65,6 +65,17 @@ export function calculateSettings(
     throw new Error('정액 수수료의 건수 기준을 확인해야 비교할 수 있어요.');
   const absolute = settingsValue(fields, 'ABS_PROCS_YN') === 'Y';
   const feeBase = settingsValue(fields, 'FEE_SMT_CALC_BASE_DVCD');
+  const vatType = settingsValue(fields, 'VAT_DVCD');
+  const aggregateCalculation =
+    feeBase === 'SUM' || (vatType !== 'ZERO' && fields.VAT_SMT_CALC_BASE_DVCD?.value === 'SUM');
+  if (
+    aggregateCalculation &&
+    absolute &&
+    fields.SIGN_APLY_LOCT_DVCD?.value !== 'NONE' &&
+    amounts.some((amount) => amount.sign() > 0) &&
+    amounts.some((amount) => amount.sign() < 0)
+  )
+    throw new Error('승인과 취소는 따로 입력해 검증해 주세요.');
   const indexes = rows.map((_, index) => index);
   const groups = feeBase === 'SUM' ? [indexes] : indexes.map((index) => [index]);
   const rawFees = groups.map((group) => {
@@ -80,7 +91,6 @@ export function calculateSettings(
   const fees = rawFees.map((fee, index) =>
     roundSetting(fee, fields, 'FEE', sum(groups[index].map((index) => amounts[index]))),
   );
-  const vatType = settingsValue(fields, 'VAT_DVCD');
   if (vatType === 'INCLUDED')
     throw new Error('VAT 포함·재분리 계산은 별도 계산기가 필요해요. 원문 수식으로 확인하세요.');
   let vats = [zero()];

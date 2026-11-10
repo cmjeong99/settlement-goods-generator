@@ -11,7 +11,11 @@ import {
   cleanNumber,
   productFieldMapping,
 } from '../public/calculation/asis-data.js';
-import { reconcileAsis, exportReconciliation } from '../public/calculation/reconciliation.js';
+import {
+  reconcileAsis,
+  exportReconciliation,
+  needsAggregation,
+} from '../public/calculation/reconciliation.js';
 import { productByCode } from '../public/catalog.js';
 
 const rate = productByCode.get('OPENBANKING-RATE');
@@ -259,6 +263,57 @@ test('요율·가맹점·기간·통화 및 승인/취소가 다른 정산 단�
     /승인과 취소/,
   );
   assert.equal(reconcileAsis(rate, sampleRows(), { scope: 'groups' }).results[0].status, 'error');
+});
+
+test('합산 검증에서 0원은 승인·취소 혼합으로 보지 않고 실제 양수·음수만 구분한다', () => {
+  const product = structuredClone(rate);
+  Object.assign(product.expected, {
+    FEE_SMT_CALC_BASE_DVCD: 'SUM',
+    VAT_SMT_CALC_BASE_DVCD: 'SUM',
+    SIGN_APLY_LOCT_DVCD: 'AFTER',
+  });
+  for (const [amount, fee] of [
+    ['10000', '150'],
+    ['-10000', '-150'],
+    ['0', '0'],
+  ]) {
+    const report = reconcileAsis(
+      product,
+      [
+        { amount, feeValue: '0.015' },
+        { amount: '0', feeValue: '0.015' },
+      ],
+      { scope: 'all' },
+    );
+    assert.equal(report.results[0].status, 'calculated');
+    assert.equal(report.results[0].metrics.fee.calculated, fee);
+  }
+  const mixed = reconcileAsis(
+    product,
+    [
+      { amount: '10000', feeValue: '0.015' },
+      { amount: '-10000', feeValue: '0.015' },
+    ],
+    { scope: 'all' },
+  );
+  assert.match(mixed.results[0].reasons[0], /승인과 취소/);
+});
+
+test('면세 상품의 사용하지 않는 VAT 합산 설정은 건별 상품을 합산 대상으로 만들지 않는다', () => {
+  const product = structuredClone(rate);
+  Object.assign(product.expected, {
+    VAT_DVCD: 'ZERO',
+    VAT_SMT_CALC_BASE_DVCD: 'SUM',
+    VAT_CALC_TRGT_DVCD: 'NONE',
+  });
+  assert.equal(needsAggregation(product), false);
+  assert.notEqual(
+    reconcileAsis(product, [{ amount: '10000', feeValue: '0.015' }], { scope: null }).results[0]
+      .status,
+    'error',
+  );
+  product.expected.FEE_SMT_CALC_BASE_DVCD = 'SUM';
+  assert.equal(needsAggregation(product), true);
 });
 
 test('기본은 선택 상품으로 계산하고 옵션을 선택할 때만 행별 상품코드를 따른다', () => {

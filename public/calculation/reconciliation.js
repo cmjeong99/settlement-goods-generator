@@ -12,9 +12,8 @@ export const RECONCILIATION_LABELS = {
 };
 const sum = (values) => values.reduce((total, value) => total.add(value), Decimal.parse('0'));
 export const needsAggregation = (product) =>
-  ['FEE_SMT_CALC_BASE_DVCD', 'VAT_SMT_CALC_BASE_DVCD'].some(
-    (key) => product?.expected[key] === 'SUM',
-  );
+  product?.expected.FEE_SMT_CALC_BASE_DVCD === 'SUM' ||
+  (product?.expected.VAT_DVCD !== 'ZERO' && product?.expected.VAT_SMT_CALC_BASE_DVCD === 'SUM');
 
 function numeric(value, label, { required = true, fallback } = {}) {
   const cleaned = cleanNumber(value);
@@ -93,13 +92,6 @@ export function reconcileAsis(
         throw new Error('특이 계산기 상품은 아직 이 화면에서 계산할 수 없어요.');
       const contextErrors = commonCalculationErrors(selectedProduct);
       if (contextErrors.length) throw new Error(contextErrors.join(' '));
-      if (
-        needsAggregation(selectedProduct) &&
-        selectedProduct.expected.ABS_PROCS_YN === 'Y' &&
-        selectedProduct.expected.SIGN_APLY_LOCT_DVCD !== 'NONE' &&
-        new Set(group.rows.map((row) => numeric(row.amount, '거래금액').sign())).size > 1
-      )
-        throw new Error('승인과 취소는 따로 입력해 검증해 주세요.');
       // Do not silently combine distinct merchant settlements or fee contracts.
       for (const key of ['merchant', 'period', 'currency']) {
         if (new Set(group.rows.map((row) => row[key] || '')).size > 1)
