@@ -9,6 +9,7 @@ import {
   detectAsisMapping,
   mapAsisRows,
   cleanNumber,
+  productFieldMapping,
 } from '../public/calculation/asis-data.js';
 import { reconcileAsis, exportReconciliation } from '../public/calculation/reconciliation.js';
 import { productByCode } from '../public/catalog.js';
@@ -101,6 +102,23 @@ test('CALRATE와 AUTHRATE가 같이 있어도 정액 상품은 AUTHRATE를 선�
   assert.equal(rows[0].feeValue, '100');
   const report = reconcileAsis(fixed, rows);
   assert.equal(report.results[0].status, 'match');
+});
+
+test('상품 변경 시 요율·건수의 자동 매핑만 갱신하고 직접 선택한 매핑은 보존한다', () => {
+  const headers = ['AMT', 'CALRATE', 'AUTHRATE', 'SCOUNT', 'TCOUNT', 'CPFEE'];
+  const mapping = detectAsisMapping(headers, rate);
+  const next = productFieldMapping(headers, mapping, fixed);
+  assert.equal(next.feeValue, headers.indexOf('AUTHRATE'));
+  assert.equal(next.asisFee, mapping.asisFee);
+  assert.equal(mapping.feeValue, headers.indexOf('CALRATE'));
+  const manual = productFieldMapping(headers, mapping, fixed, new Set(['feeValue']));
+  assert.equal(manual.feeValue, mapping.feeValue);
+  const totalCount = { ...fixed, expected: { ...fixed.expected, FRIM_BASE_DVCD: 'TCOUNT' } };
+  assert.equal(productFieldMapping(headers, mapping, totalCount).count, headers.indexOf('TCOUNT'));
+  assert.equal(
+    productFieldMapping(headers, mapping, totalCount, new Set(['count'])).count,
+    mapping.count,
+  );
 });
 
 test('소수 비율과 퍼센트 입력을 명시한 단위로 해석하고 정액단가는 나누지 않는다', () => {

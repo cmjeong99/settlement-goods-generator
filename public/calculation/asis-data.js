@@ -135,6 +135,13 @@ export function mapAsisRows(table, mapping) {
   }));
 }
 
+export function productFieldMapping(headers, mapping, product, manualFields = new Set()) {
+  const detected = detectAsisMapping(headers, product);
+  const next = { ...mapping };
+  for (const key of ['feeValue', 'count']) if (!manualFields.has(key)) next[key] = detected[key];
+  return next;
+}
+
 export function cleanNumber(value) {
   const text = String(value ?? '').trim();
   if (!text || text.toUpperCase() === 'NULL') return '';

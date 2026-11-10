@@ -13,6 +13,7 @@ import {
   parseAsisInput,
   detectAsisMapping,
   mapAsisRows,
+  productFieldMapping,
   ASIS_TEMPLATE,
   OPENBANKING_ASIS_SAMPLE,
 } from '../calculation/asis-data.js';
@@ -68,6 +69,9 @@ function createVerificationPanel(root, { aggregate }) {
     report = null,
     fileRevision = 0,
     pendingPaste = false;
+  let sourceRecords = new WeakMap(),
+    editedFields = new WeakMap();
+  const manualMapping = new Set();
   const selectedProduct = () => availableProducts.get($('asis-product').value);
   $('asis-identity-heading').textContent = aggregate ? '합계' : '행';
   function status(text, kind = 'info') {
@@ -95,7 +99,24 @@ function createVerificationPanel(root, { aggregate }) {
     products: () => [...availableProducts.values()],
   });
 
+  function refreshProductFields(targetRows = rows) {
+    if (!sourceTable) return;
+    const selected = selectedProduct();
+    const byRow = $('asis-row-products').checked;
+    mapping = productFieldMapping(sourceTable.headers, mapping, selected, manualMapping);
+    for (const row of targetRows) {
+      const record = sourceRecords.get(row);
+      if (!record) continue;
+      const product = byRow ? availableProducts.get(row.productCode || selected?.code) : selected;
+      const columns = productFieldMapping(sourceTable.headers, mapping, product, manualMapping);
+      for (const key of ['feeValue', 'count'])
+        if (!editedFields.get(row)?.has(key))
+          row[key] = columns[key] >= 0 ? record[columns[key]].trim() : '';
+    }
+  }
+
   function updateProduct() {
+    refreshProductFields();
     const product = selectedProduct();
     const fieldLabel = (key) =>
       describeField(key, {
@@ -163,6 +184,15 @@ function createVerificationPanel(root, { aggregate }) {
           input.addEventListener('input', () => {
             fileRevision++;
             row[key] = input.value;
+            if (!editedFields.has(row)) editedFields.set(row, new Set());
+            editedFields.get(row).add(key);
+            if (key === 'productCode') {
+              refreshProductFields([row]);
+              for (const field of ['feeValue', 'count']) {
+                const linked = tr.querySelector(`[data-field="${field}"]`);
+                if (linked) linked.value = row[field] ?? '';
+              }
+            }
             invalidate();
           });
           td.append(input);
@@ -199,6 +229,9 @@ function createVerificationPanel(root, { aggregate }) {
           ...sourceTable.headers.map((header, index) => new Option(header, index)),
         );
         select.value = String(mapping[key]);
+        select.addEventListener('change', () => {
+          select.dataset.userEdited = 'true';
+        });
         td.append(select);
         tr.append(make('th', label), td);
         return tr;
@@ -208,6 +241,9 @@ function createVerificationPanel(root, { aggregate }) {
 
   function applyRows() {
     rows = mapAsisRows(sourceTable, mapping);
+    sourceRecords = new WeakMap();
+    editedFields = new WeakMap();
+    rows.forEach((row, index) => sourceRecords.set(row, sourceTable.records[index]));
     $('asis-filter').value = 'all';
     $('asis-compare').checked = rows.some((row) =>
       ['asisFee', 'asisVat', 'asisPayout'].some((key) => row[key] !== ''),
@@ -222,10 +258,12 @@ function createVerificationPanel(root, { aggregate }) {
     $('asis-mapping').open = mapping.amount < 0 || mapping.feeValue < 0;
     if ($('asis-mapping').open) $('asis-import-panel').open = true;
     updateProduct();
+    renderMapping();
   }
 
   function importText(text) {
     const table = parseAsisInput(text);
+    manualMapping.clear();
     sourceTable = table;
     mapping = detectAsisMapping(table.headers, selectedProduct());
     // When no product was chosen, use a single input product to select fixed/rate columns correctly.
@@ -279,17 +317,21 @@ function createVerificationPanel(root, { aggregate }) {
   $('asis-apply-mapping').onclick = () => {
     fileRevision++;
     if (!sourceTable) return;
-    for (const select of $('asis-mapping-rows').querySelectorAll('select'))
+    for (const select of $('asis-mapping-rows').querySelectorAll('select')) {
+      if (select.dataset.userEdited === 'true') manualMapping.add(select.dataset.mapping);
       mapping[select.dataset.mapping] = Number(select.value);
+    }
     applyRows();
   };
   $('asis-product').onchange = () => {
     fileRevision++;
     updateProduct();
+    renderMapping();
   };
   $('asis-row-products').onchange = () => {
     fileRevision++;
     updateProduct();
+    renderMapping();
   };
   $('asis-show-target').onchange = () => {
     fileRevision++;
@@ -336,6 +378,9 @@ function createVerificationPanel(root, { aggregate }) {
     pendingPaste = false;
     rows = [{ amount: '', feeValue: '', sourceRow: 1 }];
     sourceTable = null;
+    sourceRecords = new WeakMap();
+    editedFields = new WeakMap();
+    manualMapping.clear();
     mapping = {};
     $('asis-paste').value = '';
     $('asis-file').value = '';
@@ -482,6 +527,9 @@ function createVerificationPanel(root, { aggregate }) {
       picker.setValue(product.code);
       rows = structuredClone(Array.isArray(input) ? input : [input]);
       sourceTable = null;
+      sourceRecords = new WeakMap();
+      editedFields = new WeakMap();
+      manualMapping.clear();
       mapping = {};
       pendingPaste = false;
       $('asis-paste').value = '';
