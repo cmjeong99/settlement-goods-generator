@@ -1,9 +1,9 @@
 import { make } from './dom.js';
-import { Decimal } from '../calculation/decimal.js';
 import {
   summarizeDashboard,
   formatDashboardNumber as format,
   dashboardBarWidth,
+  dashboardAmounts,
   exportDashboard,
   DASHBOARD_STATUS_LABELS as statuses,
 } from '../calculation/dashboard.js';
@@ -163,20 +163,14 @@ export function createDashboard(root) {
         'dashboard-caption',
       ),
     );
-    const amounts = data.mixedCurrencies
-      ? []
-      : data.entries
-          .filter((item) => item.amount !== null)
-          .slice()
-          .sort((a, b) => Decimal.parse(b.amount).abs().compare(Decimal.parse(a.amount).abs()))
-          .slice(0, 8);
+    const amounts = data.mixedCurrencies ? [] : dashboardAmounts(data.entries);
     for (const item of amounts) {
       const row = make('div', undefined, 'dashboard-bar-row');
       row.title = item.key;
       const track = make('div', undefined, 'dashboard-bar-track');
       const bar = make('span');
       bar.style.width = `${dashboardBarWidth(item.amount, amounts[0].amount)}%`;
-      bar.dataset.negative = String(Decimal.parse(item.amount).sign() < 0);
+      bar.dataset.negative = String(item.amount.startsWith('-'));
       track.append(bar);
       row.append(make('span', item.key), track, make('strong', format(item.amount)));
       chart.append(row);

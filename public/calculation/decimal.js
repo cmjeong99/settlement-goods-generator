@@ -21,10 +21,10 @@ export class Decimal {
     this.n = numerator / divisor;
     this.d = denominator / divisor;
   }
-  static parse(value) {
+  static parse(value, { maxLength = 120 } = {}) {
     if (value instanceof Decimal) return value;
     const text = String(value).trim();
-    if (text.length > 120) throw new Error('숫자는 120자 이내로 입력해 주세요.');
+    if (text.length > maxLength) throw new Error(`숫자는 ${maxLength}자 이내로 입력해 주세요.`);
     const match = text.match(/^([+-]?)(\d*)(?:\.(\d*))?(?:e([+-]?\d+))?$/i);
     if (!match || !(match[2] || match[3])) throw new Error(`숫자를 확인해 주세요: ${text}`);
     const scale = (match[3]?.length ?? 0) - Number(match[4] ?? 0);
@@ -85,7 +85,21 @@ export class Decimal {
     const integer = abs(this.n) / this.d;
     let remainder = abs(this.n) % this.d;
     let fraction = '';
-    for (let i = 0; i < 18 && remainder; i++) {
+    // Preserve every terminating digit within the supported 38-place range.
+    // Repeating fractions still carry an explicit approximation marker.
+    let denominator = this.d,
+      twos = 0,
+      fives = 0;
+    while (denominator % 2n === 0n && twos <= 38) {
+      denominator /= 2n;
+      twos++;
+    }
+    while (denominator % 5n === 0n && fives <= 38) {
+      denominator /= 5n;
+      fives++;
+    }
+    const digits = denominator === 1n && Math.max(twos, fives) <= 38 ? Math.max(twos, fives) : 18;
+    for (let i = 0; i < digits && remainder; i++) {
       remainder *= 10n;
       fraction += (remainder / this.d).toString();
       remainder %= this.d;

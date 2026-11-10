@@ -12,6 +12,7 @@ import {
   formatDashboardNumber,
   dashboardBarWidth,
   exportDashboard,
+  dashboardAmounts,
 } from '../public/calculation/dashboard.js';
 
 const product = productByCode.get('OPENBANKING-RATE');
@@ -141,6 +142,25 @@ test('큰 정수와 소수 합계를 Number로 변환하지 않으며 차트 비
   assert.equal(formatDashboardNumber(null), '—');
   assert.equal(dashboardBarWidth('-50000000000000000000', '100000000000000000000'), 50);
   assert.equal(dashboardBarWidth('0', '0'), 0);
+});
+
+test('아주 작은 유한 소수와 입력보다 길어진 합계도 대시보드·차트에서 유지한다', () => {
+  const tiny = '0.0000000000000000001';
+  const model = dashboard([row(tiny, { feeValue: '0' })]);
+  const summary = summarizeDashboard(model.entries);
+  assert.equal(summary.amount, tiny);
+  assert.equal(summary.invalidAmounts, 0);
+  assert.equal(dashboardAmounts(model.entries).length, 1);
+  const huge = '9'.repeat(120);
+  const aggregate = dashboard(
+    [row(huge, { feeValue: '0' }), row(huge, { feeValue: '0' })],
+    product,
+    { aggregate: true },
+  );
+  const large = summarizeDashboard(aggregate.entries);
+  assert.equal(large.amount, (BigInt(huge) * 2n).toString());
+  assert.equal(dashboardAmounts(aggregate.entries).length, 1);
+  assert.equal(dashboardBarWidth(large.amount, large.amount), 100);
 });
 
 test('빠른 테스트는 이번 실행의 실제 계산 결과만 사용하며 미지원 지급액은 표시하지 않는다', () => {

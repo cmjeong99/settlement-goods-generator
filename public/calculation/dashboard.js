@@ -10,9 +10,9 @@ export const DASHBOARD_STATUS_LABELS = {
   partial: '일부 비교',
 };
 
-const number = (value) => {
+const number = (value, { calculated = false } = {}) => {
   try {
-    return Decimal.parse(cleanNumber(value));
+    return Decimal.parse(cleanNumber(value), { maxLength: calculated ? 1000 : 120 });
   } catch {
     return null;
   }
@@ -21,8 +21,9 @@ const total = (values) =>
   values.reduce((sum, value) => sum.add(value), Decimal.parse('0')).toString();
 
 function entry({ key, rows, status, fee, vat, payout, reasons = [] }) {
-  const inputs = rows.map((row) => ({
-    amount: number(row.amount)?.toString() ?? null,
+  const amounts = rows.map((row) => number(row.amount));
+  const inputs = rows.map((row, index) => ({
+    amount: amounts[index]?.toString() ?? null,
     currency: row.currency?.trim().toUpperCase() || '미지정',
   }));
   const currencies = [...new Set(inputs.map((input) => input.currency))];
@@ -38,12 +39,10 @@ function entry({ key, rows, status, fee, vat, payout, reasons = [] }) {
       signs.size === 1
         ? { 1: 'positive', '-1': 'negative', 0: 'zero' }[[...signs][0]] || 'unknown'
         : 'mixed',
-    amount: inputs.every((row) => row.amount !== null)
-      ? total(inputs.map((row) => number(row.amount)))
-      : null,
-    fee: number(fee)?.toString() ?? null,
-    vat: number(vat)?.toString() ?? null,
-    payout: number(payout)?.toString() ?? null,
+    amount: amounts.every((amount) => amount !== null) ? total(amounts) : null,
+    fee: number(fee, { calculated: true })?.toString() ?? null,
+    vat: number(vat, { calculated: true })?.toString() ?? null,
+    payout: number(payout, { calculated: true })?.toString() ?? null,
   };
 }
 
@@ -104,7 +103,9 @@ export function summarizeDashboard(
   const valid = inputs.map((row) => number(row.amount)).filter((value) => value !== null);
   const metrics = Object.fromEntries(
     ['fee', 'vat', 'payout'].map((key) => {
-      const values = filtered.map((item) => number(item[key])).filter((value) => value !== null);
+      const values = filtered
+        .map((item) => number(item[key], { calculated: true }))
+        .filter((value) => value !== null);
       return [
         key,
         { value: values.length && !mixedCurrencies ? total(values) : null, count: values.length },
@@ -167,8 +168,17 @@ export function formatDashboardNumber(value) {
 }
 
 export function dashboardBarWidth(value, maximum) {
-  const amount = number(value),
-    max = number(maximum);
+  const amount = number(value, { calculated: true }),
+    max = number(maximum, { calculated: true });
   if (!amount || !max || max.sign() === 0) return 0;
   return Math.min(100, Number(amount.abs().div(max.abs()).mul('100').round('DOWN').toString()));
+}
+
+export function dashboardAmounts(entries, limit = 8) {
+  return entries
+    .map((entry) => ({ entry, amount: number(entry.amount, { calculated: true }) }))
+    .filter((item) => item.amount !== null)
+    .sort((left, right) => right.amount.abs().compare(left.amount.abs()))
+    .slice(0, limit)
+    .map((item) => item.entry);
 }

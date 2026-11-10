@@ -265,6 +265,30 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
       ).includes('승인과 취소'),
       'aggregate approval/cancel mixture is explained',
     );
+    await sumPanel.locator('[data-field="amount"]').first().fill('0.0000000000000000001');
+    await sumPanel.locator('[data-field="amount"]').nth(1).fill('0');
+    for (const input of await sumPanel.locator('[data-field="feeValue"]').all())
+      await input.fill('0');
+    await sumPanel.locator('[data-verification="asis-run"]').click();
+    const sumBoard = sumPanel.locator('[data-verification="dashboard"]');
+    await open(sumBoard.locator('.beta-dashboard'));
+    check(
+      (await sumBoard.locator('[data-dashboard-metric="amount"] strong').textContent()) ===
+        '0.0000000000000000001',
+      'small finite amounts retain every supported digit',
+    );
+    for (const input of await sumPanel.locator('[data-field="amount"]').all())
+      await input.fill('9'.repeat(120));
+    await sumPanel.locator('[data-verification="asis-run"]').click();
+    await page.setViewportSize({ width: 390, height: 844 });
+    check(
+      (await sumBoard.locator('[data-dashboard-metric="amount"] strong').textContent()).replaceAll(
+        ',',
+        '',
+      ).length === 121 &&
+        (await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)),
+      'large aggregate results survive charting and mobile layout',
+    );
     check(errors.length === 0, 'no browser runtime errors');
     return { baseURL, passed: checks.length, checks };
   } finally {

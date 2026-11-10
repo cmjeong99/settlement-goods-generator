@@ -29,6 +29,21 @@ test('소수 금액을 이진 부동소수점 오차 없이 계산하고 음수 
   assert.throws(() => Decimal.parse('1e100000'));
 });
 
+test('지원하는 유한 소수 38자리까지 표시·재입력 때 값을 보존하고 순환소수만 생략한다', () => {
+  for (const text of [
+    '0.0000000000000000001',
+    '-0.0000000000000000001',
+    '0.' + '0'.repeat(37) + '1',
+  ]) {
+    const value = Decimal.parse(text);
+    assert.equal(value.toString(), text);
+    assert.equal(Decimal.parse(value.toString()).compare(value), 0);
+  }
+  assert.equal(Decimal.parse('1').div('3').toString(), '0.333333333333333333…');
+  assert.throws(() => Decimal.parse('9'.repeat(121)), /120자/);
+  assert.equal(Decimal.parse('9'.repeat(121), { maxLength: 1000 }).toString(), '9'.repeat(121));
+});
+
 for (const [amount, fee, vat, payout] of [
   ['-9900', '148', '14', '-10062'],
   ['-55000', '825', '82', '-55907'],
