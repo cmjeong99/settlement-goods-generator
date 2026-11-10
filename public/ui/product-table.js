@@ -1,5 +1,6 @@
 import { $, make } from './dom.js';
 import { PRODUCT_COLUMNS, productTable, exportProductTable } from '../product-table.js';
+import { NULLABLE_FIELDS } from '../domain.js';
 
 const statusLabels = {
   inferred: '수식에서 도출',
@@ -20,6 +21,8 @@ export function createProductTable({ onSelect }) {
     th.scope = 'col';
     th.title = key;
     th.append(make('code', key, 'sr-only'));
+    if (NULLABLE_FIELDS.includes(key))
+      th.append(make('small', 'NULL 허용', 'nullable-column-hint'));
     head.append(th);
     const td = make('td'),
       button = make('button', undefined, 'product-cell');
@@ -99,11 +102,12 @@ export function createProductTable({ onSelect }) {
         item.badge.textContent = ['chosen', 'named'].includes(cell.status) ? '✓' : '';
         item.badge.hidden = !item.badge.textContent;
         item.badge.setAttribute('aria-hidden', 'true');
-        item.button.title = `${cell.key} · ${statusLabels[cell.status]}`;
+        const nullable = NULLABLE_FIELDS.includes(cell.key) ? ' · NULL 선택 가능' : '';
+        item.button.title = `${cell.key} · ${statusLabels[cell.status]}${nullable}`;
         item.button.disabled = !result;
         item.button.setAttribute(
           'aria-label',
-          `${cell.label}: ${cell.value || '미입력'}. ${statusLabels[cell.status]}. 눌러서 근거 확인·수정`,
+          `${cell.label}: ${cell.value || '미입력'}. ${statusLabels[cell.status]}${nullable}. 눌러서 근거 확인·수정`,
         );
       }
       $('product-markdown').textContent = result

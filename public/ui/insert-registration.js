@@ -93,10 +93,15 @@ export function createInsertRegistration({ onChange }) {
       $('insert-author').append(control, authorError);
     } else if (!required) {
       const field = make('div', undefined, 'registration-nullable-field');
+      const column = make('code', key, 'registration-column');
+      column.id = `${input.id}-column`;
+      control.insertBefore(column, input);
+      input.setAttribute('aria-describedby', column.id);
       const button = make('button', 'NULL 지정', 'null-toggle');
       button.type = 'button';
       button.dataset.nullField = key;
       button.setAttribute('aria-label', `${label} NULL 선택`);
+      button.setAttribute('aria-describedby', column.id);
       button.disabled = true;
       button.onclick = () => {
         if (nullSelections.has(key)) {

@@ -44,6 +44,47 @@ test('NULL 선택 가능 컬럼은 실제 DB의 nullable 계산 컬럼과 일치
   );
 });
 
+test('DB의 모든 nullable 컬럼은 NULL 선택으로 빠짐없이 INSERT에 포함된다', () => {
+  const nullable = schema.columns.filter((column) => column.nullable).map((c) => c.column);
+  const optional = INSERT_FIELDS.filter(([, , , required]) => !required).map(([key]) => key);
+  assert.deepEqual([...NULLABLE_FIELDS, ...optional].sort(), [...nullable].sort());
+  const draft = buildFinalProduct(
+    source(),
+    Object.fromEntries(NULLABLE_FIELDS.map((key) => [key, NULL_OVERRIDE])),
+  );
+  assert.deepEqual(draft.errors, []);
+  const row = inserted(
+    exportProductTable(draft.result, 'sql', name, {
+      ...registration(),
+      ...Object.fromEntries(optional.map((key) => [key, NULL_OVERRIDE])),
+    }),
+  );
+  for (const key of nullable) {
+    assert.equal(row[key]?.kind, 'id', key);
+    assert.equal(row[key]?.value, 'NULL', key);
+  }
+  for (const column of schema.columns.filter((c) => !c.nullable)) {
+    assert.ok(row[column.column], column.column);
+    assert.notEqual(row[column.column].value, 'NULL', column.column);
+  }
+});
+
+test('필수 계산·등록 컬럼은 NULL 선택으로 우회할 수 없다', () => {
+  for (const [key] of FIELDS.filter(([key]) => !NULLABLE_FIELDS.includes(key))) {
+    const draft = buildFinalProduct(source(), { [key]: NULL_OVERRIDE });
+    assert.equal(draft.settingErrors.length, 1, key);
+  }
+  for (const [key, label, , required] of INSERT_FIELDS) {
+    if (!required) continue;
+    assert.ok(
+      productInsertErrors(source(), name, { ...registration(), [key]: NULL_OVERRIDE }).some(
+        (error) => error.includes(label) && error.includes('NULL'),
+      ),
+      key,
+    );
+  }
+});
+
 test('절대값 N·부호 위치 NULL을 확정하면 INSERT와 음수 예시 계산이 가능하다', () => {
   const original = analyze(
     'SELECT ROUND(AMT * RATE, 0) AS CPFEE, ROUND(AMT * RATE * 0.1, 0) AS CPVAT',

@@ -193,6 +193,18 @@ header {
 .registration-nullable-field {
   min-width: 0;
 }
+.registration-column {
+  color: var(--muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.nullable-column-hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--action);
+  font-size: 10px;
+  font-weight: 500;
+}
 .null-toggle {
   min-height: 30px;
   margin-top: 6px;
