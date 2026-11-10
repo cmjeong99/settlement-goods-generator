@@ -296,7 +296,7 @@ header {
 }
 .workflow-navigation button[aria-current='step'] {
   color: var(--action);
-  background: #edf4f2;
+  background: var(--selected);
 }
 .workflow-number {
   flex: 0 0 29px;
