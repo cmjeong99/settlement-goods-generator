@@ -207,6 +207,8 @@ function createVerificationPanel(root, { aggregate }) {
           fileRevision++;
           rows.splice(index, 1);
           updateProduct();
+          const nextRow = $('asis-input-rows').children[Math.min(index, rows.length - 1)];
+          (nextRow?.querySelector('[data-field="amount"]') || $('asis-add-row')).focus();
         };
         const td = make('td');
         td.append(remove);
@@ -390,6 +392,7 @@ function createVerificationPanel(root, { aggregate }) {
     rows.push(Object.fromEntries(ASIS_FIELDS.map(([key]) => [key, ''])));
     rows.at(-1).sourceRow = rows.length;
     updateProduct();
+    $('asis-input-rows').lastElementChild?.querySelector('[data-field="amount"]')?.focus();
   };
   $('asis-clear').onclick = () => {
     fileRevision++;

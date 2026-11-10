@@ -58,6 +58,22 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
     check((await quick.locator('.dashboard-card').count()) === 0, 'edited inputs clear dashboard');
     await page.locator('#quick-run').click();
     check((await quickMetric('payout')) === '-10,062', 'negative payout');
+    await open(page.locator('#quick-history-wrap'));
+    await open(page.locator('#quick-history > details').first());
+    await page
+      .locator('#quick-history > details')
+      .first()
+      .getByRole('button', { name: '이 예시 기록 제외', exact: true })
+      .click();
+    check(
+      (await page.evaluate(() => document.activeElement.tagName)) === 'SUMMARY',
+      'removing a test record keeps keyboard focus in history',
+    );
+    await page.locator('#quick-history-clear').click();
+    check(
+      (await page.evaluate(() => document.activeElement.id)) === 'quick-amount',
+      'clearing test records focuses the next amount input',
+    );
 
     await step(3);
     await page.locator('#show-insert-preview').click();
@@ -128,6 +144,22 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
       await panel.locator('[data-verification="asis-import"]').click();
     };
     await product.selectOption('OPENBANKING-RATE');
+    await panel.locator('[data-verification="asis-add-row"]').click();
+    check(
+      (await page.evaluate(() => document.activeElement.dataset.field)) === 'amount',
+      'adding a row focuses its amount',
+    );
+    await panel.getByRole('button', { name: '2행 삭제', exact: true }).click();
+    check(
+      (await page.evaluate(() => document.activeElement.dataset.field)) === 'amount',
+      'removing a row focuses the remaining amount',
+    );
+    await panel.getByRole('button', { name: '1행 삭제', exact: true }).click();
+    check(
+      (await page.evaluate(() => document.activeElement.dataset.verification)) === 'asis-add-row',
+      'removing the final row focuses add-row',
+    );
+    await panel.locator('[data-verification="asis-add-row"]').click();
     await importData('AMT\tCALRATE\tAUTHRATE\n9900\t0.015\t100');
     await product.selectOption('OPENBANKING-FIXED');
     check(

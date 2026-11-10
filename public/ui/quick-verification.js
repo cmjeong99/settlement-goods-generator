@@ -177,6 +177,8 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
           updateReportState();
           renderHistory();
           publish();
+          const next = $('quick-history').children[Math.min(index, history.length - 1)];
+          (next?.querySelector('summary') || $('quick-amount')).focus();
         };
         detail.append(remove);
         return detail;
@@ -317,6 +319,7 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
     renderHistory();
     invalidateCurrent();
     publish();
+    $('quick-amount').focus();
   };
   $('quick-calculator').onclick = () => {
     try {
