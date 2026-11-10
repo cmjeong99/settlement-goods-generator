@@ -341,28 +341,28 @@ textarea {
 #sql::selection {
   background: #b8d5ff80;
 }
-#sql-highlight .token.comment {
+:is(#sql-highlight, .sql-preview) .token.comment {
   color: #68717f;
 }
-#sql-highlight .token.keyword,
-#sql-highlight .token.boolean {
+:is(#sql-highlight, .sql-preview) .token.keyword,
+:is(#sql-highlight, .sql-preview) .token.boolean {
   color: #7b31a3;
 }
-#sql-highlight .token.function {
+:is(#sql-highlight, .sql-preview) .token.function {
   color: #075eb5;
 }
-#sql-highlight .token.string {
+:is(#sql-highlight, .sql-preview) .token.string {
   color: #a33821;
 }
-#sql-highlight .token.number {
+:is(#sql-highlight, .sql-preview) .token.number {
   color: #1c5eb8;
 }
-#sql-highlight .token.variable,
-#sql-highlight .token.identifier {
+:is(#sql-highlight, .sql-preview) .token.variable,
+:is(#sql-highlight, .sql-preview) .token.identifier {
   color: #805417;
 }
-#sql-highlight .token.operator,
-#sql-highlight .token.punctuation {
+:is(#sql-highlight, .sql-preview) .token.operator,
+:is(#sql-highlight, .sql-preview) .token.punctuation {
   color: #536174;
 }
 .editor-meta button {

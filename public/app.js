@@ -16,6 +16,7 @@ import { createProductTable } from './ui/product-table.js';
 import { createHistory } from './ui/history.js';
 import { createSqlEditor } from './ui/sql-editor.js';
 import { renderWorkspaceSummary } from './ui/workspace-summary.js';
+import { highlightSql } from './sql-tools.js';
 
 const syncTableOverflow = observeTableOverflow();
 const sqlEditor = createSqlEditor({ onMessage: message });
@@ -60,6 +61,7 @@ const progressTable = createProductTable({ onSelect: evidence });
 let results = [];
 let index = 0;
 let namingError = '';
+let previewSql = null;
 const base = () => results[index];
 const columns = () => ({
   feeColumn: $('fee-column').value,
@@ -123,6 +125,23 @@ function syncActions() {
   const draft = finalProduct.draft();
   $('markdown').disabled = $('tsv').disabled = !r || draft.errors.length > 0;
   const insertErrors = productInsertErrors(draft.result, draft.name, draft.registration);
+  $('show-insert-preview').disabled = !r;
+  const previewErrors = [...draft.errors, ...insertErrors];
+  const sql =
+    r && !previewErrors.length
+      ? exportProductTable(draft.result, 'sql', draft.name, draft.registration)
+      : null;
+  $('insert-preview').querySelector('pre').hidden = sql === null;
+  const previewStatus =
+    sql === null
+      ? `INSERT를 만들려면 확인해 주세요: ${previewErrors.join(' ')}`
+      : '현재 상품명·등록 정보·NULL 선택을 반영한 쿼리예요. 복사되는 내용과 같아요.';
+  if ($('insert-preview-status').textContent !== previewStatus)
+    $('insert-preview-status').textContent = previewStatus;
+  if (previewSql !== sql) {
+    $('insert-preview-code').innerHTML = sql === null ? '' : highlightSql(sql);
+    previewSql = sql;
+  }
   $('copy-insert').disabled = !r || draft.errors.length > 0 || insertErrors.length > 0;
   $('copy-hint').dataset.kind = r && insertErrors.length ? 'error' : 'info';
   $('copy-hint').textContent = !r
@@ -285,6 +304,12 @@ async function copy(format) {
 $('markdown').onclick = () => copy('markdown');
 $('tsv').onclick = () => copy('tsv');
 $('copy-insert').onclick = () => copy('sql');
+$('show-insert-preview').onclick = () => {
+  const preview = $('insert-preview');
+  preview.open = true;
+  preview.querySelector('summary').focus({ preventScroll: true });
+  preview.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+};
 function suggestProductNames() {
   if ($('suggest-name').disabled || !base()) return;
   namingError = '';

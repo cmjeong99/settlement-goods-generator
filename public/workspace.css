@@ -193,6 +193,31 @@ header {
 .registration-nullable-field {
   min-width: 0;
 }
+.insert-preview > p {
+  margin: 12px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.sql-preview {
+  max-height: 440px;
+  margin: 12px 0 0;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #f8faff;
+  color: var(--ink);
+  font:
+    14px/1.7 Consolas,
+    'D2Coding',
+    monospace;
+  tab-size: 2;
+  white-space: pre;
+}
+.sql-preview code {
+  font: inherit;
+}
 .registration-column {
   color: var(--muted);
   font-size: 11px;

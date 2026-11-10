@@ -436,6 +436,17 @@
                   </details>
                 </details>
                 <p id="final-errors" class="action-hint" role="status" aria-live="polite"></p>
+                <details id="insert-preview" class="supporting-details insert-preview">
+                  <summary>INSERT 미리보기</summary>
+                  <p id="insert-preview-status" role="status" aria-live="polite"></p>
+                  <pre
+                    class="sql-preview"
+                    tabindex="0"
+                    role="region"
+                    aria-label="복사할 INSERT 쿼리"
+                    hidden
+                  ><code id="insert-preview-code"></code></pre>
+                </details>
                 <details class="naming-area supporting-details" open>
                   <summary>이름 추천</summary>
                   <p class="section-hint">
@@ -480,6 +491,9 @@
                       </button>
                       <button id="copy-insert" aria-describedby="copy-hint" disabled>
                         INSERT 쿼리 복사
+                      </button>
+                      <button id="show-insert-preview" class="text-button" type="button" disabled>
+                        쿼리 미리보기
                       </button>
                     </div>
                     <p id="copy-hint" class="copy-hint">분석 결과가 나오면 복사할 수 있어요.</p>
