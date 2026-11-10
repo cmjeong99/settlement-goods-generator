@@ -73,7 +73,7 @@ export function createDashboard(root) {
   detail.append(summary, caption, body);
   root.append(detail);
 
-  function render() {
+  function render({ paginationFocus } = {}) {
     body.hidden = !model;
     if (!model) {
       caption.textContent =
@@ -243,11 +243,11 @@ export function createDashboard(root) {
     next.disabled = (page + 1) * 20 >= data.entries.length;
     previous.onclick = () => {
       page--;
-      render();
+      render({ paginationFocus: 'previous' });
     };
     next.onclick = () => {
       page++;
-      render();
+      render({ paginationFocus: 'next' });
     };
     pagination.append(
       previous,
@@ -259,6 +259,11 @@ export function createDashboard(root) {
     );
     section.append(pagination);
     content.append(section);
+    if (paginationFocus) {
+      const preferred = paginationFocus === 'next' ? next : previous;
+      const fallback = paginationFocus === 'next' ? previous : next;
+      (preferred.disabled ? fallback : preferred).focus();
+    }
   }
   direction.onchange =
     status.onchange =

@@ -41,7 +41,7 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
   let state = { status: 'untested', count: 0, text: '테스트 전' };
   let columns = { columns: [] },
     sourceControls = [],
-    manual = new Set(),
+    manual = new Map(),
     sourceCount = 0;
   const fixed = () => product?.expected.FEE_TYPE_DVCD === 'FIXED';
   const inputRows = () =>
@@ -87,7 +87,6 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       sourceCount !== rows.length ||
       sourceControls.length !== rows.length * columns.columns.length
     ) {
-      const previous = new Map(sourceControls.map((item) => [item.key, item.input.value]));
       sourceControls = [];
       $('quick-source-inputs').replaceChildren(
         ...rows.map((row, index) => {
@@ -103,10 +102,11 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
             input.dataset.sourceColumn = column;
             input.dataset.sourceIndex = index;
             input.setAttribute('aria-label', `${index + 1}행 원문 ${column}`);
-            if (manual.has(key)) input.value = previous.get(key) ?? '';
-            label.append(make('span', column), input);
+            if (manual.has(key)) input.value = manual.get(key);
+            const binding = make('small', undefined, 'source-binding');
+            label.append(make('span', column), input, binding);
             grid.append(label);
-            sourceControls.push({ input, column, index, key });
+            sourceControls.push({ input, column, index, key, binding });
           }
           return group;
         }),
@@ -115,8 +115,18 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
     }
     for (const item of sourceControls) {
       if (!manual.has(item.key)) item.input.value = defaultValue(item.column, rows[item.index]);
+      const linked = [columns.amount, columns.rate, columns.count].includes(item.column);
+      item.binding.textContent = manual.has(item.key)
+        ? '직접 입력값'
+        : linked
+          ? '자동 연결'
+          : '직접 입력 필요';
       item.input.placeholder = item.input.value ? '' : '원문에 대입할 값 또는 NULL';
     }
+    $('quick-source-reset').disabled = !sourceControls.some(
+      (item) =>
+        manual.has(item.key) && [columns.amount, columns.rate, columns.count].includes(item.column),
+    );
     if (
       sourceControls.some(
         (item) =>
@@ -179,10 +189,20 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
   }
   $('quick-form').addEventListener('input', (event) => {
     if (event.target.dataset.sourceColumn)
-      manual.add(`${event.target.dataset.sourceIndex}:${event.target.dataset.sourceColumn}`);
+      manual.set(
+        `${event.target.dataset.sourceIndex}:${event.target.dataset.sourceColumn}`,
+        event.target.value,
+      );
     syncSourceInputs();
     invalidateCurrent({ inputChanged: true });
   });
+  $('quick-source-reset').onclick = () => {
+    for (const item of sourceControls)
+      if ([columns.amount, columns.rate, columns.count].includes(item.column))
+        manual.delete(item.key);
+    syncSourceInputs();
+    invalidateCurrent({ inputChanged: true });
+  };
   $('quick-form').onsubmit = (event) => {
     event.preventDefault();
     try {

@@ -223,6 +223,10 @@ header {
   font-size: 11px;
   overflow-wrap: anywhere;
 }
+.source-binding {
+  color: var(--muted);
+  font-size: 11px;
+}
 .nullable-column-hint {
   display: block;
   margin-top: 4px;
