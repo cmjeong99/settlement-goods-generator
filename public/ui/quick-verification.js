@@ -7,6 +7,11 @@ import {
 import { cleanNumber } from '../calculation/asis-data.js';
 import { quickDashboard } from '../calculation/dashboard.js';
 import { createDashboard } from './dashboard.js';
+import {
+  rememberSample,
+  sampleTestState,
+  SAMPLE_HISTORY_LIMIT,
+} from '../calculation/sample-session.js';
 
 export function verificationProduct(result, dbProduct) {
   if (!result) return null;
@@ -32,7 +37,8 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
     product = null,
     signature = '',
     settingErrors = [],
-    history = [];
+    history = [],
+    dirty = false;
   let state = { status: 'untested', count: 0, text: '테스트 전' };
   let columns = { columns: [] },
     sourceControls = [],
@@ -129,11 +135,16 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
           .join(' · ')
       : '원문에 입력할 컬럼이 없어요.';
   }
-  function invalidateCurrent() {
+  function invalidateCurrent({ inputChanged = false } = {}) {
     dashboard.update(null);
     $('quick-results').hidden = true;
     $('quick-status').textContent = settingErrors.join(' ');
     syncActions();
+    if (inputChanged) {
+      dirty = history.length > 0 || dirty;
+      updateReportState();
+      publish();
+    }
   }
   function renderHistory() {
     $('quick-history').replaceChildren(
@@ -165,26 +176,13 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
     $('quick-history-wrap').hidden = !history.length;
   }
   function updateReportState() {
-    const status = !history.length
-      ? 'untested'
-      : history.some((record) => record.status === 'mismatch')
-        ? 'mismatch'
-        : history.some((record) => record.status === 'unavailable')
-          ? 'unavailable'
-          : 'match';
-    state = {
-      status,
-      count: history.length,
-      text: history.length
-        ? `${history.length}개 테스트 · ${status === 'match' ? '일치' : status === 'mismatch' ? '차이 있음' : '비교 불가'}`
-        : '테스트 전',
-    };
+    state = sampleTestState(history, { dirty });
   }
   $('quick-form').addEventListener('input', (event) => {
     if (event.target.dataset.sourceColumn)
       manual.add(`${event.target.dataset.sourceIndex}:${event.target.dataset.sourceColumn}`);
     syncSourceInputs();
-    invalidateCurrent();
+    invalidateCurrent({ inputChanged: true });
   });
   $('quick-form').onsubmit = (event) => {
     event.preventDefault();
@@ -200,12 +198,13 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
           );
         sourceRows[item.index][item.column] = item.input.value.trim();
       }
+      const expected = { fee: $('quick-fee').value, vat: $('quick-vat').value };
       const report = compareSample(source, draft, {
         rows,
         sourceRows,
         feeValue,
         engine: product.engine,
-        expected: { fee: $('quick-fee').value, vat: $('quick-vat').value },
+        expected,
       });
       const table = make('table'),
         head = make('thead'),
@@ -260,18 +259,22 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       $('quick-results').hidden = false;
       dashboard.update(quickDashboard(report, rows, product));
       $('quick-status').textContent = report.errors.join(' ');
-      history.push({
+      history = rememberSample(history, {
+        input: { rows, sourceRows, feeValue, expected },
         status: report.status,
         amounts: rows.map((row) => row.amount),
         rate: $('quick-rate').value,
         sourceRows,
         metrics: report.metrics,
       });
+      dirty = false;
+      if (history.length === SAMPLE_HISTORY_LIMIT)
+        $('quick-status').textContent += ` 예시 기록 ${SAMPLE_HISTORY_LIMIT}개를 보관 중이에요.`;
       updateReportState();
       renderHistory();
       publish();
     } catch (error) {
-      invalidateCurrent();
+      invalidateCurrent({ inputChanged: true });
       $('quick-status').textContent = error.message;
     }
   };
@@ -285,10 +288,11 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       if (!$('quick-rate').value.trim()) $('quick-rate').value = fixed() ? '100' : '1.5%';
       manual.clear();
       syncSourceInputs();
-      invalidateCurrent();
+      invalidateCurrent({ inputChanged: true });
     };
   $('quick-history-clear').onclick = () => {
     history = [];
+    dirty = false;
     state = { status: 'untested', count: 0, text: '테스트 전' };
     renderHistory();
     invalidateCurrent();
@@ -336,11 +340,8 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       signature = nextSignature;
       settingErrors = errors;
       history = [];
-      state = {
-        status: !newSource && changed ? 'stale' : 'untested',
-        count: 0,
-        text: !newSource && changed ? '재테스트 필요' : '테스트 전',
-      };
+      dirty = !newSource && changed;
+      updateReportState();
       if (newSource) {
         $('quick-options').open = false;
         $('quick-source-panel').open = false;
