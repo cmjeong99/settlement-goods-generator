@@ -7,6 +7,7 @@
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./workspace.css" />
+    <link rel="stylesheet" href="./dashboard.css" />
   </head>
   <body>
     <a class="skip-link" href="#sql">수식 입력으로 바로 가기</a>
@@ -383,6 +384,7 @@
                 </form>
                 <p id="quick-status" class="action-hint" role="status" aria-live="polite"></p>
                 <div id="quick-results" class="quick-results" hidden></div>
+                <div id="quick-dashboard"></div>
                 <details id="quick-history-wrap" class="quick-compare" hidden>
                   <summary>테스트 기록</summary>
                   <div id="quick-history"></div>
@@ -656,6 +658,7 @@
                 <div data-verification="asis-calculation-rows"></div>
               </details>
             </div>
+            <div data-verification="dashboard"></div>
             <details data-verification="asis-import-panel" class="asis-options">
               <summary>붙여넣기 · CSV</summary>
               <textarea

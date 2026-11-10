@@ -4,6 +4,8 @@ import { productByCode } from '../catalog.js';
 import { describeField } from '../domain.js';
 import { createTabs } from './workflow.js';
 import { createProductPicker } from './catalog.js';
+import { createDashboard } from './dashboard.js';
+import { reconciliationDashboard } from '../calculation/dashboard.js';
 import {
   ASIS_FIELDS,
   MAX_ASIS_ROWS,
@@ -68,6 +70,7 @@ export function createVerification() {
 
 function createVerificationPanel(root, { aggregate }) {
   const $ = (id) => root.querySelector(`[data-verification="${id}"]`);
+  const dashboard = createDashboard($('dashboard'));
   const availableProducts = new Map(productByCode);
   let rows = [{ amount: '', feeValue: '', sourceRow: 1 }],
     sourceTable = null,
@@ -82,6 +85,7 @@ function createVerificationPanel(root, { aggregate }) {
     $('asis-status').dataset.kind = kind;
   }
   function invalidate() {
+    dashboard.update(null);
     report = null;
     $('asis-results').hidden = true;
     $('asis-export').disabled = true;
@@ -460,6 +464,12 @@ function createVerificationPanel(root, { aggregate }) {
         products: availableProducts,
       });
       renderReport();
+      dashboard.update(
+        reconciliationDashboard(report, inputRows, {
+          aggregate,
+          title: $('asis-row-products').checked ? '행별 상품 설정' : selectedProduct()?.name,
+        }),
+      );
       status('');
     } catch (error) {
       invalidate();

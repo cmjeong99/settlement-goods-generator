@@ -5,6 +5,8 @@ import {
   suggestSampleColumns,
 } from '../calculation/sample-verification.js';
 import { cleanNumber } from '../calculation/asis-data.js';
+import { quickDashboard } from '../calculation/dashboard.js';
+import { createDashboard } from './dashboard.js';
 
 export function verificationProduct(result, dbProduct) {
   if (!result) return null;
@@ -24,6 +26,7 @@ export function verificationProduct(result, dbProduct) {
 }
 
 export function createQuickVerification({ onContinue, onSummary, onReport }) {
+  const dashboard = createDashboard($('quick-dashboard'));
   let source = null,
     draft = null,
     product = null,
@@ -127,6 +130,7 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       : '원문에 입력할 컬럼이 없어요.';
   }
   function invalidateCurrent() {
+    dashboard.update(null);
     $('quick-results').hidden = true;
     $('quick-status').textContent = settingErrors.join(' ');
     syncActions();
@@ -254,6 +258,7 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
         );
       if (b) $('quick-results').append(breakdown);
       $('quick-results').hidden = false;
+      dashboard.update(quickDashboard(report, rows, product));
       $('quick-status').textContent = report.errors.join(' ');
       history.push({
         status: report.status,
