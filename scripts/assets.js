@@ -41,6 +41,7 @@ export const browserAssets = Object.freeze([
   'ui/workflow.js',
   'ui/quick-verification.js',
   'ui/dashboard.js',
+  'ui/download.js',
   'calculation/dashboard.js',
   'calculation/decimal.js',
   'calculation/expression.js',

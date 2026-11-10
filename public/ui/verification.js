@@ -6,6 +6,7 @@ import { createTabs } from './workflow.js';
 import { createProductPicker } from './catalog.js';
 import { createDashboard } from './dashboard.js';
 import { reconciliationDashboard } from '../calculation/dashboard.js';
+import { download } from './download.js';
 import {
   ASIS_FIELDS,
   MAX_ASIS_ROWS,
@@ -21,17 +22,6 @@ import {
   needsAggregation,
   RECONCILIATION_LABELS,
 } from '../calculation/reconciliation.js';
-
-function download(text, name, type = 'text/csv;charset=utf-8') {
-  const url = URL.createObjectURL(new Blob([text], { type }));
-  const anchor = make('a');
-  anchor.href = url;
-  anchor.download = name;
-  document.body.append(anchor);
-  anchor.click();
-  anchor.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 
 function metricCell(metric) {
   const cell = make('td');

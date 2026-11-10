@@ -1,5 +1,14 @@
 import { Decimal } from './decimal.js';
-import { cleanNumber } from './asis-data.js';
+import { cleanNumber, asCsv } from './asis-data.js';
+
+export const DASHBOARD_STATUS_LABELS = {
+  match: '일치',
+  mismatch: '차이 있음',
+  unavailable: '비교 불가',
+  error: '계산 불가',
+  calculated: '계산 완료',
+  partial: '일부 비교',
+};
 
 const number = (value) => {
   try {
@@ -14,14 +23,17 @@ const total = (values) =>
 function entry({ key, rows, status, fee, vat, payout, reasons = [] }) {
   const inputs = rows.map((row) => ({
     amount: number(row.amount)?.toString() ?? null,
-    currency: row.currency?.trim() || '미지정',
+    currency: row.currency?.trim().toUpperCase() || '미지정',
   }));
+  const currencies = [...new Set(inputs.map((input) => input.currency))];
   const signs = new Set(inputs.map((row) => number(row.amount)?.sign()));
   return {
     key,
     inputs,
     status,
     reasons,
+    currencies,
+    currency: currencies.length === 1 ? currencies[0] : '혼합',
     direction:
       signs.size === 1
         ? { 1: 'positive', '-1': 'negative', 0: 'zero' }[[...signs][0]] || 'unknown'
@@ -73,10 +85,14 @@ export function reconciliationDashboard(report, rows, { aggregate = false, title
   };
 }
 
-export function summarizeDashboard(entries, { direction = 'all', status = 'all' } = {}) {
+export function summarizeDashboard(
+  entries,
+  { direction = 'all', status = 'all', currency = '' } = {},
+) {
   const filtered = entries.filter(
     (item) =>
       (direction === 'all' || item.direction === direction) &&
+      (!currency || (item.currencies.length === 1 && item.currency === currency)) &&
       (status === 'all' ||
         (status === 'attention'
           ? ['mismatch', 'error', 'unavailable'].includes(item.status)
@@ -112,6 +128,36 @@ export function summarizeDashboard(entries, { direction = 'all', status = 'all' 
       .length,
     errors: filtered.filter((item) => item.status === 'error').length,
   };
+}
+
+export function exportDashboard(model, filters = {}) {
+  const { entries } = summarizeDashboard(model.entries, filters);
+  return asCsv([
+    [
+      '상품명',
+      '계산 단위',
+      '통화',
+      '입력 건수',
+      '거래금액',
+      '수수료',
+      '부가세',
+      '지급액',
+      '결과',
+      '확인사항',
+    ],
+    ...entries.map((item) => [
+      model.title,
+      item.key,
+      item.currency === '혼합' ? item.currencies.join(' / ') : item.currency,
+      item.inputs.length,
+      item.amount,
+      item.fee,
+      item.vat,
+      item.payout,
+      DASHBOARD_STATUS_LABELS[item.status] || item.status,
+      item.reasons.join(' '),
+    ]),
+  ]);
 }
 
 export function formatDashboardNumber(value) {

@@ -11,6 +11,7 @@ import {
   summarizeDashboard,
   formatDashboardNumber,
   dashboardBarWidth,
+  exportDashboard,
 } from '../public/calculation/dashboard.js';
 
 const product = productByCode.get('OPENBANKING-RATE');
@@ -86,6 +87,50 @@ test('통화가 섞이면 거래 건수만 요약하고 서로 다른 통화의 
   assert.equal(summary.amount, null);
   assert.equal(summary.metrics.fee.value, null);
   assert.equal(summary.positiveAmount, null);
+});
+
+test('통화·거래 방향·상태 필터를 함께 적용하고 합산 단위를 쪼개지 않는다', () => {
+  const model = dashboard([
+    row('10000', { currency: 'krw' }),
+    row('-9900', { currency: 'KRW' }),
+    row('100', { currency: 'USD' }),
+    row('500', { currency: '' }),
+  ]);
+  const krw = summarizeDashboard(model.entries, { currency: 'KRW' });
+  assert.equal(krw.count, 2);
+  assert.equal(krw.amount, '100');
+  assert.equal(krw.mixedCurrencies, false);
+  const negative = summarizeDashboard(model.entries, {
+    currency: 'KRW',
+    direction: 'negative',
+    status: 'calculated',
+  });
+  assert.equal(negative.amount, '-9900');
+  const mixed = dashboard(
+    [row('10000', { currency: 'KRW' }), row('100', { currency: 'USD' })],
+    product,
+    { aggregate: true },
+  );
+  assert.equal(summarizeDashboard(mixed.entries).count, 2);
+  assert.equal(summarizeDashboard(mixed.entries, { currency: 'KRW' }).count, 0);
+});
+
+test('대시보드 CSV는 현재 필터의 모든 단위를 내보내고 미계산 값은 빈칸으로 유지한다', () => {
+  const model = dashboard(
+    Array.from({ length: 25 }, (_, i) =>
+      row(String(10000 + i), { currency: 'KRW', id: `T${i + 1}` }),
+    ).concat(row('100', { currency: 'USD', id: 'USD-1' })),
+  );
+  const csv = exportDashboard(model, { currency: 'KRW' });
+  assert.equal(csv.charCodeAt(0), 0xfeff);
+  assert.equal(csv.split('\r\n').length, 26);
+  assert.ok(csv.includes('"T25"'));
+  assert.ok(!csv.includes('USD-1'));
+  assert.match(csv, /"통화"/);
+  const failed = dashboard([row('bad', { id: '=SUM(1,2)' })]);
+  const errorCsv = exportDashboard(failed);
+  assert.match(errorCsv, /"'=SUM\(1,2\)"/);
+  assert.match(errorCsv, /"","","","","계산 불가"/);
 });
 
 test('큰 정수와 소수 합계를 Number로 변환하지 않으며 차트 비율만 변환한다', () => {

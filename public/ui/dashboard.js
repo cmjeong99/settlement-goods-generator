@@ -4,16 +4,10 @@ import {
   summarizeDashboard,
   formatDashboardNumber as format,
   dashboardBarWidth,
+  exportDashboard,
+  DASHBOARD_STATUS_LABELS as statuses,
 } from '../calculation/dashboard.js';
-
-const statuses = {
-  match: '일치',
-  mismatch: '차이 있음',
-  unavailable: '비교 불가',
-  error: '계산 불가',
-  calculated: '계산 완료',
-  partial: '일부 비교',
-};
+import { download } from './download.js';
 
 export function createDashboard(root) {
   let model = null,
@@ -29,7 +23,9 @@ export function createDashboard(root) {
   const body = make('div', undefined, 'dashboard-body');
   const toolbar = make('div', undefined, 'dashboard-toolbar');
   const direction = make('select'),
-    status = make('select');
+    status = make('select'),
+    currencyFilter = make('select');
+  currencyFilter.setAttribute('aria-label', '대시보드 통화 필터');
   for (const [value, label] of [
     ['all', '전체 거래'],
     ['positive', '양수 거래'],
@@ -48,9 +44,32 @@ export function createDashboard(root) {
     status.append(new Option(label, value));
   direction.setAttribute('aria-label', '대시보드 거래 필터');
   status.setAttribute('aria-label', '대시보드 결과 필터');
-  toolbar.append(direction, status);
+  const reset = make('button', '필터 초기화'),
+    csv = make('button', '현재 필터 CSV');
+  reset.type = csv.type = 'button';
+  const filters = () => ({
+    direction: direction.value,
+    status: status.value,
+    currency: currencyFilter.value,
+  });
+  const resetFilters = () => {
+    direction.value = status.value = 'all';
+    currencyFilter.value = '';
+    page = 0;
+  };
+  reset.onclick = () => {
+    resetFilters();
+    render();
+  };
+  csv.onclick = () => {
+    if (model) download(exportDashboard(model, filters()), 'settlement-dashboard-beta.csv');
+  };
+  toolbar.append(direction, status, currencyFilter, reset, csv);
+  const filterStatus = make('p', undefined, 'dashboard-caption');
+  filterStatus.setAttribute('role', 'status');
+  filterStatus.setAttribute('aria-live', 'polite');
   const content = make('div');
-  body.append(toolbar, content);
+  body.append(toolbar, filterStatus, content);
   detail.append(summary, caption, body);
   root.append(detail);
 
@@ -62,10 +81,10 @@ export function createDashboard(root) {
       content.replaceChildren();
       return;
     }
-    const data = summarizeDashboard(model.entries, {
-      direction: direction.value,
-      status: status.value,
-    });
+    const data = summarizeDashboard(model.entries, filters());
+    csv.disabled = !data.entries.length;
+    reset.disabled = direction.value === 'all' && status.value === 'all' && !currencyFilter.value;
+    filterStatus.textContent = `전체 ${model.entries.length}개 중 ${data.entries.length}개 계산 단위 · CSV는 현재 필터의 전체 결과를 담아요.`;
     const currency =
       data.currencies.length === 1 && data.currencies[0] !== '미지정'
         ? `통화 ${data.currencies[0]}`
@@ -107,7 +126,7 @@ export function createDashboard(root) {
       content.append(
         make(
           'p',
-          '통화가 다른 거래가 함께 있어 금액 합계와 차트를 표시하지 않아요. 같은 통화끼리 나누어 테스트해 주세요.',
+          '통화가 다른 거래가 함께 있어 금액 합계와 차트를 표시하지 않아요. 통화 필터로 한 통화를 선택해 주세요. 혼합된 합산 단위는 나눠 테스트해야 해요.',
           'dashboard-notice',
         ),
       );
@@ -177,6 +196,7 @@ export function createDashboard(root) {
       tbody = make('tbody');
     for (const label of [
       '계산 단위',
+      '통화',
       '입력 건수',
       '거래금액',
       '수수료',
@@ -194,7 +214,9 @@ export function createDashboard(root) {
       const row = make('tr');
       const key = make('th', item.key);
       key.scope = 'row';
-      row.append(key, make('td', `${item.inputs.length}건`));
+      const currency = make('td', item.currency);
+      if (item.currencies.length > 1) currency.title = item.currencies.join(' / ');
+      row.append(key, currency, make('td', `${item.inputs.length}건`));
       for (const name of ['amount', 'fee', 'vat', 'payout'])
         row.append(make('td', format(item[name])));
       const state = make('td');
@@ -238,10 +260,13 @@ export function createDashboard(root) {
     section.append(pagination);
     content.append(section);
   }
-  direction.onchange = status.onchange = () => {
-    page = 0;
-    render();
-  };
+  direction.onchange =
+    status.onchange =
+    currencyFilter.onchange =
+      () => {
+        page = 0;
+        render();
+      };
   render();
   return {
     setTitle(title) {
@@ -251,8 +276,15 @@ export function createDashboard(root) {
     },
     update(next) {
       model = next;
-      page = 0;
-      direction.value = status.value = 'all';
+      const currencies = [
+        ...new Set(next?.entries.flatMap((item) => item.currencies) || []),
+      ].sort();
+      currencyFilter.replaceChildren(
+        new Option('전체 통화', ''),
+        ...currencies.map((value) => new Option(value, value)),
+      );
+      currencyFilter.hidden = currencies.length <= 1;
+      resetFilters();
       render();
     },
   };

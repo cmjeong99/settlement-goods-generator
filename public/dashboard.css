@@ -37,6 +37,11 @@
   min-height: 36px;
   font-size: 12px;
 }
+.dashboard-toolbar button {
+  min-height: 36px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
