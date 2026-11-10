@@ -68,6 +68,8 @@ function createVerificationPanel(root, { aggregate }) {
     mapping = {},
     report = null,
     fileRevision = 0,
+    fileSelection = 0,
+    activeFileRevision = null,
     pendingPaste = false;
   let sourceRecords = new WeakMap(),
     editedFields = new WeakMap();
@@ -88,6 +90,7 @@ function createVerificationPanel(root, { aggregate }) {
   }
   function syncActions() {
     $('asis-run').disabled =
+      activeFileRevision === fileRevision ||
       (!rows.length && !(pendingPaste && $('asis-paste').value.trim())) ||
       (!selectedProduct() && !$('asis-row-products').checked);
     $('asis-add-row').disabled = rows.length >= MAX_ASIS_ROWS;
@@ -289,9 +292,19 @@ function createVerificationPanel(root, { aggregate }) {
     }
   };
   $('asis-file').onchange = async () => {
-    const file = $('asis-file').files[0];
-    if (!file) return;
+    const selection = ++fileSelection;
     const revision = ++fileRevision;
+    const file = $('asis-file').files[0];
+    if (!file) {
+      activeFileRevision = null;
+      $('asis-file').setAttribute('aria-busy', 'false');
+      status('');
+      syncActions();
+      return;
+    }
+    activeFileRevision = revision;
+    $('asis-file').setAttribute('aria-busy', 'true');
+    invalidate();
     status('파일을 읽고 있어요.');
     try {
       if (file.size > 2_000_000) throw new Error('파일은 2MB 이내로 나눠 주세요.');
@@ -311,7 +324,12 @@ function createVerificationPanel(root, { aggregate }) {
         status(error.message, 'error');
       }
     } finally {
-      if (revision === fileRevision) $('asis-file').value = '';
+      if (selection === fileSelection) {
+        $('asis-file').value = '';
+        $('asis-file').setAttribute('aria-busy', 'false');
+        activeFileRevision = null;
+        syncActions();
+      }
     }
   };
   $('asis-apply-mapping').onclick = () => {
@@ -349,7 +367,7 @@ function createVerificationPanel(root, { aggregate }) {
   };
   $('asis-paste').addEventListener('input', () => {
     fileRevision++;
-    pendingPaste = true;
+    pendingPaste = !!$('asis-paste').value.trim();
     invalidate();
   });
   $('asis-paste').addEventListener('paste', (event) => {
