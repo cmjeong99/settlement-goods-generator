@@ -30,6 +30,13 @@ export function inlineProof(key, cell) {
 }
 export function renderExplanation(r) {
   $('calculation-explanation').replaceChildren(
-    ...explainCalculation(r).map((text) => make('p', text)),
+    ...(r ? explainCalculation(r) : []).map((text, index) => {
+      const item = make('div', undefined, 'calculation-explanation-item');
+      item.append(
+        make('h4', ['수수료 계산', '부가세 계산', '금액·부호 처리'][index]),
+        make('p', text),
+      );
+      return item;
+    }),
   );
 }

@@ -100,6 +100,7 @@ function renderReadiness() {
 function syncDraft() {
   const r = base(),
     draft = finalProduct.draft();
+  renderExplanation(draft.result);
   if (r && draft.result) {
     $('final-understanding').replaceChildren(
       ...explainCalculation(draft.result).map((text) => make('p', text)),
@@ -249,7 +250,6 @@ function render() {
   $('blocks').value = String(index);
   $('result-source').textContent = r ? '수식 분석 결과' : '입력 대기';
   if (!r) return;
-  renderExplanation(r);
   $('notices-panel').hidden = !r.notices.length;
   $('notices-title').textContent = `계산 전에 확인할 점 ${r.notices.length}개`;
   $('notices').replaceChildren(...r.notices.map((n) => make('li', n)));

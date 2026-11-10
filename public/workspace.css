@@ -183,6 +183,45 @@ header {
 .workflow-main .supporting-details {
   border-color: var(--line);
 }
+.review-explanation {
+  margin: 0 22px 22px;
+  padding: 18px 20px;
+  border: 1px solid #e0e9f6;
+  border-radius: 8px;
+  background: #f8faff;
+}
+.review-explanation > h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.explanation-caption {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.review-explanation .calculation-prose {
+  max-width: none;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.85;
+}
+.calculation-explanation-item {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 16px;
+}
+.calculation-explanation-item + .calculation-explanation-item {
+  margin-top: 14px;
+}
+.calculation-explanation-item h4 {
+  margin: 0;
+  color: #506584;
+  font-size: 13px;
+  font-weight: 600;
+}
+.calculation-explanation-item p {
+  margin: 0;
+}
 .workflow-main .copy-success {
   background: #f1f7f4;
   border-color: #dce9e0;
@@ -515,5 +554,13 @@ header {
   }
   .workflow-main .product-progress {
     padding: 16px;
+  }
+  .review-explanation {
+    margin: 0 16px 16px;
+    padding: 16px;
+  }
+  .calculation-explanation-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
   }
 }
