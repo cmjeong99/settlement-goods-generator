@@ -3,6 +3,7 @@
 export const browserAssets = Object.freeze([
   'index.html',
   'styles.css',
+  'workspace.css',
   'app.js',
   'sql-tools.js',
   'ui/sql-editor.js',
@@ -19,6 +20,7 @@ export const browserAssets = Object.freeze([
   'naming.js',
   'history.js',
   'ui/dom.js',
+  'ui/workspace-summary.js',
   'ui/history.js',
   'ui/views.js',
   'catalog.js',

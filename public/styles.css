@@ -3,15 +3,15 @@
   color: #253041;
   background: #f8f9fb;
   font-synthesis: none;
-  --blue: #0f71ff;
-  --action: #0969ef;
-  --action-hover: #0958d9;
-  --selected: #eff5ff;
+  --blue: #315c55;
+  --action: #315c55;
+  --action-hover: #254a44;
+  --selected: #edf4f2;
   --ink: #253041;
-  --line: #e5e7eb;
-  --muted: #616977;
-  --soft: #f8f9fb;
-  --border: #b8bec8;
+  --line: #e4e8ec;
+  --muted: #647180;
+  --soft: #f6f8fa;
+  --border: #c5ced5;
   --motion: 140ms;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }

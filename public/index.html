@@ -6,6 +6,7 @@
     <title>다날 정산 상품 생성기</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./workspace.css" />
   </head>
   <body>
     <a class="skip-link" href="#sql">수식 입력으로 바로 가기</a>
@@ -13,7 +14,13 @@
       <a class="brand" href="./">다날 정산 상품 생성기</a>
     </header>
     <main>
-      <h1 class="sr-only">정산 수식을, 상품 설정으로.</h1>
+      <section class="workspace-intro" aria-labelledby="workspace-title">
+        <h1 id="workspace-title">계산식을 정산 상품으로.</h1>
+        <p>
+          다온에서는 계산식을 정산 상품으로 만들어 일관성 있게 관리해요. 원하는 계산 상품을 만들고
+          기존 상품을 테스트해 볼 수 있어요.
+        </p>
+      </section>
       <div class="workspace-tabs" role="tablist" aria-label="작업 선택">
         <button
           id="product-workspace-tab"
@@ -43,421 +50,503 @@
         </button>
       </div>
       <div id="product-workspace" role="tabpanel" aria-labelledby="product-workspace-tab">
-        <div id="message" role="status" aria-live="polite" aria-atomic="true"></div>
-        <details id="workflow-input" class="panel workflow-card" data-workflow-step="0" open>
-          <summary class="workflow-heading">
-            <h2 id="input-title">1단계 · 수식</h2>
-            <span class="workflow-summary" data-step-summary="0">수식이나 예제를 선택하세요</span>
-          </summary>
-          <div class="workflow-content">
-            <section class="panel editor-panel" aria-labelledby="input-title">
-              <div class="panel-head">
-                <div class="tools">
-                  <label class="sr-only" for="example-service">서비스 선택</label>
-                  <select id="example-service">
-                    <option value="">전체 서비스</option>
-                  </select>
-                  <label class="sr-only" for="example">예제 선택</label
-                  ><select id="example">
-                    <option value="">예제 선택</option></select
-                  ><button id="clear" class="text-button">입력 지우기</button>
-                </div>
-              </div>
-              <p class="sr-only" id="sql-hint">
-                수수료·부가세 계산식을 붙여 넣거나 예제를 선택하세요. SQL 정렬 단축키는 Ctrl 또는
-                Command + Shift + F입니다.
-              </p>
-              <div class="editor-meta">
-                <span class="editor-language">MSSQL</span
-                ><span class="sr-only">SQL 실행·DB 연결 없이 분석해요.</span>
-                <div class="tools">
-                  <button id="undo-format-sql" type="button" class="text-button" hidden>
-                    정렬 되돌리기
-                  </button>
-                  <button id="format-sql" type="button" title="Ctrl / ⌘ + Shift + F" disabled>
-                    SQL 정렬
-                  </button>
-                </div>
-              </div>
-              <div class="editor">
-                <pre id="gutter" aria-hidden="true">1</pre>
-                <div class="sql-surface">
-                  <pre
-                    id="sql-highlight"
-                    aria-hidden="true"
-                  ><code id="sql-highlight-code"></code></pre>
-                  <textarea
-                    id="sql"
-                    aria-label="MSSQL 수식 입력"
-                    aria-describedby="sql-hint"
-                    spellcheck="false"
-                    autocapitalize="off"
-                    autocomplete="off"
-                    wrap="off"
-                    placeholder="CPFEE = ROUND(ABS(AMT) * CPRATE, 0)&#10;, CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1)"
-                  ></textarea>
-                </div>
-              </div>
-              <div class="editor-footer">
-                <div>
-                  <span id="input-info" class="sr-only">1행 · 0자</span
-                  ><span class="shortcut">분석 단축키 Ctrl + Enter</span>
-                </div>
-                <button id="analyze" class="primary" aria-describedby="sql-hint" disabled>
-                  수식 분석
-                </button>
-              </div>
-              <details class="advanced-input">
-                <summary>입력 설정</summary>
-                <p>
-                  기본값은 수수료 CPFEE / RAMT, 부가세 CPVAT / VAMT예요. 다른 컬럼을 쓸 때만
-                  입력하세요.
-                </p>
-                <div class="column-options">
-                  <label
-                    >금액 기준<select id="input-scope">
-                      <option value="row">거래 금액</option>
-                      <option value="settlement">가맹점·정산주기별 합산 금액</option>
-                    </select></label
-                  >
-                  <label
-                    >수수료 컬럼명<input
-                      id="fee-column"
-                      maxlength="128"
-                      placeholder="예: FEE_AMT"
-                      spellcheck="false" /></label
-                  ><label
-                    >부가세 컬럼명<input
-                      id="vat-column"
-                      maxlength="128"
-                      placeholder="예: VAT_AMT"
-                      spellcheck="false"
-                  /></label>
-                </div>
-              </details>
-            </section>
+        <section class="workspace-overview" aria-label="현재 작업 요약">
+          <div class="overview-product">
+            <span class="overview-label">현재 상품</span>
+            <strong id="workspace-product-name">새 정산 상품</strong>
+            <span id="workspace-product-code">수식을 입력하거나 예제를 선택하세요</span>
           </div>
-        </details>
-        <details id="workflow-review" class="panel workflow-card" data-workflow-step="1">
-          <summary class="workflow-heading" aria-disabled="true">
-            <h2>2단계 · 상품 설정</h2>
-            <span class="workflow-summary" data-step-summary="1">수식을 먼저 분석하세요</span>
-          </summary>
-          <div class="workflow-content">
-            <div class="analysis-layout">
-              <section class="panel result-panel" aria-labelledby="result-title">
-                <div class="sr-only">
-                  <h2 id="result-title">수식에서 내 상품 설정으로</h2>
-                  <span id="result-source" class="badge">입력 대기</span>
-                </div>
-                <div class="block-picker">
-                  <label for="blocks" id="blocks-label" hidden>확인할 계산 구문</label
-                  ><select id="blocks" hidden></select>
-                </div>
-                <div id="result-empty" class="result-empty">
-                  <p>수식을 분석하면 설정 코드가 여기에 나와요.</p>
-                </div>
-                <div id="result-content" hidden>
-                  <div id="product-table-review">
-                    <section
-                      id="product-progress"
-                      class="product-progress"
-                      aria-labelledby="code-title"
-                      hidden
-                    >
-                      <div id="code-details">
-                        <div class="product-toolbar">
-                          <div class="product-progress-heading">
-                            <h3 id="code-title" class="sr-only">상품 설정</h3>
-                            <span id="product-confirmation" role="status"></span>
-                          </div>
-                          <div class="product-progress-tools">
-                            <button id="edit-calculation" type="button">계산 방식</button>
-                            <span id="product-test-state"></span
-                            ><button id="next-pending" type="button" hidden>미확정 항목 확인</button
-                            ><button id="final-reset" type="button" class="text-button" disabled>
-                              원래대로
-                            </button>
-                          </div>
-                        </div>
-                        <p id="table-scroll-hint" class="sr-only">
-                          표를 좌우로 밀어 나머지 항목을 확인하세요. 값을 누르면 근거를 볼 수
-                          있어요.
-                        </p>
-                        <div
-                          class="table-scroll"
-                          tabindex="0"
-                          role="region"
-                          aria-label="현재 상품 설정 표"
-                          aria-describedby="table-scroll-hint"
-                        >
-                          <table id="result-table">
-                            <caption class="sr-only">
-                              단계마다 같은 열 순서를 유지하는 상품 설정
-                            </caption>
-                            <thead></thead>
-                            <tbody></tbody>
-                          </table>
-                        </div>
-                        <div id="code-proof" class="cell-editor" hidden></div>
-                        <details class="product-markdown">
-                          <summary>표 원문</summary>
-                          <pre id="product-markdown"></pre>
-                        </details>
-                      </div>
-                    </section>
+          <div>
+            <span class="overview-label">계산 설정</span>
+            <strong id="workspace-settings">—</strong>
+            <span id="workspace-settings-detail">수식 분석 후 표시돼요</span>
+          </div>
+          <div id="workspace-test-card">
+            <span class="overview-label">예시 검증</span>
+            <strong id="workspace-verification">테스트 전</strong>
+            <span id="workspace-verification-detail">현재 설정의 계산 결과를 확인하세요</span>
+          </div>
+        </section>
+        <div id="message" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="workbench">
+          <div class="workflow-main">
+            <details id="workflow-input" class="panel workflow-card" data-workflow-step="0" open>
+              <summary class="workflow-heading">
+                <h2 id="input-title">1단계 · 수식</h2>
+                <span class="workflow-summary" data-step-summary="0"
+                  >수식이나 예제를 선택하세요</span
+                >
+              </summary>
+              <div class="workflow-content">
+                <section class="panel editor-panel" aria-labelledby="input-title">
+                  <div class="panel-head">
+                    <div class="tools">
+                      <label class="sr-only" for="example-service">서비스 선택</label>
+                      <select id="example-service">
+                        <option value="">전체 서비스</option>
+                      </select>
+                      <label class="sr-only" for="example">예제 선택</label
+                      ><select id="example">
+                        <option value="">예제 선택</option></select
+                      ><button id="clear" class="text-button">입력 지우기</button>
+                    </div>
                   </div>
-                  <details id="review-details" class="supporting-details">
-                    <summary>근거·추가 검토</summary>
-                    <details id="product-context" class="panel catalog-panel" hidden>
-                      <summary id="product-title">선택한 DB 상품</summary>
-                      <p id="product-source"></p>
-                      <p id="product-flow"></p>
-                      <p id="product-unresolved" hidden></p>
-                      <p>
-                        DB에 보관된 SP에서 계산 표현식을 발췌했어요. 여러 구문은 각각의 계산
-                        단계예요. 조인·거래 필터·앞 단계 결과는 별도로 확인하세요.
-                      </p>
-                      <ul id="product-references"></ul>
-                    </details>
-                    <details id="explanation-details" class="details-block">
-                      <summary>원문 수식의 풀이</summary>
-                      <p class="section-hint">
-                        원문과 판단 이유는 위 표의 코드값을 눌러 확인할 수 있어요.
-                      </p>
-                      <div id="calculation-explanation" class="calculation-prose"></div>
-                    </details>
-                    <details id="product-comparison" class="details-block" hidden>
-                      <summary id="product-comparison-title">DB 상품 설정 대조</summary>
-                      <p>
-                        조회한 DB 설정과 현재 선택한 구문의 분석 결과를 비교해요. 미확정 값과 차이가
-                        있는 값은 자동으로 바꾸지 않아요.
-                      </p>
-                      <div class="table-scroll">
-                        <table>
-                          <thead>
-                            <tr>
-                              <th>항목</th>
-                              <th>DB 설정</th>
-                              <th>수식 분석</th>
-                              <th>대조</th>
-                            </tr>
-                          </thead>
-                          <tbody id="product-comparison-rows"></tbody>
-                        </table>
+                  <p class="sr-only" id="sql-hint">
+                    수수료·부가세 계산식을 붙여 넣거나 예제를 선택하세요. SQL 정렬 단축키는 Ctrl
+                    또는 Command + Shift + F입니다.
+                  </p>
+                  <div class="editor-meta">
+                    <span class="editor-language">MSSQL</span
+                    ><span class="sr-only">SQL 실행·DB 연결 없이 분석해요.</span>
+                    <div class="tools">
+                      <button id="undo-format-sql" type="button" class="text-button" hidden>
+                        정렬 되돌리기
+                      </button>
+                      <button id="format-sql" type="button" title="Ctrl / ⌘ + Shift + F" disabled>
+                        SQL 정렬
+                      </button>
+                    </div>
+                  </div>
+                  <div class="editor">
+                    <pre id="gutter" aria-hidden="true">1</pre>
+                    <div class="sql-surface">
+                      <pre
+                        id="sql-highlight"
+                        aria-hidden="true"
+                      ><code id="sql-highlight-code"></code></pre>
+                      <textarea
+                        id="sql"
+                        aria-label="MSSQL 수식 입력"
+                        aria-describedby="sql-hint"
+                        spellcheck="false"
+                        autocapitalize="off"
+                        autocomplete="off"
+                        wrap="off"
+                        placeholder="CPFEE = ROUND(ABS(AMT) * CPRATE, 0)&#10;, CPVAT = FLOOR(ROUND(ABS(AMT) * CPRATE, 0) * 0.1)"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="editor-footer">
+                    <div>
+                      <span id="input-info" class="sr-only">1행 · 0자</span
+                      ><span class="shortcut">분석 단축키 Ctrl + Enter</span>
+                    </div>
+                    <button id="analyze" class="primary" aria-describedby="sql-hint" disabled>
+                      수식 분석
+                    </button>
+                  </div>
+                  <details class="advanced-input">
+                    <summary>입력 설정</summary>
+                    <p>
+                      기본값은 수수료 CPFEE / RAMT, 부가세 CPVAT / VAMT예요. 다른 컬럼을 쓸 때만
+                      입력하세요.
+                    </p>
+                    <div class="column-options">
+                      <label
+                        >금액 기준<select id="input-scope">
+                          <option value="row">거래 금액</option>
+                          <option value="settlement">가맹점·정산주기별 합산 금액</option>
+                        </select></label
+                      >
+                      <label
+                        >수수료 컬럼명<input
+                          id="fee-column"
+                          maxlength="128"
+                          placeholder="예: FEE_AMT"
+                          spellcheck="false" /></label
+                      ><label
+                        >부가세 컬럼명<input
+                          id="vat-column"
+                          maxlength="128"
+                          placeholder="예: VAT_AMT"
+                          spellcheck="false"
+                      /></label>
+                    </div>
+                  </details>
+                </section>
+              </div>
+            </details>
+            <details id="workflow-review" class="panel workflow-card" data-workflow-step="1">
+              <summary class="workflow-heading" aria-disabled="true">
+                <h2>2단계 · 상품 설정</h2>
+                <span class="workflow-summary" data-step-summary="1">수식을 먼저 분석하세요</span>
+              </summary>
+              <div class="workflow-content">
+                <div class="analysis-layout">
+                  <section class="panel result-panel" aria-labelledby="result-title">
+                    <div class="sr-only">
+                      <h2 id="result-title">수식에서 내 상품 설정으로</h2>
+                      <span id="result-source" class="badge">입력 대기</span>
+                    </div>
+                    <div class="block-picker">
+                      <label for="blocks" id="blocks-label" hidden>확인할 계산 구문</label
+                      ><select id="blocks" hidden></select>
+                    </div>
+                    <div id="result-empty" class="result-empty">
+                      <p>수식을 분석하면 설정 코드가 여기에 나와요.</p>
+                    </div>
+                    <div id="result-content" hidden>
+                      <div id="product-table-review">
+                        <section
+                          id="product-progress"
+                          class="product-progress"
+                          aria-labelledby="code-title"
+                          hidden
+                        >
+                          <div id="code-details">
+                            <div class="product-toolbar">
+                              <div class="product-progress-heading">
+                                <h3 id="code-title" class="sr-only">상품 설정</h3>
+                                <span id="product-confirmation" role="status"></span>
+                              </div>
+                              <div class="product-progress-tools">
+                                <button id="edit-calculation" type="button">계산 방식</button>
+                                <span id="product-test-state"></span
+                                ><button id="next-pending" type="button" hidden>
+                                  미확정 항목 확인</button
+                                ><button
+                                  id="final-reset"
+                                  type="button"
+                                  class="text-button"
+                                  disabled
+                                >
+                                  원래대로
+                                </button>
+                              </div>
+                            </div>
+                            <p id="table-scroll-hint" class="sr-only">
+                              표를 좌우로 밀어 나머지 항목을 확인하세요. 값을 누르면 근거를 볼 수
+                              있어요.
+                            </p>
+                            <div
+                              class="table-scroll"
+                              tabindex="0"
+                              role="region"
+                              aria-label="현재 상품 설정 표"
+                              aria-describedby="table-scroll-hint"
+                            >
+                              <table id="result-table">
+                                <caption class="sr-only">
+                                  단계마다 같은 열 순서를 유지하는 상품 설정
+                                </caption>
+                                <thead></thead>
+                                <tbody></tbody>
+                              </table>
+                            </div>
+                            <div id="code-proof" class="cell-editor" hidden></div>
+                            <details class="product-markdown">
+                              <summary>표 원문</summary>
+                              <pre id="product-markdown"></pre>
+                            </details>
+                          </div>
+                        </section>
+                      </div>
+                      <details id="review-details" class="supporting-details">
+                        <summary>근거·추가 검토</summary>
+                        <details id="product-context" class="panel catalog-panel" hidden>
+                          <summary id="product-title">선택한 DB 상품</summary>
+                          <p id="product-source"></p>
+                          <p id="product-flow"></p>
+                          <p id="product-unresolved" hidden></p>
+                          <p>
+                            DB에 보관된 SP에서 계산 표현식을 발췌했어요. 여러 구문은 각각의 계산
+                            단계예요. 조인·거래 필터·앞 단계 결과는 별도로 확인하세요.
+                          </p>
+                          <ul id="product-references"></ul>
+                        </details>
+                        <details id="explanation-details" class="details-block">
+                          <summary>원문 수식의 풀이</summary>
+                          <p class="section-hint">
+                            원문과 판단 이유는 위 표의 코드값을 눌러 확인할 수 있어요.
+                          </p>
+                          <div id="calculation-explanation" class="calculation-prose"></div>
+                        </details>
+                        <details id="product-comparison" class="details-block" hidden>
+                          <summary id="product-comparison-title">DB 상품 설정 대조</summary>
+                          <p>
+                            조회한 DB 설정과 현재 선택한 구문의 분석 결과를 비교해요. 미확정 값과
+                            차이가 있는 값은 자동으로 바꾸지 않아요.
+                          </p>
+                          <div class="table-scroll">
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>항목</th>
+                                  <th>DB 설정</th>
+                                  <th>수식 분석</th>
+                                  <th>대조</th>
+                                </tr>
+                              </thead>
+                              <tbody id="product-comparison-rows"></tbody>
+                            </table>
+                          </div>
+                        </details>
+                        <details id="notices-panel" class="details-block" hidden>
+                          <summary id="notices-title">계산 전에 확인할 점</summary>
+                          <ul id="notices"></ul>
+                        </details>
+                      </details>
+                    </div>
+                  </section>
+                </div>
+                <div class="workflow-actions">
+                  <button class="primary" data-go-step="2" disabled>예시 테스트 →</button>
+                </div>
+              </div>
+            </details>
+            <details id="workflow-verify" class="panel workflow-card" data-workflow-step="2">
+              <summary class="workflow-heading" aria-disabled="true">
+                <h2>3단계 · 예시 테스트</h2>
+                <span class="workflow-summary" data-step-summary="2">예시 테스트 전</span>
+              </summary>
+              <div class="workflow-content">
+                <div id="product-table-test"></div>
+                <p class="sr-only" id="quick-product">
+                  원문 수식과 내 상품을 같은 예시로 비교해요.
+                </p>
+                <form id="quick-form">
+                  <div class="sample-presets">
+                    <span class="sr-only">연습용 예시</span
+                    ><button id="quick-approval" type="button">승인 9,900원</button
+                    ><button id="quick-cancel" type="button">취소 −9,900원</button>
+                  </div>
+                  <div class="quick-fields">
+                    <label
+                      >거래금액<input
+                        id="quick-amount"
+                        inputmode="decimal"
+                        placeholder="예: -9900"
+                        maxlength="120"
+                    /></label>
+                    <label
+                      ><span id="quick-rate-label">요율</span
+                      ><input
+                        id="quick-rate"
+                        inputmode="decimal"
+                        placeholder="예: 1.5%"
+                        maxlength="120"
+                    /></label>
+                    <label id="quick-count-wrap" hidden
+                      >과금건수 (각 거래)<input
+                        id="quick-count"
+                        inputmode="numeric"
+                        value="1"
+                        maxlength="120"
+                    /></label>
+                  </div>
+                  <details id="quick-options" class="quick-compare">
+                    <summary>테스트 설정</summary>
+                    <details class="quick-compare">
+                      <summary>거래 추가·대상금액</summary>
+                      <div class="quick-fields">
+                        <label
+                          >두 번째 거래금액 (선택)<input
+                            id="quick-second-amount"
+                            inputmode="decimal"
+                            maxlength="120"
+                            placeholder="입력하면 두 거래를 함께 비교"
+                        /></label>
+                        <label
+                          >계산대상금액 (각 거래, 선택)<input
+                            id="quick-target"
+                            inputmode="decimal"
+                            maxlength="120"
+                            placeholder="비우면 각 거래금액"
+                        /></label>
                       </div>
                     </details>
-                    <details id="notices-panel" class="details-block" hidden>
-                      <summary id="notices-title">계산 전에 확인할 점</summary>
-                      <ul id="notices"></ul>
+                    <details id="quick-source-panel" class="quick-compare">
+                      <summary>원문 입력값</summary>
+                      <p>원문에 사용할 값입니다. 합산 금액 기준이면 AMT를 먼저 합칩니다.</p>
+                      <p id="quick-bindings" class="action-hint"></p>
+                      <div id="quick-source-inputs"></div>
+                    </details>
+                    <details class="quick-compare">
+                      <summary>기대값 비교</summary>
+                      <div class="quick-fields">
+                        <label
+                          >기대 수수료<input id="quick-fee" inputmode="decimal" maxlength="120"
+                        /></label>
+                        <label
+                          >기대 VAT<input id="quick-vat" inputmode="decimal" maxlength="120"
+                        /></label>
+                      </div>
                     </details>
                   </details>
-                </div>
-              </section>
-            </div>
-            <div class="workflow-actions">
-              <button class="primary" data-go-step="2" disabled>예시 테스트 →</button>
-            </div>
-          </div>
-        </details>
-        <details id="workflow-verify" class="panel workflow-card" data-workflow-step="2">
-          <summary class="workflow-heading" aria-disabled="true">
-            <h2>3단계 · 예시 테스트</h2>
-            <span class="workflow-summary" data-step-summary="2">예시 테스트 전</span>
-          </summary>
-          <div class="workflow-content">
-            <div id="product-table-test"></div>
-            <p class="sr-only" id="quick-product">원문 수식과 내 상품을 같은 예시로 비교해요.</p>
-            <form id="quick-form">
-              <div class="sample-presets">
-                <span class="sr-only">연습용 예시</span
-                ><button id="quick-approval" type="button">승인 9,900원</button
-                ><button id="quick-cancel" type="button">취소 −9,900원</button>
-              </div>
-              <div class="quick-fields">
-                <label
-                  >거래금액<input
-                    id="quick-amount"
-                    inputmode="decimal"
-                    placeholder="예: -9900"
-                    maxlength="120"
-                /></label>
-                <label
-                  ><span id="quick-rate-label">요율</span
-                  ><input
-                    id="quick-rate"
-                    inputmode="decimal"
-                    placeholder="예: 1.5%"
-                    maxlength="120"
-                /></label>
-                <label id="quick-count-wrap" hidden
-                  >과금건수 (각 거래)<input
-                    id="quick-count"
-                    inputmode="numeric"
-                    value="1"
-                    maxlength="120"
-                /></label>
-              </div>
-              <details id="quick-options" class="quick-compare">
-                <summary>테스트 설정</summary>
-                <details class="quick-compare">
-                  <summary>거래 추가·대상금액</summary>
-                  <div class="quick-fields">
-                    <label
-                      >두 번째 거래금액 (선택)<input
-                        id="quick-second-amount"
-                        inputmode="decimal"
-                        maxlength="120"
-                        placeholder="입력하면 두 거래를 함께 비교"
-                    /></label>
-                    <label
-                      >계산대상금액 (각 거래, 선택)<input
-                        id="quick-target"
-                        inputmode="decimal"
-                        maxlength="120"
-                        placeholder="비우면 각 거래금액"
-                    /></label>
+                  <div class="workflow-actions">
+                    <button id="quick-run" class="primary" type="submit" disabled>테스트</button
+                    ><button id="quick-calculator" type="button" disabled>계산기에서 이어서</button>
                   </div>
+                </form>
+                <p id="quick-status" class="action-hint" role="status" aria-live="polite"></p>
+                <div id="quick-results" class="quick-results" hidden></div>
+                <details id="quick-history-wrap" class="quick-compare" hidden>
+                  <summary>테스트 기록</summary>
+                  <div id="quick-history"></div>
+                  <button id="quick-history-clear" type="button">테스트 기록 비우기</button>
                 </details>
-                <details id="quick-source-panel" class="quick-compare">
-                  <summary>원문 입력값</summary>
-                  <p>원문에 사용할 값입니다. 합산 금액 기준이면 AMT를 먼저 합칩니다.</p>
-                  <p id="quick-bindings" class="action-hint"></p>
-                  <div id="quick-source-inputs"></div>
-                </details>
-                <details class="quick-compare">
-                  <summary>기대값 비교</summary>
-                  <div class="quick-fields">
-                    <label
-                      >기대 수수료<input id="quick-fee" inputmode="decimal" maxlength="120"
-                    /></label>
-                    <label
-                      >기대 VAT<input id="quick-vat" inputmode="decimal" maxlength="120"
-                    /></label>
-                  </div>
-                </details>
-              </details>
-              <div class="workflow-actions">
-                <button id="quick-run" class="primary" type="submit" disabled>테스트</button
-                ><button id="quick-calculator" type="button" disabled>계산기에서 이어서</button>
-              </div>
-            </form>
-            <p id="quick-status" class="action-hint" role="status" aria-live="polite"></p>
-            <div id="quick-results" class="quick-results" hidden></div>
-            <details id="quick-history-wrap" class="quick-compare" hidden>
-              <summary>테스트 기록</summary>
-              <div id="quick-history"></div>
-              <button id="quick-history-clear" type="button">테스트 기록 비우기</button>
-            </details>
-            <div class="workflow-actions">
-              <button class="primary" data-go-step="3" disabled>상품 완성 →</button>
-            </div>
-          </div>
-        </details>
-        <details id="workflow-copy" class="panel workflow-card" data-workflow-step="3">
-          <summary class="workflow-heading" aria-disabled="true">
-            <h2>4단계 · 완성</h2>
-            <span class="workflow-summary" data-step-summary="3">최종값 확인</span>
-          </summary>
-          <div class="workflow-content">
-            <div class="final-identity">
-              <label
-                >상품코드<input
-                  id="final-code"
-                  maxlength="100"
-                  placeholder="상품코드 (선택)"
-                  disabled
-              /></label>
-              <label
-                >상품명<input id="final-name" maxlength="100" placeholder="상품명 (선택)" disabled
-              /></label>
-            </div>
-            <div id="product-table-final"></div>
-            <details class="insert-registration supporting-details" open>
-              <summary>INSERT 등록 정보</summary>
-              <p>
-                상품 예제를 선택하면 해당 상품의 정보를 채워요. * 항목을 확인하고 아래 복사 영역에
-                등록자 ID를 입력해 주세요.
-              </p>
-              <div id="insert-required" class="column-options"></div>
-              <p id="insert-service-name" role="status" aria-live="polite"></p>
-              <details>
-                <summary>통화·계산 엔진 등 추가 정보</summary>
-                <p>빈 항목은 INSERT에서 생략하고 DB 기본값을 사용해요.</p>
-                <div id="insert-optional" class="column-options"></div>
-              </details>
-            </details>
-            <p id="final-errors" class="action-hint" role="status" aria-live="polite"></p>
-            <details class="naming-area supporting-details" open>
-              <summary>이름 추천</summary>
-              <p class="section-hint">
-                등록한 서비스 정보로 이름을 추천해요. 추천 항목을 선택하면 위 상품코드·상품명과
-                복사할 INSERT에 반영돼요.
-              </p>
-              <div class="name-actions">
-                <label for="description"
-                  >서비스명 또는 설명 <span class="muted">(선택)</span
-                  ><input id="description" maxlength="2000" placeholder="예: 페이코인" /></label
-                ><button id="suggest-name" aria-describedby="name-help" disabled>
-                  상품명 추천
-                </button>
-              </div>
-              <p
-                id="name-help"
-                class="action-hint"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                수식을 먼저 분석해 주세요.
-              </p>
-              <section id="names-panel" aria-labelledby="names-title" hidden>
-                <div class="panel-head">
-                  <h2 id="names-title">상품명 선택</h2>
-                  <button id="remove-name" class="text-button">선택 해제</button>
+                <div class="workflow-actions">
+                  <button class="primary" data-go-step="3" disabled>상품 완성 →</button>
                 </div>
-                <div id="names"></div>
-              </section>
+              </div>
             </details>
+            <details id="workflow-copy" class="panel workflow-card" data-workflow-step="3">
+              <summary class="workflow-heading" aria-disabled="true">
+                <h2>4단계 · 완성</h2>
+                <span class="workflow-summary" data-step-summary="3">최종값 확인</span>
+              </summary>
+              <div class="workflow-content">
+                <div class="final-identity">
+                  <label
+                    >상품코드<input
+                      id="final-code"
+                      maxlength="100"
+                      placeholder="상품코드 (선택)"
+                      disabled
+                  /></label>
+                  <label
+                    >상품명<input
+                      id="final-name"
+                      maxlength="100"
+                      placeholder="상품명 (선택)"
+                      disabled
+                  /></label>
+                </div>
+                <div id="product-table-final"></div>
+                <details class="insert-registration supporting-details" open>
+                  <summary>INSERT 등록 정보</summary>
+                  <p>
+                    상품 예제를 선택하면 해당 상품의 정보를 채워요. * 항목을 확인하고 복사 영역에
+                    등록자 ID를 입력해 주세요.
+                  </p>
+                  <div id="insert-required" class="column-options"></div>
+                  <p id="insert-service-name" role="status" aria-live="polite"></p>
+                  <details>
+                    <summary>통화·계산 엔진 등 추가 정보</summary>
+                    <p>빈 항목은 INSERT에서 생략하고 DB 기본값을 사용해요.</p>
+                    <div id="insert-optional" class="column-options"></div>
+                  </details>
+                </details>
+                <p id="final-errors" class="action-hint" role="status" aria-live="polite"></p>
+                <details class="naming-area supporting-details" open>
+                  <summary>이름 추천</summary>
+                  <p class="section-hint">
+                    등록한 서비스 정보로 이름을 추천해요. 추천 항목을 선택하면 위 상품코드·상품명과
+                    복사할 INSERT에 반영돼요.
+                  </p>
+                  <div class="name-actions">
+                    <label for="description"
+                      >서비스명 또는 설명 <span class="muted">(선택)</span
+                      ><input id="description" maxlength="2000" placeholder="예: 페이코인" /></label
+                    ><button id="suggest-name" aria-describedby="name-help" disabled>
+                      상품명 추천
+                    </button>
+                  </div>
+                  <p
+                    id="name-help"
+                    class="action-hint"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    수식을 먼저 분석해 주세요.
+                  </p>
+                  <section id="names-panel" aria-labelledby="names-title" hidden>
+                    <div class="panel-head">
+                      <h2 id="names-title">상품명 선택</h2>
+                      <button id="remove-name" class="text-button">선택 해제</button>
+                    </div>
+                    <div id="names"></div>
+                  </section>
+                </details>
 
-            <div class="copy-actions">
-              <div id="insert-author" class="insert-author"></div>
-              <div class="tools">
-                <button id="tsv" class="primary" aria-describedby="copy-hint" disabled>
-                  엑셀용 복사</button
-                ><button id="markdown" aria-describedby="copy-hint" disabled>Markdown 복사</button>
-                <button id="copy-insert" aria-describedby="copy-hint" disabled>
-                  INSERT 쿼리 복사
-                </button>
+                <div id="copy-actions-main">
+                  <div id="product-copy-actions" class="copy-actions">
+                    <h2 class="copy-rail-title">완성 상품 내보내기</h2>
+                    <div id="insert-author" class="insert-author"></div>
+                    <div class="tools">
+                      <button id="tsv" class="primary" aria-describedby="copy-hint" disabled>
+                        엑셀용 복사</button
+                      ><button id="markdown" aria-describedby="copy-hint" disabled>
+                        Markdown 복사
+                      </button>
+                      <button id="copy-insert" aria-describedby="copy-hint" disabled>
+                        INSERT 쿼리 복사
+                      </button>
+                    </div>
+                    <p id="copy-hint" class="copy-hint">분석 결과가 나오면 복사할 수 있어요.</p>
+                    <div
+                      id="copy-success"
+                      class="copy-success"
+                      role="status"
+                      aria-live="polite"
+                      aria-atomic="true"
+                      hidden
+                    >
+                      <div class="copy-confetti" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                      </div>
+                      <span class="success-mark" aria-hidden="true">✓</span>
+                      <div>
+                        <h3 id="copy-success-title">다날 정산 상품을 만들었어요!</h3>
+                        <p id="copy-success-description">
+                          최종 상품 설정을 복사했어요. 필요한 곳에 붙여 넣어 사용하세요.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <details class="product-readiness">
+                  <summary>계산 요약</summary>
+                  <div id="final-understanding"></div>
+                  <p id="final-test-status" role="status"></p>
+                </details>
               </div>
-              <p id="copy-hint" class="copy-hint">분석 결과가 나오면 복사할 수 있어요.</p>
-            </div>
-            <div
-              id="copy-success"
-              class="copy-success"
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-              hidden
-            >
-              <div class="copy-confetti" aria-hidden="true">
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              </div>
-              <span class="success-mark" aria-hidden="true">✓</span>
-              <div>
-                <h3 id="copy-success-title">다날 정산 상품을 만들었어요!</h3>
-                <p id="copy-success-description">
-                  최종 상품 설정을 복사했어요. 필요한 곳에 붙여 넣어 사용하세요.
-                </p>
-              </div>
-            </div>
-            <details class="product-readiness">
-              <summary>계산 요약</summary>
-              <div id="final-understanding"></div>
-              <p id="final-test-status" role="status"></p>
             </details>
           </div>
-        </details>
+          <aside class="workbench-sidebar" aria-label="상품 만들기 안내">
+            <nav class="workflow-navigation" aria-label="상품 생성 단계">
+              <h2>만드는 순서</h2>
+              <button type="button" data-go-step="0" data-workflow-nav="0" aria-current="step">
+                <span class="workflow-number">01</span
+                ><span
+                  ><strong>수식 입력</strong
+                  ><small data-step-summary="0">수식이나 예제를 선택하세요</small></span
+                >
+              </button>
+              <button type="button" data-go-step="1" data-workflow-nav="1" disabled>
+                <span class="workflow-number">02</span
+                ><span><strong>상품 설정</strong><small data-step-summary="1"></small></span>
+              </button>
+              <button type="button" data-go-step="2" data-workflow-nav="2" disabled>
+                <span class="workflow-number">03</span
+                ><span><strong>예시 테스트</strong><small data-step-summary="2"></small></span>
+              </button>
+              <button type="button" data-go-step="3" data-workflow-nav="3" disabled>
+                <span class="workflow-number">04</span
+                ><span><strong>완성·복사</strong><small data-step-summary="3"></small></span>
+              </button>
+            </nav>
+            <div id="copy-actions-rail" class="copy-actions-rail" hidden></div>
+            <section class="workflow-guidance" aria-labelledby="workflow-guide-title">
+              <span class="overview-label">다음 작업</span>
+              <h2 id="workflow-guide-title">수식을 준비하세요</h2>
+              <p id="workflow-guide-text">
+                서비스별 예제를 선택하거나 수수료·부가세 수식을 입력해 주세요.
+              </p>
+              <button id="workflow-next" class="primary" type="button" data-go-step="1" disabled>
+                상품 설정으로 →
+              </button>
+            </section>
+            <section class="calculator-shortcut">
+              <h2>기존 상품을 확인하려면</h2>
+              <p>상품을 선택하고 거래금액과 요율로 계산 결과를 비교해 보세요.</p>
+              <button id="open-calculator" type="button" class="text-button">
+                정산 계산기 열기 ↗
+              </button>
+            </section>
+          </aside>
+        </div>
       </div>
       <div
         id="calculator-workspace"

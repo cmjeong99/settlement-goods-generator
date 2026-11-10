@@ -15,6 +15,7 @@ import { createDecisionReview } from './ui/decision-review.js';
 import { createProductTable } from './ui/product-table.js';
 import { createHistory } from './ui/history.js';
 import { createSqlEditor } from './ui/sql-editor.js';
+import { renderWorkspaceSummary } from './ui/workspace-summary.js';
 
 const syncTableOverflow = observeTableOverflow();
 const sqlEditor = createSqlEditor({ onMessage: message });
@@ -93,6 +94,7 @@ function renderReadiness() {
   $('markdown').textContent = 'Markdown 복사';
   const draft = finalProduct.draft();
   progressTable.render(draft.result, draft.name, state);
+  renderWorkspaceSummary(draft.result, draft.name, state, draft.settingErrors);
   syncTableOverflow();
 }
 function syncDraft() {
