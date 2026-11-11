@@ -1,3 +1,5 @@
+import { roundingUnitLabel } from './calculation/rounding-unit.js';
+
 export const FIELDS = [
   ['FRIM_BASE_DVCD', '과금 기준', ['AMOUNT', 'SCOUNT', 'TCOUNT']],
   ['FEE_TYPE_DVCD', '수수료 타입', ['RATE', 'FIXED']],
@@ -48,7 +50,7 @@ export function describeField(key, cell) {
           ? 'NULL로 지정했어요'
           : '사용하지 않아요'
         : '수식만으로 알 수 없어요';
-  if (key.endsWith('_UNIT_VAL')) return `${cell.value === 0 ? 1 : cell.value}원 단위`;
+  if (key.endsWith('_UNIT_VAL')) return roundingUnitLabel(cell.value);
   if (key === 'ABS_PROCS_YN')
     return cell.value === 'Y' ? '절대값으로 계산' : '절대값으로 바꾸지 않음';
   if (key === 'SIGN_APLY_LOCT_DVCD')
@@ -92,7 +94,7 @@ export function explainCalculation(result) {
     if (method === null) return `${subject}의 반올림·절사 방식은 추가 확인이 필요해요.`;
     if (method === 'NONE') return `${subject}에 별도 반올림이나 절사는 적용하지 않아요.`;
     const unit = value(`${prefix}_SMT_CALC_UNIT_VAL`);
-    const unitText = unit === null ? '' : `${unit === 0 ? 1 : unit}원 단위로 `;
+    const unitText = unit === null ? '' : `${roundingUnitLabel(unit)}로 `;
     const actions = {
       DOWN: '절사해요',
       HALF_UP: '반올림해요',

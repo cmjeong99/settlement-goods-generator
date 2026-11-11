@@ -1,6 +1,7 @@
 import { Decimal } from './calculation/decimal.js';
 import { cleanNumber } from './calculation/asis-data.js';
 import { NULL_OVERRIDE, NULLABLE_FIELDS } from './domain.js';
+import { roundingUnit } from './calculation/rounding-unit.js';
 
 export const ROUNDING_METHODS = [
   ['DOWN', '절사'],
@@ -12,17 +13,22 @@ export const ROUNDING_METHODS = [
 ];
 export const ROUNDING_UNITS = [
   [0, '1원'],
-  [10, '10원'],
-  [100, '100원'],
-  [0.1, '0.1원'],
-  [0.01, '0.01원'],
+  [-1, '10원'],
+  [-2, '100원'],
+  [1, '0.1원'],
+  [2, '0.01원'],
 ];
 
 export function unitCode(text) {
   const value = Number(cleanNumber(text));
-  if (!Number.isFinite(value) || value <= 0 || value > 1e12)
-    throw new Error('단위는 0보다 크고 1조 이하인 금액으로 입력해 주세요.');
-  return value === 1 ? 0 : value;
+  const scale = -Math.log10(value);
+  if (
+    !Number.isFinite(scale) ||
+    Math.abs(scale) > 12 ||
+    Math.abs(scale - Math.round(scale)) > 1e-10
+  )
+    throw new Error('단위는 1·10·100·0.1·0.01처럼 10의 거듭제곱으로 입력해 주세요.');
+  return Math.round(scale) || 0;
 }
 export function readRoundingPolicy(fields, prefix) {
   const value = (key) =>
@@ -61,11 +67,12 @@ export function roundingPreview(policy, text) {
   if (
     !policy.method ||
     policy.method === NULL_OVERRIDE ||
-    (policy.method !== 'NONE' && [null, NULL_OVERRIDE].includes(policy.unit))
+    (policy.method !== 'NONE' && policy.unit === null)
   )
     return null;
   const value = Decimal.parse(cleanNumber(text)).abs();
-  const unit = policy.method === 'NONE' || policy.unit === 0 ? '1' : String(policy.unit);
+  const unit =
+    policy.method === 'NONE' ? '1' : roundingUnit(policy.unit === NULL_OVERRIDE ? 0 : policy.unit);
   return {
     positive: value.round(policy.method, unit).toString(),
     negative: value.neg().round(policy.method, unit).toString(),

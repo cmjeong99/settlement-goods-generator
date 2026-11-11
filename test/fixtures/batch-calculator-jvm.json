@@ -1,0 +1,359 @@
+{
+  "repository": "daon-settlement-batch",
+  "revision": "1d34afaf335f3b646741077b4c3b20896374e8fe",
+  "sources": {
+    "src/main/java/kr/co/danal/settlement/batch/business/common/calculator/merchant/custom/sum/mobile/MobileRateIncludeVatMerchantSumCalculator.java": "0dd2995e11efdd430fbd5984fd2dc98c33a770d13a9352be64b2f7fcc22547ec",
+    "src/main/java/kr/co/danal/settlement/batch/business/common/calculator/merchant/custom/sum/mobile/MobileTmonetMerchantSumCalculator.java": "114cac08f38f8aef3de341a9b162fddec40e005f85bf9d01c68649494abeb1d6",
+    "src/main/java/kr/co/danal/settlement/batch/business/common/calculator/merchant/custom/sum/mobile/MobileGovernmentOfficeMerchantSumCalculator.java": "840faedc25547fa51cd893a13dd79e0d9ae8e73892960a62483040c40e798fb7",
+    "src/main/java/kr/co/danal/settlement/batch/business/common/calculator/merchant/custom/sum/selfconfirm/SelfConfirmIncludeVatMerchantSumCalculator.java": "7549b81ebc23182131e232752232aa72e7d7ea52c7995f2c4d632e0883a2e275",
+    "src/main/java/kr/co/danal/core/calculator/common/code/RoundingRule.java": "4895eb039dd554a67e4755e4a6adefb7fa903c17824dca291f533baea6632132"
+  },
+  "custom": [
+    {
+      "method": "mobileRate",
+      "amount": "1000",
+      "grossFee": "110",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "100",
+        "vat": "10",
+        "payout": "890"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "1000",
+      "grossFee": "110",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "100",
+        "vat": "10",
+        "payout": "890"
+      }
+    },
+    {
+      "method": "mobileRate",
+      "amount": "-1000",
+      "grossFee": "-110",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "-100",
+        "vat": "-10",
+        "payout": "-890"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "-1000",
+      "grossFee": "-110",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "-100",
+        "vat": "-10",
+        "payout": "-890"
+      }
+    },
+    {
+      "method": "mobileRate",
+      "amount": "1000",
+      "grossFee": "149",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "135",
+        "vat": "14",
+        "payout": "851"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "1000",
+      "grossFee": "149",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "135",
+        "vat": "14",
+        "payout": "851"
+      }
+    },
+    {
+      "method": "mobileRate",
+      "amount": "-1000",
+      "grossFee": "-149",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "-136",
+        "vat": "-13",
+        "payout": "-851"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "-1000",
+      "grossFee": "-149",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "-135",
+        "vat": "-14",
+        "payout": "-851"
+      }
+    },
+    {
+      "method": "mobileRate",
+      "amount": "1000",
+      "grossFee": "0",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "0",
+        "vat": "0",
+        "payout": "1000"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "1000",
+      "grossFee": "0",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "0",
+        "vat": "0",
+        "payout": "1000"
+      }
+    },
+    {
+      "method": "mobileRate",
+      "amount": "1000",
+      "grossFee": "1.0999995",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "1",
+        "vat": "0.0999995",
+        "payout": "998.9000005"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "1000",
+      "grossFee": "1.0999995",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "1",
+        "vat": "0.0999995",
+        "payout": "998.9000005"
+      }
+    },
+    {
+      "method": "mobileRate",
+      "amount": "-1000",
+      "grossFee": "-1.0999995",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-RATE-INCL",
+      "expected": {
+        "fee": "-1",
+        "vat": "-0.0999995",
+        "payout": "-998.9000005"
+      }
+    },
+    {
+      "method": "timonet",
+      "amount": "-1000",
+      "grossFee": "-1.0999995",
+      "count": "1",
+      "feeValue": "0",
+      "scheduledPayout": "0",
+      "productCode": "MOBILE-TIMONET",
+      "expected": {
+        "fee": "-1",
+        "vat": "-0.0999995",
+        "payout": "-998.9000005"
+      }
+    },
+    {
+      "method": "government",
+      "amount": "1000",
+      "scheduledPayout": "835",
+      "grossFee": "0",
+      "count": "1",
+      "feeValue": "0",
+      "productCode": "MOBILE-GOVERNMENT",
+      "expected": {
+        "fee": "150",
+        "vat": "15",
+        "payout": "835"
+      }
+    },
+    {
+      "method": "government",
+      "amount": "-1000",
+      "scheduledPayout": "-835",
+      "grossFee": "0",
+      "count": "1",
+      "feeValue": "0",
+      "productCode": "MOBILE-GOVERNMENT",
+      "expected": {
+        "fee": "-150",
+        "vat": "-15",
+        "payout": "-835"
+      }
+    },
+    {
+      "method": "government",
+      "amount": "1000",
+      "scheduledPayout": "851",
+      "grossFee": "0",
+      "count": "1",
+      "feeValue": "0",
+      "productCode": "MOBILE-GOVERNMENT",
+      "expected": {
+        "fee": "135",
+        "vat": "14",
+        "payout": "851"
+      }
+    },
+    {
+      "method": "government",
+      "amount": "-1000",
+      "scheduledPayout": "-851",
+      "grossFee": "0",
+      "count": "1",
+      "feeValue": "0",
+      "productCode": "MOBILE-GOVERNMENT",
+      "expected": {
+        "fee": "-136",
+        "vat": "-13",
+        "payout": "-851"
+      }
+    },
+    {
+      "method": "self",
+      "amount": "0",
+      "count": "1",
+      "feeValue": "1",
+      "grossFee": "0",
+      "scheduledPayout": "0",
+      "productCode": "SELF-STANDARD-SCNT-INCL",
+      "expected": {
+        "fee": "0",
+        "vat": "0",
+        "payout": "0"
+      }
+    },
+    {
+      "method": "self",
+      "amount": "0",
+      "count": "2",
+      "feeValue": "55",
+      "grossFee": "0",
+      "scheduledPayout": "0",
+      "productCode": "SELF-STANDARD-SCNT-INCL",
+      "expected": {
+        "fee": "109",
+        "vat": "11",
+        "payout": "-120"
+      }
+    },
+    {
+      "method": "self",
+      "amount": "0",
+      "count": "100",
+      "feeValue": "15.5",
+      "grossFee": "0",
+      "scheduledPayout": "0",
+      "productCode": "SELF-STANDARD-SCNT-INCL",
+      "expected": {
+        "fee": "1545",
+        "vat": "155",
+        "payout": "-1700"
+      }
+    },
+    {
+      "method": "self",
+      "amount": "0",
+      "count": "0",
+      "feeValue": "100",
+      "grossFee": "0",
+      "scheduledPayout": "0",
+      "productCode": "SELF-STANDARD-SCNT-INCL",
+      "expected": {
+        "fee": "0",
+        "vat": "0",
+        "payout": "0"
+      }
+    }
+  ],
+  "rounding": [
+    {
+      "value": "1234.56",
+      "scale": -1,
+      "rule": "HALF_UP",
+      "expected": "1230"
+    },
+    {
+      "value": "-1234",
+      "scale": -1,
+      "rule": "SIGNED_DOWN",
+      "expected": "-1240"
+    },
+    {
+      "value": "1234.56",
+      "scale": -2,
+      "rule": "HALF_UP",
+      "expected": "1200"
+    },
+    {
+      "value": "1234.567",
+      "scale": 2,
+      "rule": "DOWN",
+      "expected": "1234.56"
+    },
+    {
+      "value": "-1234.567",
+      "scale": 2,
+      "rule": "SIGNED_DOWN",
+      "expected": "-1234.57"
+    },
+    {
+      "value": "123.456",
+      "scale": 0,
+      "rule": "NONE",
+      "expected": "123.456"
+    }
+  ]
+}

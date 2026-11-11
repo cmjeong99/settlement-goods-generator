@@ -466,6 +466,44 @@ header {
   gap: 12px;
   margin-top: 12px;
 }
+.batch-parameters {
+  margin: 0 24px 16px;
+}
+.batch-engine-choice {
+  margin: 0 24px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.batch-parameter-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.batch-parameter-fields legend {
+  color: var(--muted);
+  font-size: 13px;
+}
+.batch-parameter-fields label {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 200px;
+  min-width: 0;
+  font-size: 13px;
+}
+.batch-parameter-fields input {
+  width: 100%;
+  min-width: 0;
+}
+.numeric-preparation {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
 .calculation-result {
   margin: 16px 0;
   min-width: 0;

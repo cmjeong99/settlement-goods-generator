@@ -641,6 +641,15 @@
               >
             </div>
             <p data-verification="asis-scope-help" class="verification-hint"></p>
+            <label data-verification="batch-engine-label" class="batch-engine-choice" hidden>
+              계산 기준
+              <select data-verification="batch-engine">
+                <option value="COMMON">저장된 상품 설정 (COMMON)</option>
+                <option value="CUSTOM">배치에 등록된 전용 계산기 (CUSTOM)</option>
+              </select>
+            </label>
+            <p data-verification="batch-note" class="verification-hint" hidden></p>
+            <div data-verification="batch-parameters" class="batch-parameters" hidden></div>
             <details data-verification="formula" class="review-explanation" hidden>
               <summary>상품 설정·원문 공식</summary>
               <div data-verification="formula-products"></div>

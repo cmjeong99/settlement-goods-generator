@@ -133,6 +133,6 @@ test('최소 수수료·구간·기본 요금제를 필요한 값 없이 일반 
     const detailed = reconcileAsis(selected, input).results[0];
     assert.equal(detailed.status, 'error');
     assert.equal(detailed.metrics, null);
-    assert.match(detailed.reasons[0], /아직 지원하지 않아/);
+    assert.match(detailed.reasons[0], /입력해 주세요/);
   }
 });

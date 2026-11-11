@@ -9,6 +9,7 @@ import {
 } from '../rounding-policy.js';
 import { proofNodes } from './views.js';
 import { NULL_OVERRIDE, NULLABLE_FIELDS } from '../domain.js';
+import { roundingUnit, roundingUnitLabel } from '../calculation/rounding-unit.js';
 
 export function createRoundingEditor({ onApply, onClose }) {
   let prefix = 'FEE',
@@ -47,10 +48,10 @@ export function createRoundingEditor({ onApply, onClose }) {
       }[policy.method] || '처리 방식을 선택하세요';
     const unit =
       policy.unit === NULL_OVERRIDE
-        ? '단위 NULL(미적용)'
+        ? '단위 NULL (배치 기본 1원)'
         : policy.unit === null
           ? '단위 미선택'
-          : `${policy.unit === 0 ? 1 : policy.unit}원 단위`;
+          : roundingUnitLabel(policy.unit);
     const baseLabel =
       policy.base === NULL_OVERRIDE
         ? '계산 기준 NULL(미적용)'
@@ -182,7 +183,7 @@ export function createRoundingEditor({ onApply, onClose }) {
       button.onclick = () => {
         policy.unit = value;
         unitError = false;
-        refs.custom.value = value === 0 ? '1' : String(value);
+        refs.custom.value = roundingUnit(value).toString();
         refs.error.textContent = '';
         update();
       };
@@ -203,7 +204,9 @@ export function createRoundingEditor({ onApply, onClose }) {
     refs.custom.maxLength = 120;
     refs.custom.value = [null, NULL_OVERRIDE].includes(policy.unit)
       ? ''
-      : String(policy.unit === 0 ? 1 : policy.unit);
+      : Math.abs(policy.unit) <= 38
+        ? roundingUnit(policy.unit).toString()
+        : '';
     refs.custom.setAttribute('aria-label', '처리 단위 직접 지정');
     refs.custom.oninput = () => {
       try {

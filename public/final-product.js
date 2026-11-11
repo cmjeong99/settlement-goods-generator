@@ -1,4 +1,5 @@
 import { FIELDS, NULL_OVERRIDE, NULLABLE_FIELDS } from './domain.js';
+import { validScale } from './calculation/rounding-unit.js';
 
 export function buildFinalProduct(source, overrides = {}, identity = {}) {
   if (!source)
@@ -36,13 +37,9 @@ export function buildFinalProduct(source, overrides = {}, identity = {}) {
       continue;
     }
     const value = values ? raw : Number(raw);
-    if (
-      values
-        ? !values.includes(value)
-        : !/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(raw) || !Number.isFinite(value) || value > 1e12
-    ) {
+    if (values ? !values.includes(value) : !/^[+-]?\d+$/.test(raw) || !validScale(value)) {
       errors.push(
-        `${label}을 확인해 주세요.${values ? '' : ' 0 이상 1조 이하의 숫자로 입력하세요.'}`,
+        `${label}을 확인해 주세요.${values ? '' : ' -999~999 정수인 scale 코드로 입력하세요.'}`,
       );
       continue;
     }

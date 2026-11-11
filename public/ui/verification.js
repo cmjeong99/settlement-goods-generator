@@ -5,6 +5,13 @@ import { describeField } from '../domain.js';
 import { renderExplanation } from './views.js';
 import { highlightSql } from '../sql-tools.js';
 import { numericTotal, numericPayout, numericBreakdown } from './numeric-formula.js';
+import {
+  batchNotes,
+  calculatorParameters,
+  calculatorCode,
+  customCalculator,
+  CUSTOM_CALCULATORS,
+} from '../calculation/batch-reference.js';
 import { createTabs } from './workflow.js';
 import { createProductPicker } from './catalog.js';
 import { createDashboard } from './dashboard.js';
@@ -72,6 +79,8 @@ function createVerificationPanel(root, { aggregate }) {
   const $ = (id) => root.querySelector(`[data-verification="${id}"]`);
   const dashboard = createDashboard($('dashboard'));
   const availableProducts = new Map(productByCode);
+  const parameterValues = new Map();
+  const batchEngines = new Set();
   let rows = [{ amount: '', feeValue: '', sourceRow: 1 }],
     sourceTable = null,
     mapping = {},
@@ -83,7 +92,13 @@ function createVerificationPanel(root, { aggregate }) {
   let sourceRecords = new WeakMap(),
     editedFields = new WeakMap();
   const manualMapping = new Set();
-  const selectedProduct = () => availableProducts.get($('asis-product').value);
+  const productForCode = (code) => {
+    const product = availableProducts.get(code);
+    return product && batchEngines.has(code)
+      ? { ...product, engine: 'CUSTOM', batchEngineOverride: true }
+      : product;
+  };
+  const selectedProduct = () => productForCode($('asis-product').value);
   $('asis-identity-heading').textContent = aggregate ? '합계' : '행';
   function status(text, kind = 'info') {
     $('asis-status').textContent = text;
@@ -130,13 +145,18 @@ function createVerificationPanel(root, { aggregate }) {
   function updateProduct() {
     refreshProductFields();
     const product = selectedProduct();
+    const stored = availableProducts.get($('asis-product').value);
+    $('batch-engine-label').hidden = !(
+      stored?.engine === 'COMMON' && CUSTOM_CALCULATORS[calculatorCode(stored)]
+    );
+    $('batch-engine').value = batchEngines.has(stored?.code) ? 'CUSTOM' : 'COMMON';
     const fieldLabel = (key) =>
       describeField(key, {
         value: product.expected[key],
         status: product.expected[key] === null ? 'unknown' : 'known',
       });
     $('asis-product-info').textContent = product
-      ? `${product.name} · ${fieldLabel('FEE_TYPE_DVCD')} · 수수료 ${fieldLabel('FEE_SMT_CALC_BASE_DVCD')} / VAT ${product.expected.VAT_DVCD === 'ZERO' ? '0원 (면세)' : fieldLabel('VAT_SMT_CALC_BASE_DVCD')} · ${['analysis', 'draft'].includes(product.source) ? '직접 판단한 상품 설정' : `${PRODUCT_SNAPSHOT_DATE} DB 설정`}${product.engine !== 'COMMON' ? ' · 특이 계산 미지원' : ''}`
+      ? `${product.name} · ${fieldLabel('FEE_TYPE_DVCD')} · 수수료 ${fieldLabel('FEE_SMT_CALC_BASE_DVCD')} / VAT ${product.expected.VAT_DVCD === 'ZERO' ? '0원 (면세)' : fieldLabel('VAT_SMT_CALC_BASE_DVCD')} · ${['analysis', 'draft'].includes(product.source) ? '직접 판단한 상품 설정' : `${PRODUCT_SNAPSHOT_DATE} DB 설정`}${customCalculator(product) ? ' · 배치 CUSTOM 계산' : product.engine !== 'COMMON' ? ' · CUSTOM 구현 확인 필요' : ''}`
       : '검증할 상품을 선택하세요. SQL 분석 없이 AS-IS 데이터만 입력해도 돼요.';
     $('asis-scope-help').textContent = !product
       ? ''
@@ -157,11 +177,12 @@ function createVerificationPanel(root, { aggregate }) {
       : selected
         ? [selected.code]
         : [];
+    renderBatchParameters(codes);
     $('formula').hidden = !codes.length;
     $('formula-products').replaceChildren(
       ...codes.map((code) => {
         const section = make('div', undefined, 'verification-formula-product');
-        const product = availableProducts.get(code);
+        const product = productForCode(code);
         section.append(make('h4', product ? `${product.name} · ${code}` : code));
         if (!product) {
           section.append(make('p', '상품코드를 찾을 수 없어요. 입력한 코드를 확인해 주세요.'));
@@ -185,7 +206,7 @@ function createVerificationPanel(root, { aggregate }) {
             'explanation-caption',
           ),
         );
-        if (product.engine !== 'COMMON')
+        if (product.engine !== 'COMMON' && !customCalculator(product))
           section.append(
             make('p', '특이 계산기 상품은 공통 설정만으로 계산할 수 없어요.', 'verification-hint'),
           );
@@ -216,16 +237,53 @@ function createVerificationPanel(root, { aggregate }) {
     );
   }
 
+  function renderBatchParameters(codes) {
+    const products = codes.map(productForCode).filter(Boolean);
+    $('batch-note').textContent = products.flatMap(batchNotes).join(' ');
+    $('batch-note').hidden = !$('batch-note').textContent;
+    $('batch-parameters').replaceChildren();
+    for (const product of products) {
+      const definitions = calculatorParameters(product);
+      if (!definitions.length) continue;
+      const fields = make('fieldset', undefined, 'batch-parameter-fields');
+      fields.append(
+        make('legend', products.length > 1 ? `${product.name} 계산값` : '계산에 필요한 값'),
+      );
+      if (!parameterValues.has(product.code)) parameterValues.set(product.code, {});
+      const values = parameterValues.get(product.code);
+      for (const [key, name] of definitions) {
+        const label = make('label', name);
+        const input = make('input');
+        input.inputMode = 'decimal';
+        input.maxLength = 120;
+        input.value = values[key] || '';
+        input.dataset.parameter = key;
+        input.setAttribute('aria-label', `${product.name} ${name}`);
+        input.addEventListener('input', () => {
+          values[key] = input.value;
+          fileRevision++;
+          invalidate();
+        });
+        label.append(input);
+        fields.append(label);
+      }
+      $('batch-parameters').append(fields);
+    }
+    $('batch-parameters').hidden = !$('batch-parameters').childElementCount;
+  }
+
   function visibleFields() {
     const fields = [];
     if (rows.some((row) => row.id)) fields.push(['id', '거래번호']);
     if ($('asis-row-products').checked) fields.push(['productCode', '원본 상품코드']);
     fields.push(['amount', '거래금액']);
     if ($('asis-show-target').checked) fields.push(['targetAmount', '계산대상금액']);
-    fields.push([
-      'feeValue',
-      selectedProduct()?.expected.FEE_TYPE_DVCD === 'FIXED' ? '단가' : '요율',
-    ]);
+    const custom = customCalculator(selectedProduct());
+    if (!custom || custom.countBased)
+      fields.push([
+        'feeValue',
+        selectedProduct()?.expected.FEE_TYPE_DVCD === 'FIXED' ? '단가' : '요율',
+      ]);
     if (selectedProduct()?.expected.FEE_TYPE_DVCD === 'FIXED' || $('asis-row-products').checked)
       fields.push(['count', '과금건수']);
     if ($('asis-compare').checked)
@@ -425,6 +483,13 @@ function createVerificationPanel(root, { aggregate }) {
     updateProduct();
     renderMapping();
   };
+  $('batch-engine').onchange = () => {
+    const code = $('asis-product').value;
+    if ($('batch-engine').value === 'CUSTOM') batchEngines.add(code);
+    else batchEngines.delete(code);
+    fileRevision++;
+    updateProduct();
+  };
   $('asis-row-products').onchange = () => {
     fileRevision++;
     updateProduct();
@@ -474,6 +539,7 @@ function createVerificationPanel(root, { aggregate }) {
   $('asis-clear').onclick = () => {
     fileRevision++;
     pendingPaste = false;
+    parameterValues.clear();
     rows = [{ amount: '', feeValue: '', sourceRow: 1 }];
     sourceTable = null;
     sourceRecords = new WeakMap();
@@ -613,7 +679,10 @@ function createVerificationPanel(root, { aggregate }) {
         scope: aggregate ? 'all' : 'rows',
         rateUnit: $('asis-rate-unit').value,
         useRowProducts: $('asis-row-products').checked,
-        products: availableProducts,
+        products: new Map(
+          [...availableProducts.keys()].map((code) => [code, productForCode(code)]),
+        ),
+        parametersByProduct: parameterValues,
       });
       renderReport();
       dashboard.update(
@@ -641,6 +710,8 @@ function createVerificationPanel(root, { aggregate }) {
     loadInput(product, input) {
       fileRevision++;
       availableProducts.set(product.code, product);
+      parameterValues.delete(product.code);
+      batchEngines.delete(product.code);
       picker.setValue(product.code);
       rows = structuredClone(Array.isArray(input) ? input : [input]);
       sourceTable = null;

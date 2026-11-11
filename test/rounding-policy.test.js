@@ -13,9 +13,9 @@ import {
 
 test('사용자가 고른 원 단위를 상품 코드로 바꾸며 잘못된 금액은 거부한다', () => {
   assert.equal(unitCode('1'), 0);
-  assert.equal(unitCode('1,000'), 1000);
-  assert.equal(unitCode('0.01'), 0.01);
-  for (const input of ['', '0', '-1', 'NaN', 'Infinity', '1000000000001'])
+  assert.equal(unitCode('1,000'), -3);
+  assert.equal(unitCode('0.01'), 2);
+  for (const input of ['', '0', '-1', 'NaN', 'Infinity', '1000000000001', '5', '0.25'])
     assert.throws(() => unitCode(input));
 });
 
@@ -30,7 +30,7 @@ test('선택한 수수료 계산 방식만 함께 적용하고 원문과 부가�
   assert.deepEqual(changes, {
     FEE_SMT_CALC_MHOD_DVCD: 'HALF_UP',
     FEE_SMT_CALC_BASE_DVCD: 'SUM',
-    FEE_SMT_CALC_UNIT_VAL: '10',
+    FEE_SMT_CALC_UNIT_VAL: '-1',
   });
   const current = buildFinalProduct(source, changes);
   assert.deepEqual(current.errors, []);
@@ -82,7 +82,10 @@ test('방식·단위·VAT 기준의 명시적 NULL을 미선택이나 코드 NON
     {},
   );
   assert.equal(roundingPreview({ method: NULL_OVERRIDE, unit: NULL_OVERRIDE }, '148.5'), null);
-  assert.equal(roundingPreview({ method: 'DOWN', unit: NULL_OVERRIDE }, '148.5'), null);
+  assert.deepEqual(roundingPreview({ method: 'DOWN', unit: NULL_OVERRIDE }, '148.5'), {
+    positive: '148',
+    negative: '-148',
+  });
   assert.deepEqual(
     roundingChanges(source.fields, 'FEE', { method: 'NONE', unit: NULL_OVERRIDE, base: 'EACH' }),
     { FEE_SMT_CALC_MHOD_DVCD: 'NONE', FEE_SMT_CALC_UNIT_VAL: NULL_OVERRIDE },
@@ -99,11 +102,11 @@ test('양수와 음수 예시로 절사·반올림·올림의 차이를 보여�
   };
   for (const [method, [positive, negative]] of Object.entries(expected))
     assert.deepEqual(roundingPreview({ method, unit: 0 }, '148.5'), { positive, negative });
-  assert.deepEqual(roundingPreview({ method: 'HALF_UP', unit: 10 }, '148.5'), {
+  assert.deepEqual(roundingPreview({ method: 'HALF_UP', unit: -1 }, '148.5'), {
     positive: '150',
     negative: '-150',
   });
-  assert.deepEqual(roundingPreview({ method: 'DOWN', unit: 0.01 }, '148.599'), {
+  assert.deepEqual(roundingPreview({ method: 'DOWN', unit: 2 }, '148.599'), {
     positive: '148.59',
     negative: '-148.59',
   });

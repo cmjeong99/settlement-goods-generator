@@ -1,11 +1,13 @@
 import { FIELDS, NULL_OVERRIDE } from './domain.js';
 import { INSERT_FIELDS, normalizeRegistration } from './product-insert.js';
+import { validScale } from './calculation/rounding-unit.js';
 
 export const HISTORY_KEY = 'danal.settlement.history.v1';
 export const HISTORY_LIMIT = 50;
 
 export function historySnapshot({ result, name, registration }, { sql, tests = [] }) {
   return {
+    unitEncoding: 'scale',
     name: name ? { code: name.code, name: name.name } : null,
     ...(registration ? { registration: normalizeRegistration(registration) } : {}),
     sql,
@@ -24,6 +26,7 @@ function validEntry(entry) {
   return (
     entry &&
     typeof entry === 'object' &&
+    (entry.unitEncoding === undefined || entry.unitEncoding === 'scale') &&
     typeof entry.id === 'string' &&
     typeof entry.createdAt === 'string' &&
     Number.isFinite(Date.parse(entry.createdAt)) &&
@@ -53,10 +56,12 @@ function validEntry(entry) {
         (cell.value === null ||
           (values
             ? values.includes(cell.value)
-            : typeof cell.value === 'number' &&
-              Number.isFinite(cell.value) &&
-              cell.value >= 0 &&
-              cell.value <= 1e12))
+            : entry.unitEncoding === 'scale'
+              ? validScale(cell.value)
+              : typeof cell.value === 'number' &&
+                Number.isFinite(cell.value) &&
+                cell.value >= 0 &&
+                cell.value <= 1e12))
       );
     }) &&
     Array.isArray(entry.tests) &&

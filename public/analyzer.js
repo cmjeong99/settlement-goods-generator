@@ -119,12 +119,12 @@ function roundInfo(n) {
       truncate = core.args[2] ? numeric(core.args[2]) : 0;
     if (!Number.isInteger(digits) || Math.abs(digits) > 12 || !Number.isFinite(truncate))
       return { base, method: null, unit: null, input: core.args[0] };
-    const unit = 10 ** (Math.round(Math.log10(factor)) - digits);
-    if (unit < 1e-12 || unit > 1e12) return { base, method: null, unit: null, input };
+    const unit = digits - Math.round(Math.log10(factor));
+    if (Math.abs(unit) > 38) return { base, method: null, unit: null, input };
     return {
       base,
       method: truncate === 0 ? 'HALF_UP' : 'DOWN',
-      unit: unit === 1 ? 0 : unit,
+      unit: unit || 0,
       input,
     };
   }
@@ -132,7 +132,7 @@ function roundInfo(n) {
     base,
     method:
       core.name === 'FLOOR' ? (nonnegative(core.args[0]) ? 'DOWN' : 'SIGNED_DOWN') : 'CEILING',
-    unit: factor === 1 ? 0 : factor,
+    unit: -Math.round(Math.log10(factor)) || 0,
     input,
   };
 }
@@ -275,7 +275,7 @@ export function analyzeBlock(block, source, options = {}) {
           keys[2],
           ri.unit,
           original,
-          '단위 코드: 1원은 0, 10원은 10, 소수 둘째 자리는 0.01이에요.',
+          '배치의 scale 코드: 1원은 0, 10원은 -1, 소수 둘째 자리는 2예요.',
         );
       else
         put(

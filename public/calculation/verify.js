@@ -1,5 +1,6 @@
 import { Decimal } from './decimal.js';
 import { evaluateFormula } from './expression.js';
+import { roundingUnit } from './rounding-unit.js';
 
 const zero = () => Decimal.parse('0');
 const sum = (values) =>
@@ -21,7 +22,9 @@ function roundSetting(value, fields, prefix, amount, adjustments) {
       : settingsValue(fields, 'SIGN_APLY_LOCT_DVCD');
   const method = settingsValue(fields, `${prefix}_SMT_CALC_MHOD_DVCD`);
   const configuredUnit =
-    method === 'NONE' ? 0 : settingsValue(fields, `${prefix}_SMT_CALC_UNIT_VAL`);
+    method === 'NONE' || fields[`${prefix}_SMT_CALC_UNIT_VAL`]?.status === 'not-applicable'
+      ? 0
+      : settingsValue(fields, `${prefix}_SMT_CALC_UNIT_VAL`);
   const applySign = (value) => (amount.sign() < 0 && value.sign() > 0 ? value.neg() : value);
   const sign = () => {
     const signed = applySign(value);
@@ -34,7 +37,7 @@ function roundSetting(value, fields, prefix, amount, adjustments) {
     value = signed;
   };
   if (position === 'BEFORE') sign();
-  const unit = configuredUnit === 0 ? '1' : String(configuredUnit);
+  const unit = roundingUnit(configuredUnit).toString();
   const rounded = value.round(method, unit);
   adjustments?.push({
     kind: 'round',
@@ -58,6 +61,9 @@ export function calculateSettings(
     feeValue,
     countPerRow = '1',
     engine = 'COMMON',
+    tariff = 'STANDARD',
+    parameters = {},
+    minimumFeeEnabled = false,
   } = {},
 ) {
   if (engine !== 'COMMON')
@@ -81,8 +87,28 @@ export function calculateSettings(
     throw new Error('요율·단가는 비음수, 건수는 비음수 정수로 입력해 주세요.');
   const feeType = settingsValue(fields, 'FEE_TYPE_DVCD');
   const feeBasis = settingsValue(fields, 'FRIM_BASE_DVCD');
-  if (feeType === 'FIXED' && !['SCOUNT', 'TCOUNT'].includes(feeBasis))
-    throw new Error('정액 수수료의 건수 기준을 확인해야 비교할 수 있어요.');
+  if (!['AMOUNT', 'SCOUNT', 'TCOUNT'].includes(feeBasis))
+    throw new Error('수수료의 과금 기준을 확인해야 비교할 수 있어요.');
+  const countBased = feeBasis !== 'AMOUNT';
+  if (!['STANDARD', 'BASE', 'SLIDING'].includes(tariff))
+    throw new Error('지원하지 않는 요금제예요. 배치 요금제 코드를 확인해 주세요.');
+  const parameter = (key, label, { optional = false } = {}) => {
+    const text = String(parameters[key] ?? '')
+      .replaceAll(',', '')
+      .trim();
+    if (!text) {
+      if (optional) return null;
+      throw new Error(`${label}을 입력해 주세요.`);
+    }
+    return Decimal.parse(text);
+  };
+  const baseFee = tariff === 'BASE' ? parameter('baseFee', '기본요금') : null;
+  const baseOffer = tariff === 'BASE' ? parameter('baseOffer', '기본 제공량') : null;
+  const tierFrom = tariff === 'SLIDING' ? parameter('tierFrom', '구간 시작값') : null;
+  const tierTo = tariff === 'SLIDING' ? parameter('tierTo', '구간 끝값', { optional: true }) : null;
+  if (tierTo && tierTo.compare(tierFrom) <= 0)
+    throw new Error('구간 끝값은 시작값보다 커야 해요. 끝값은 구간에 포함하지 않아요.');
+  const minimumFee = minimumFeeEnabled ? parameter('minimumFee', '최소 수수료').abs() : null;
   const absolute = settingsValue(fields, 'ABS_PROCS_YN') === 'Y';
   const feeBase = settingsValue(fields, 'FEE_SMT_CALC_BASE_DVCD');
   const vatType = settingsValue(fields, 'VAT_DVCD');
@@ -101,40 +127,74 @@ export function calculateSettings(
   const feeSteps = [];
   const rawFees = groups.map((group) => {
     const amount = sum(group.map((index) => targetAmounts[index]));
-    const target =
-      feeType === 'FIXED'
-        ? sum(group.map((index) => counts[index]))
-        : absolute
-          ? amount.abs()
-          : amount;
-    const raw = target.mul(value);
+    const target = countBased
+      ? sum(group.map((index) => counts[index]))
+      : absolute
+        ? amount.abs()
+        : amount;
+    let raw = target.mul(value);
+    let expression;
+    const input = (value) => ({ text: value.toString(), kind: 'input' });
+    const op = (text) => ({ text, kind: 'operator' });
+    if (tariff === 'BASE') {
+      raw =
+        target.sign() === 0
+          ? zero()
+          : target.compare(baseOffer) <= 0
+            ? baseFee
+            : baseFee.add(target.sub(baseOffer).mul(value));
+      expression =
+        target.sign() === 0
+          ? [input('0')]
+          : target.compare(baseOffer) <= 0
+            ? [input(baseFee)]
+            : [
+                input(baseFee),
+                op(' + ('),
+                input(target),
+                op(' − '),
+                input(baseOffer),
+                op(') × '),
+                input(value),
+              ];
+    } else if (tariff === 'SLIDING') {
+      if (target.compare(tierFrom) < 0 || (tierTo && target.compare(tierTo) >= 0))
+        throw new Error(
+          '입력한 대상은 선택 구간에 속하지 않아요. 시작 이상·끝 미만의 구간을 입력해 주세요.',
+        );
+    }
     feeSteps.push({
-      inputs: group.map((index) =>
-        (feeType === 'FIXED' ? counts[index] : targetAmounts[index]).toString(),
-      ),
-      inputTotal:
-        feeType === 'FIXED'
-          ? sum(group.map((index) => counts[index])).toString()
-          : amount.toString(),
-      basis: feeType === 'FIXED' ? '과금건수' : '계산대상금액',
-      absolute: feeType !== 'FIXED' && absolute,
+      inputs: group.map((index) => (countBased ? counts[index] : targetAmounts[index]).toString()),
+      inputTotal: countBased
+        ? sum(group.map((index) => counts[index])).toString()
+        : amount.toString(),
+      basis: countBased ? '과금건수' : '계산대상금액',
+      absolute: !countBased && absolute,
+      ...(expression ? { expression } : {}),
       multiplier: value.toString(),
       raw: raw.toString(),
       adjustments: [],
     });
     return raw;
   });
-  const fees = rawFees.map((fee, index) =>
-    roundSetting(
-      fee,
-      fields,
-      'FEE',
-      sum(groups[index].map((index) => amounts[index])),
-      feeSteps[index].adjustments,
-    ),
-  );
+  const fees = rawFees.map((fee, index) => {
+    const amount = sum(groups[index].map((index) => amounts[index]));
+    const rounded = roundSetting(fee, fields, 'FEE', amount, feeSteps[index].adjustments);
+    if (minimumFee && rounded.abs().compare(minimumFee) < 0) {
+      const result = amount.sign() < 0 ? minimumFee.neg() : minimumFee;
+      feeSteps[index].adjustments.push({
+        kind: 'minimum',
+        input: rounded.toString(),
+        result: result.toString(),
+      });
+      return result;
+    }
+    return rounded;
+  });
   if (vatType === 'INCLUDED')
-    throw new Error('VAT 포함·재분리 계산은 별도 계산기가 필요해요. 원문 수식으로 확인하세요.');
+    throw new Error(
+      'VAT 포함의 공통 계산과 상품별 CUSTOM 재분리는 달라요. 배치의 상품코드·계산 엔진 매핑을 확인해 주세요.',
+    );
   let vats = [zero()];
   const rawVats = [];
   const vatSteps = [];

@@ -8,6 +8,7 @@ import { cleanNumber } from '../calculation/asis-data.js';
 import { quickDashboard } from '../calculation/dashboard.js';
 import { createDashboard } from './dashboard.js';
 import { numericBreakdown } from './numeric-formula.js';
+import { batchNotes } from '../calculation/batch-reference.js';
 import { currentProductContext, commonCalculationErrors } from '../calculation/product-context.js';
 import {
   rememberSample,
@@ -21,6 +22,7 @@ export function verificationProduct(result, dbProduct, context) {
     ...currentProductContext(dbProduct, context),
     code: dbProduct ? `DRAFT-${dbProduct.code}` : 'CURRENT-ANALYSIS',
     source: 'draft',
+    calculatorCode: context?.identity?.code || dbProduct?.code,
     calculationResult: structuredClone(result),
     expected: Object.fromEntries(
       Object.entries(result.fields).map(([key, field]) => [
@@ -377,7 +379,9 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
       $('quick-count-wrap').hidden = !fixed() && !columns.count;
       $('quick-rate').placeholder = fixed() ? '예: 100' : '예: 1.5% 또는 0.015';
       $('quick-product').textContent = source
-        ? '2단계에서 판단한 설정으로 원문 수식과 내 상품을 비교해요.'
+        ? ['2단계에서 판단한 설정으로 원문 수식과 내 상품을 비교해요.', ...batchNotes(next)].join(
+            ' ',
+          )
         : '수식을 먼저 분석해 주세요.';
       syncSourceInputs();
       renderHistory();

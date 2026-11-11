@@ -1,4 +1,5 @@
 import { FIELDS, NULL_OVERRIDE, NULLABLE_FIELDS } from './domain.js';
+import { validScale } from './calculation/rounding-unit.js';
 
 // DAON_SMT_OWNER.TB_SSI_MERC_SMT_GDS_M, checked against ALL_TAB_COLUMNS 2026-11-09.
 export const INSERT_FIELDS = [
@@ -51,14 +52,14 @@ export function productInsertErrors(result, name, registration = {}) {
     const cell = result.fields[key];
     if (cell?.status === 'not-applicable') return !NULLABLE_FIELDS.includes(key);
     if (cell?.status !== 'known') return true;
-    return options ? !options.includes(cell.value) : !Number.isFinite(cell.value) || cell.value < 0;
+    return options ? !options.includes(cell.value) : !validScale(cell.value);
   });
   if (pending.length)
     errors.push(`다음 설정을 확정해 주세요: ${pending.map(([, label]) => label).join(', ')}.`);
   for (const [key, label, options] of FIELDS) {
     const cell = result.fields[key];
-    if (!options && cell?.status === 'known' && (!Number.isInteger(cell.value) || cell.value > 999))
-      errors.push(`${label}은 DB 컬럼 NUMBER(3,0)에 맞는 0~999 정수로 지정해 주세요.`);
+    if (!options && cell?.status === 'known' && !validScale(cell.value))
+      errors.push(`${label}은 DB 컬럼 NUMBER(3,0)에 맞는 -999~999 정수로 지정해 주세요.`);
   }
   return errors;
 }

@@ -33,6 +33,14 @@ export function createHistory() {
         detail.ontoggle = () => {
           if (!detail.open || loaded) return;
           loaded = true;
+          if (entry.unitEncoding !== 'scale')
+            detail.append(
+              make(
+                'p',
+                '이전 단위 해석으로 저장한 이력이에요. 배치 scale 기준으로 다시 분석해 주세요.',
+                'action-hint',
+              ),
+            );
           const scroll = make('div', undefined, 'table-scroll history-table'),
             table = make('table'),
             head = make('thead'),

@@ -40,14 +40,14 @@ test('최종 수정값과 상품명을 복사하되 분석 원본과 근거는 �
     original,
     {
       FEE_SMT_CALC_MHOD_DVCD: 'HALF_UP',
-      FEE_SMT_CALC_UNIT_VAL: '0.01',
+      FEE_SMT_CALC_UNIT_VAL: '2',
       SIGN_APLY_LOCT_DVCD: 'AFTER',
     },
     { code: ' FINAL-01 ', name: ' 최종 정산 상품 ' },
   );
   assert.deepEqual(draft.errors, []);
   assert.equal(draft.changedFields.length, 3);
-  assert.equal(draft.result.fields.FEE_SMT_CALC_UNIT_VAL.value, 0.01);
+  assert.equal(draft.result.fields.FEE_SMT_CALC_UNIT_VAL.value, 2);
   assert.deepEqual(draft.result.fields.SIGN_APLY_LOCT_DVCD.evidence, []);
   const [keys, values] = exportRow(draft.result, 'tsv', draft.name)
     .split('\n')
@@ -56,7 +56,7 @@ test('최종 수정값과 상품명을 복사하되 분석 원본과 근거는 �
   assert.equal(copied.SMT_GDS_CD, 'FINAL-01');
   assert.equal(copied.SMT_GDS_NM, '최종 정산 상품');
   assert.equal(copied.SIGN_APLY_LOCT_DVCD, 'AFTER');
-  assert.equal(copied.FEE_SMT_CALC_UNIT_VAL, '0.01');
+  assert.equal(copied.FEE_SMT_CALC_UNIT_VAL, '2');
   assert.match(exportRow(draft.result, 'markdown', draft.name), /FINAL-01/);
   assert.deepEqual(original, before);
 });
@@ -74,7 +74,7 @@ test('분석값 유지와 0원 단위를 구분하고 미확정 값을 자동 �
 
 test('잘못된 계산 단위와 코드값은 복사 오류로 남기고 원본을 덮어쓰지 않는다', () => {
   const original = source();
-  for (const value of ['-1', 'Infinity', 'NaN', '1e30', '1000000000001']) {
+  for (const value of ['-1000', '0.01', 'Infinity', 'NaN', '1e30', '1000000000001']) {
     const draft = buildFinalProduct(original, { FEE_SMT_CALC_UNIT_VAL: value });
     assert.equal(draft.errors.length, 1);
     assert.deepEqual(draft.result.fields, original.fields);

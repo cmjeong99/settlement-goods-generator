@@ -214,13 +214,18 @@ test('필수 등록값을 비우면 복사를 막고 선택값을 비우면 DB �
   assert.equal(row.ORCM_SMT_CURN_CD.value, 'KRW');
 });
 
-test('DB 문자열 길이와 NUMBER(3,0)을 검사하되 표·계산기에서의 소수 단위는 유지한다', () => {
+test('DB 문자열 길이와 NUMBER(3,0)의 정수 scale을 검사한다', () => {
   for (const unit of ['0.01', '1000']) {
     const draft = buildFinalProduct(source(), { FEE_SMT_CALC_UNIT_VAL: unit });
-    assert.throws(
-      () => exportProductTable(draft.result, 'sql', name, registration()),
-      /NUMBER\(3,0\)/,
-    );
+    assert.equal(draft.errors.length, 1);
+    const invalid = {
+      ...source(),
+      fields: {
+        ...source().fields,
+        FEE_SMT_CALC_UNIT_VAL: { status: 'known', value: Number(unit) },
+      },
+    };
+    assert.throws(() => exportProductTable(invalid, 'sql', name, registration()), /NUMBER\(3,0\)/);
     assert.doesNotThrow(() => exportProductTable(draft.result, 'tsv', name));
   }
   assert.throws(

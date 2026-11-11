@@ -2,6 +2,8 @@ import { Decimal } from './decimal.js';
 import { calculateSettings } from './verify.js';
 import { cleanNumber, MAX_ASIS_ROWS, asCsv } from './asis-data.js';
 import { commonCalculationErrors } from './product-context.js';
+import { calculateCustom } from './custom-calculation.js';
+import { customCalculator } from './batch-reference.js';
 
 export const RECONCILIATION_LABELS = {
   match: '일치',
@@ -12,6 +14,7 @@ export const RECONCILIATION_LABELS = {
 };
 const sum = (values) => values.reduce((total, value) => total.add(value), Decimal.parse('0'));
 export const needsAggregation = (product) =>
+  !!customCalculator(product) ||
   product?.expected.FEE_SMT_CALC_BASE_DVCD === 'SUM' ||
   (product?.expected.VAT_DVCD !== 'ZERO' && product?.expected.VAT_SMT_CALC_BASE_DVCD === 'SUM');
 
@@ -64,7 +67,14 @@ function compareMetric(rows, key, calculated) {
 export function reconcileAsis(
   product,
   rows,
-  { scope = 'rows', rateUnit = 'ratio', useRowProducts = false, products = new Map() } = {},
+  {
+    scope = 'rows',
+    rateUnit = 'ratio',
+    useRowProducts = false,
+    products = new Map(),
+    parameters = {},
+    parametersByProduct = new Map(),
+  } = {},
 ) {
   if (!rows.length || rows.length > MAX_ASIS_ROWS)
     throw new Error(`검증할 AS-IS 거래를 1~${MAX_ASIS_ROWS}행 입력해 주세요.`);
@@ -88,9 +98,17 @@ export function reconcileAsis(
       if (!selectedProduct) throw new Error('입력한 상품코드를 찾을 수 없어요.');
       if (needsAggregation(selectedProduct) && !scope)
         throw new Error('합산 상품의 검증 단위를 선택해 주세요.');
-      if (selectedProduct.engine !== 'COMMON')
-        throw new Error('특이 계산기 상품은 아직 이 화면에서 계산할 수 없어요.');
-      const contextErrors = commonCalculationErrors(selectedProduct);
+      const custom = customCalculator(selectedProduct);
+      if (selectedProduct.engine !== 'COMMON' && !custom)
+        throw new Error('이 상품코드로 등록된 배치 CUSTOM 계산기를 확인하지 못했어요.');
+      if (custom && scope === 'rows')
+        throw new Error(
+          '이 상품은 합산 검증에서 계산해 주세요. 배치의 합산 CUSTOM 계산기 대상이에요.',
+        );
+      const selectedParameters = parametersByProduct.get(selectedProduct.code) || parameters;
+      const contextErrors = custom
+        ? []
+        : commonCalculationErrors(selectedProduct, selectedParameters);
       if (contextErrors.length) throw new Error(contextErrors.join(' '));
       // Do not silently combine distinct merchant settlements or fee contracts.
       for (const key of ['merchant', 'period', 'currency']) {
@@ -101,6 +119,7 @@ export function reconcileAsis(
       }
       const fixed = selectedProduct.expected.FEE_TYPE_DVCD === 'FIXED';
       const values = group.rows.map((row) => {
+        if (custom && !custom.countBased) return Decimal.parse('0');
         const text = String(row.feeValue ?? '').trim();
         const percent = text.endsWith('%');
         if (fixed && percent) throw new Error('정액단가는 금액으로 입력해 주세요.');
@@ -121,13 +140,18 @@ export function reconcileAsis(
           { value, status: value === null ? 'unknown' : 'known' },
         ]),
       );
-      const calculation = calculateSettings(fields, data, {
-        amountColumn: 'amount',
-        targetAmountColumn: 'targetAmount',
-        countColumn: 'count',
-        feeValue,
-        engine: selectedProduct.engine,
-      });
+      const calculation = custom
+        ? calculateCustom(selectedProduct, data, { parameters: selectedParameters, feeValue })
+        : calculateSettings(fields, data, {
+            amountColumn: 'amount',
+            targetAmountColumn: 'targetAmount',
+            countColumn: 'count',
+            feeValue,
+            engine: selectedProduct.engine,
+            tariff: selectedProduct.registration?.TRFS_DVCD || 'STANDARD',
+            parameters: selectedParameters,
+            minimumFeeEnabled: selectedProduct.registration?.MIN_FEE_SETP_YN === 'Y',
+          });
       const payoutSupported =
         selectedProduct.settlement?.paymentMethod === 'PAYOUT' &&
         selectedProduct.settlement?.feeCollection === 'PRE';

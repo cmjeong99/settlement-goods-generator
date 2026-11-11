@@ -43,8 +43,8 @@ test('SUM 밖 반올림과 SUM 안 반올림의 계산 단위를 구분', () => 
 test('ROUND 자리수는 GDS 계산단위로 변환', () => {
   for (const [digits, unit] of [
     [0, 0],
-    [2, 0.01],
-    [-2, 100],
+    [2, 2],
+    [-2, -2],
   ])
     assert.equal(value(result(`CPFEE=ROUND(AMT*CPRATE,${digits})`), 'FEE_SMT_CALC_UNIT_VAL'), unit);
   assert.equal(
@@ -184,12 +184,12 @@ test('백분율 수수료와 VAT /10 표현·SIGN 위치', () => {
 });
 test('단위 보정은 역수 관계인 10의 거듭제곱만 인정', () => {
   for (const [expr, method, unit] of [
-    ['FLOOR(ABS(AMT)*CPRATE/10.0)*10', 'DOWN', 10],
-    ['10*CEILING(ABS(AMT)*CPRATE/10.0)', 'CEILING', 10],
-    ['ROUND(AMT*CPRATE/100.0,0)*100', 'HALF_UP', 100],
-    ['ROUND(AMT*CPRATE*100,0)/100.0', 'HALF_UP', 0.01],
-    ['ROUND(AMT*CPRATE/100.0,1)*100', 'HALF_UP', 10],
-    ['FLOOR(AMT*CPRATE/10.0)*10', 'SIGNED_DOWN', 10],
+    ['FLOOR(ABS(AMT)*CPRATE/10.0)*10', 'DOWN', -1],
+    ['10*CEILING(ABS(AMT)*CPRATE/10.0)', 'CEILING', -1],
+    ['ROUND(AMT*CPRATE/100.0,0)*100', 'HALF_UP', -2],
+    ['ROUND(AMT*CPRATE*100,0)/100.0', 'HALF_UP', 2],
+    ['ROUND(AMT*CPRATE/100.0,1)*100', 'HALF_UP', -1],
+    ['FLOOR(AMT*CPRATE/10.0)*10', 'SIGNED_DOWN', -1],
   ]) {
     const r = result(`CPFEE=${expr}`);
     assert.equal(value(r, 'FEE_SMT_CALC_MHOD_DVCD'), method, expr);
@@ -204,8 +204,8 @@ test('단위 보정은 역수 관계인 10의 거듭제곱만 인정', () => {
     assert.equal(result(`CPFEE=${expr}`).fields.FEE_SMT_CALC_MHOD_DVCD.status, 'custom', expr);
   assert.equal(value(result('CPFEE=ROUND(AMT*CPRATE/1e12,12)*1e12'), 'FEE_SMT_CALC_UNIT_VAL'), 0);
   assert.equal(
-    value(result('CPFEE=ROUND(AMT*CPRATE/1e12,-12)*1e12'), 'FEE_SMT_CALC_MHOD_DVCD'),
-    null,
+    value(result('CPFEE=ROUND(AMT*CPRATE/1e12,-12)*1e12'), 'FEE_SMT_CALC_UNIT_VAL'),
+    -24,
   );
   assert.equal(
     value(result('CPFEE=SUM(FLOOR(AMT*CPRATE/10.0)*10)'), 'FEE_SMT_CALC_BASE_DVCD'),
@@ -222,7 +222,7 @@ test('단위 보정은 역수 관계인 10의 거듭제곱만 인정', () => {
 });
 test('NULL 처리·조건 함수는 AST에 보존하고 복합 계산은 보수적으로 처리', () => {
   const r = result(EXAMPLES['십원 단위·NULL 처리']);
-  assert.equal(value(r, 'FEE_SMT_CALC_UNIT_VAL'), 10);
+  assert.equal(value(r, 'FEE_SMT_CALC_UNIT_VAL'), -1);
   assert.ok(r.notices.some((n) => n.includes('NULL')));
   assert.equal(
     value(result('CPFEE=ROUND(ISNULL(AMT,0)*CPRATE/NULLIF(100,0),0)'), 'FEE_TYPE_DVCD'),
@@ -271,8 +271,8 @@ test('화면의 한글 설명은 코드값과 내보내기 데이터를 바꾸�
 test('단위·부호·미확정·미적용을 구분하며 모든 코드값에 화면 설명 제공', () => {
   for (const [unit, label] of [
     [0, '1원 단위'],
-    [10, '10원 단위'],
-    [0.01, '0.01원 단위'],
+    [-1, '10원 단위'],
+    [2, '0.01원 단위'],
   ])
     assert.equal(describeField('FEE_SMT_CALC_UNIT_VAL', { value: unit }), label);
   for (const [status, label] of [

@@ -274,7 +274,7 @@ function roundInfo(n) {
   if(core.name === 'ROUND') {
     const digits=numeric(core.args[1]), truncate=core.args[2] ? numeric(core.args[2]) : 0;
     if(!Number.isInteger(digits) || Math.abs(digits)>12 || !Number.isFinite(truncate)) return {base,method:null,unit:null,input:core.args[0]};
-    return {base, method:truncate === 0 ? 'HALF_UP' : 'DOWN',unit:digits === 0 ? 0 : 10 ** -digits,input:core.args[0]};
+    return {base, method:truncate === 0 ? 'HALF_UP' : 'DOWN',unit:digits,input:core.args[0]};
   }
   return {base,method:core.name === 'FLOOR' ? 'DOWN' : 'CEILING',unit:0,input:core.args[0]};
 }
@@ -307,7 +307,7 @@ const supported = new Set(['ABS','FLOOR','CEILING','ROUND','SUM','COUNT','CAST',
     put(keys[0],ri.base,original,ri.base === 'SUM'?'집계액 또는 집계 건수를 계산합니다.':'거래별 계산입니다. 바깥 SUM은 계산된 결과의 합계입니다.');
     if(ri.method) {
       put(keys[1],ri.method,original,'가장 바깥 계산 순서의 반올림 함수를 판별했습니다.');
-      if(ri.unit !== null) put(keys[2],ri.unit,original,'GDS 단위: 원 단위 0 / 10원 단위 10 / 소수 둘째 자리 0.01.');
+      if(ri.unit !== null) put(keys[2],ri.unit,original,'배치 scale: 원 단위 0 / 10원 단위 -1 / 소수 둘째 자리 2.');
       else put(keys[2],null,original,'반올림이 없어 계산 단위를 적용하지 않습니다.','not-applicable');
     }
     return ri;

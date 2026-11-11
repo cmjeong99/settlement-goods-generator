@@ -36,24 +36,31 @@ function terms(root, values, title) {
 }
 
 function adjustmentLabel(step) {
-  return step.kind === 'sign' ? '부호 적용' : roundingNames[step.method] || step.method;
+  return step.kind === 'sign'
+    ? '부호 적용'
+    : step.kind === 'minimum'
+      ? '최소 수수료'
+      : roundingNames[step.method] || step.method;
 }
 
 export function numericStep(step, { compact = false } = {}) {
   const root = make('div', undefined, 'numeric-formula');
   const code = make('code', undefined, 'formula-equation');
-  const absolute = step.absolute && step.inputTotal.startsWith('-');
-  if (absolute) code.append(token('ABS', 'function', '절댓값'), operator('('));
-  else if (step.inputs.length > 1) code.append(operator('('));
-  terms(code, step.inputs, step.basis);
-  if (absolute || step.inputs.length > 1) code.append(operator(')'));
+  if (step.expression) {
+    for (const item of step.expression) code.append(token(item.text, item.kind));
+  } else {
+    const absolute = step.absolute && step.inputTotal.startsWith('-');
+    if (absolute) code.append(token('ABS', 'function', '절댓값'), operator('('));
+    else if (step.inputs.length > 1) code.append(operator('('));
+    terms(code, step.inputs, step.basis);
+    if (absolute || step.inputs.length > 1) code.append(operator(')'));
+    code.append(
+      operator(' × '),
+      number(step.multiplier, 'rate', step.basis === '과금건수' ? '단가' : '요율'),
+    );
+  }
   const changes = step.adjustments.filter((item) => item.input !== item.result);
-  code.append(
-    operator(' × '),
-    number(step.multiplier, 'rate', step.basis === '과금건수' ? '단가' : '요율'),
-    equality(step.raw),
-    number(step.raw, changes.length ? 'intermediate' : 'result'),
-  );
+  code.append(equality(step.raw), number(step.raw, changes.length ? 'intermediate' : 'result'));
   changes.forEach((item, index) => {
     code.append(
       operator(' → '),
@@ -66,9 +73,11 @@ export function numericStep(step, { compact = false } = {}) {
     const notes = step.adjustments.map((item) =>
       item.kind === 'sign'
         ? `부호는 단수 처리 ${item.position === 'BEFORE' ? '전' : '후'}에 적용`
-        : item.method === 'NONE'
-          ? roundingNames.NONE
-          : `${item.unit}원 단위 ${adjustmentLabel(item)}`,
+        : item.kind === 'minimum'
+          ? '최소 수수료 적용'
+          : item.method === 'NONE'
+            ? roundingNames.NONE
+            : `${item.unit}원 단위 ${adjustmentLabel(item)}`,
     );
     root.append(make('small', [step.basis, ...notes].join(' · '), 'formula-note'));
   }
@@ -157,6 +166,17 @@ export function numericBreakdown(breakdown, { payout = false, metrics = null } =
   }
   if (payout) {
     metricSection('payout', '지급액').append(numericPayout(breakdown));
+  }
+  if (breakdown.preparation?.length) {
+    const preparation = make('section', undefined, 'numeric-preparation');
+    preparation.append(make('h4', '계산 순서'));
+    for (const step of breakdown.preparation) {
+      preparation.append(
+        make('p', step.label, 'formula-note'),
+        numericStep(step, { compact: true }),
+      );
+    }
+    root.append(preparation);
   }
   return root;
 }

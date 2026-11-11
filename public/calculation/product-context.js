@@ -27,14 +27,15 @@ export function currentProductContext(dbProduct, { registration, identity } = {}
   };
 }
 
-export function commonCalculationErrors(product) {
+export function commonCalculationErrors(product, parameters = {}) {
   const errors = [];
   const registration = product?.registration;
-  if (registration?.MIN_FEE_SETP_YN === 'Y')
-    errors.push('최소 수수료 상품은 최소 금액 입력을 아직 지원하지 않아 계산할 수 없어요.');
-  if (registration?.TRFS_DVCD && registration.TRFS_DVCD !== 'STANDARD')
-    errors.push(
-      '구간·기본 요금제는 구간값과 기본 제공량 입력을 아직 지원하지 않아 계산할 수 없어요.',
-    );
+  const missing = (key) => String(parameters[key] ?? '').trim() === '';
+  if (registration?.MIN_FEE_SETP_YN === 'Y' && missing('minimumFee'))
+    errors.push('최소 수수료 상품은 계산기에서 최소 금액을 입력해 주세요.');
+  if (registration?.TRFS_DVCD === 'BASE' && (missing('baseFee') || missing('baseOffer')))
+    errors.push('기본 요금제는 계산기에서 기본요금과 기본 제공량을 입력해 주세요.');
+  if (registration?.TRFS_DVCD === 'SLIDING' && missing('tierFrom'))
+    errors.push('구간 요금제는 계산기에서 적용 구간을 입력해 주세요.');
   return errors;
 }
