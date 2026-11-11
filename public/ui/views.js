@@ -28,8 +28,8 @@ export function inlineProof(key, cell) {
   );
   return proof;
 }
-export function renderExplanation(r) {
-  $('calculation-explanation').replaceChildren(
+export function renderExplanation(r, root = $('calculation-explanation')) {
+  root.replaceChildren(
     ...(r ? explainCalculation(r) : []).map((text, index) => {
       const item = make('div', undefined, 'calculation-explanation-item');
       item.append(

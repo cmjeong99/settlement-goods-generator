@@ -13,7 +13,7 @@ function settingsValue(fields, key) {
   return field.value;
 }
 
-function roundSetting(value, fields, prefix, amount) {
+function roundSetting(value, fields, prefix, amount, adjustments) {
   const absolute = settingsValue(fields, 'ABS_PROCS_YN');
   const position =
     absolute === 'N' && fields.SIGN_APLY_LOCT_DVCD?.value == null
@@ -23,9 +23,29 @@ function roundSetting(value, fields, prefix, amount) {
   const configuredUnit =
     method === 'NONE' ? 0 : settingsValue(fields, `${prefix}_SMT_CALC_UNIT_VAL`);
   const applySign = (value) => (amount.sign() < 0 && value.sign() > 0 ? value.neg() : value);
-  if (position === 'BEFORE') value = applySign(value);
-  value = value.round(method, configuredUnit === 0 ? '1' : String(configuredUnit));
-  return position === 'AFTER' ? applySign(value) : value;
+  const sign = () => {
+    const signed = applySign(value);
+    adjustments?.push({
+      kind: 'sign',
+      position,
+      input: value.toString(),
+      result: signed.toString(),
+    });
+    value = signed;
+  };
+  if (position === 'BEFORE') sign();
+  const unit = configuredUnit === 0 ? '1' : String(configuredUnit);
+  const rounded = value.round(method, unit);
+  adjustments?.push({
+    kind: 'round',
+    method,
+    unit,
+    input: value.toString(),
+    result: rounded.toString(),
+  });
+  value = rounded;
+  if (position === 'AFTER') sign();
+  return value;
 }
 
 export function calculateSettings(
@@ -78,6 +98,7 @@ export function calculateSettings(
     throw new Error('승인과 취소는 따로 입력해 검증해 주세요.');
   const indexes = rows.map((_, index) => index);
   const groups = feeBase === 'SUM' ? [indexes] : indexes.map((index) => [index]);
+  const feeSteps = [];
   const rawFees = groups.map((group) => {
     const amount = sum(group.map((index) => targetAmounts[index]));
     const target =
@@ -86,15 +107,37 @@ export function calculateSettings(
         : absolute
           ? amount.abs()
           : amount;
-    return target.mul(value);
+    const raw = target.mul(value);
+    feeSteps.push({
+      inputs: group.map((index) =>
+        (feeType === 'FIXED' ? counts[index] : targetAmounts[index]).toString(),
+      ),
+      inputTotal:
+        feeType === 'FIXED'
+          ? sum(group.map((index) => counts[index])).toString()
+          : amount.toString(),
+      basis: feeType === 'FIXED' ? '과금건수' : '계산대상금액',
+      absolute: feeType !== 'FIXED' && absolute,
+      multiplier: value.toString(),
+      raw: raw.toString(),
+      adjustments: [],
+    });
+    return raw;
   });
   const fees = rawFees.map((fee, index) =>
-    roundSetting(fee, fields, 'FEE', sum(groups[index].map((index) => amounts[index]))),
+    roundSetting(
+      fee,
+      fields,
+      'FEE',
+      sum(groups[index].map((index) => amounts[index])),
+      feeSteps[index].adjustments,
+    ),
   );
   if (vatType === 'INCLUDED')
     throw new Error('VAT 포함·재분리 계산은 별도 계산기가 필요해요. 원문 수식으로 확인하세요.');
   let vats = [zero()];
   const rawVats = [];
+  const vatSteps = [];
   if (vatType !== 'ZERO') {
     const vatTarget = settingsValue(fields, 'VAT_CALC_TRGT_DVCD');
     const vatBase = settingsValue(fields, 'VAT_SMT_CALC_BASE_DVCD');
@@ -111,7 +154,17 @@ export function calculateSettings(
         vatBase === 'SUM' ? sum(amounts) : sum(groups[index].map((index) => amounts[index]));
       const rawVat = target.mul('0.1');
       rawVats.push(rawVat);
-      return roundSetting(rawVat, fields, 'VAT', amount);
+      const step = {
+        inputs: group.map((value) => value.toString()),
+        inputTotal: sum(group).toString(),
+        basis: vatTarget === 'FEE' ? '계산된 수수료' : '단수 처리 전 수수료',
+        absolute,
+        multiplier: '0.1',
+        raw: rawVat.toString(),
+        adjustments: [],
+      };
+      vatSteps.push(step);
+      return roundSetting(rawVat, fields, 'VAT', amount, step.adjustments);
     });
   }
   const fee = sum(fees),
@@ -131,6 +184,10 @@ export function calculateSettings(
       vat: vat.toString(),
       vatCalculationCount: rawVats.length,
       payout: payout.toString(),
+      steps: {
+        fee: feeSteps.map((step, index) => ({ ...step, result: fees[index].toString() })),
+        vat: vatSteps.map((step, index) => ({ ...step, result: vats[index].toString() })),
+      },
     },
   };
 }

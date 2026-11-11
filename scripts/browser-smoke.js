@@ -72,6 +72,11 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
       (await quickMetric('fee')) === '148' && (await quickMetric('payout')) === '9,738',
       'quick calculation',
     );
+    check(
+      (await page.locator('#quick-results .numeric-breakdown').isVisible()) &&
+        (await page.locator('#quick-results details').count()) === 0,
+      'sample numeric formulas are visible without expanding details',
+    );
     await page.locator('#quick-run').click();
     check(
       (await page.locator('#workspace-test-card').textContent()).includes('1개 일치'),
@@ -315,6 +320,16 @@ export async function runBrowserSmoke(hostPage, { baseURL = 'http://127.0.0.1:43
         .first()
         .getAttribute('data-status')) !== 'error',
       'zero amount does not invalidate aggregate approval',
+    );
+    check(
+      (await sumPanel
+        .locator('[data-verification="asis-calculation-rows"] .numeric-breakdown')
+        .isVisible()) &&
+        (await sumPanel.locator('[data-verification="asis-results"] details').count()) === 0 &&
+        !(await sumPanel.locator('[data-verification="asis-results"]').innerText()).includes(
+          '미입력·NULL',
+        ),
+      'calculator results and small per-unit formulas require no expansion or AS-IS warning',
     );
     await sumPanel.locator('[data-field="amount"]').nth(1).fill('-10000');
     await sumPanel.locator('[data-verification="asis-run"]').click();

@@ -385,6 +385,157 @@ header {
 .calculation-explanation-item p {
   margin: 0;
 }
+.verification-formula-product > h4 {
+  margin: 14px 0 4px;
+  overflow-wrap: anywhere;
+}
+.verification-formula-product + .verification-formula-product {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+}
+.verification-formula-product .verification-hint {
+  margin: 0 0 12px;
+}
+.verification-formula-source {
+  margin-top: 16px;
+}
+.verification-formula-source > summary {
+  font-size: 13px;
+}
+.verification-formula-source > p {
+  margin: 8px 0;
+}
+.verification-formula-code {
+  max-height: 240px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+  font-size: 12px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.numeric-formula {
+  margin: 6px 0;
+  min-width: 0;
+  font-size: 13px;
+  text-align: left;
+}
+.formula-equation {
+  display: block;
+  font-family: Consolas, 'Malgun Gothic', monospace;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.9;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.formula-input {
+  color: #175c6c;
+}
+.formula-rate,
+.formula-function {
+  color: #7232ae;
+}
+.formula-operator,
+.formula-intermediate {
+  color: #58677d;
+}
+.formula-result {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #e8f1ff;
+  color: #075bc7;
+  font-weight: 700;
+}
+.formula-adjustment {
+  color: #854c0a;
+  font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+  font-size: 12px;
+}
+.formula-note {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.numeric-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.calculation-result {
+  margin: 16px 0;
+  min-width: 0;
+}
+.calculation-result-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.calculation-result h3 {
+  margin: 0;
+  font-size: 15px;
+}
+.calculation-result-count {
+  color: var(--muted);
+  font-size: 12px;
+}
+.numeric-breakdown-metric {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f8faff;
+}
+.numeric-breakdown-metric h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.numeric-metric-value {
+  display: block;
+  font-size: 28px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.numeric-breakdown .numeric-formula {
+  font-size: 15px;
+  margin-top: 10px;
+}
+.numeric-unit-steps {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.numeric-unit-steps .numeric-formula {
+  font-size: 13px;
+}
+.numeric-metric-comparison,
+.calculation-result-notice {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.numeric-breakdown-metric[data-comparison='mismatch'] {
+  background: #fff4f1;
+  border-color: #e1b7aa;
+}
+.numeric-breakdown-metric[data-comparison='mismatch'] .numeric-metric-comparison {
+  color: #7a261b;
+}
+.calculation-result[data-status='error'] .calculation-result-notice {
+  color: #7a261b;
+}
+.asis-result-table .numeric-formula {
+  max-width: 340px;
+  min-width: 170px;
+  margin-left: auto;
+  text-align: right;
+}
 .workflow-main .copy-success {
   background: var(--selected);
   border-color: var(--selected-border);

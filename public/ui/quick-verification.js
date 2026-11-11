@@ -7,6 +7,7 @@ import {
 import { cleanNumber } from '../calculation/asis-data.js';
 import { quickDashboard } from '../calculation/dashboard.js';
 import { createDashboard } from './dashboard.js';
+import { numericBreakdown } from './numeric-formula.js';
 import { currentProductContext, commonCalculationErrors } from '../calculation/product-context.js';
 import {
   rememberSample,
@@ -20,6 +21,7 @@ export function verificationProduct(result, dbProduct, context) {
     ...currentProductContext(dbProduct, context),
     code: dbProduct ? `DRAFT-${dbProduct.code}` : 'CURRENT-ANALYSIS',
     source: 'draft',
+    calculationResult: structuredClone(result),
     expected: Object.fromEntries(
       Object.entries(result.fields).map(([key, field]) => [
         key,
@@ -259,25 +261,19 @@ export function createQuickVerification({ onContinue, onSummary, onReport }) {
             `${metric.key === 'fee' ? '수수료' : '부가세'} 기대값 ${metric.expected} · ${metric.expectedMatch === null ? '비교 불가' : metric.expectedMatch ? '내 상품과 일치' : '내 상품과 차이 있음'}`,
           ),
         );
-      const breakdown = make('details', undefined, 'sample-breakdown');
-      breakdown.append(make('summary', '계산 과정'));
       const b = report.breakdown;
-      if (b)
+      if (b) {
+        const breakdown = make('section', undefined, 'calculation-result');
         breakdown.append(
-          make(
-            'p',
-            `내 상품 계산: 수수료 ${b.rawFee} → ${b.fee}, 부가세 ${b.rawVat} → ${b.vat} (부호·단수 처리 전 → 후)`,
-          ),
+          make('h3', '내 상품 계산'),
+          numericBreakdown(b, {
+            payout:
+              product.settlement?.paymentMethod === 'PAYOUT' &&
+              product.settlement?.feeCollection === 'PRE',
+          }),
         );
-      if (
-        b &&
-        product.settlement?.paymentMethod === 'PAYOUT' &&
-        product.settlement?.feeCollection === 'PRE'
-      )
-        breakdown.append(
-          make('p', `상품 지급액: ${b.amount} − (${b.fee}) − (${b.vat}) = ${b.payout}`),
-        );
-      if (b) $('quick-results').append(breakdown);
+        $('quick-results').append(breakdown);
+      }
       $('quick-results').hidden = false;
       dashboard.update(quickDashboard(report, rows, product));
       $('quick-status').textContent = report.errors.join(' ');

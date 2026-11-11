@@ -38,6 +38,7 @@ export const browserAssets = Object.freeze([
   'ui/rounding-editor.js',
   'ui/decision-review.js',
   'ui/verification.js',
+  'ui/numeric-formula.js',
   'ui/workflow.js',
   'ui/quick-verification.js',
   'ui/dashboard.js',

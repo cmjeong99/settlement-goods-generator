@@ -2,6 +2,9 @@ import { $, make } from './dom.js';
 import { PRODUCT_SNAPSHOT_DATE } from '../product-examples.js';
 import { productByCode } from '../catalog.js';
 import { describeField } from '../domain.js';
+import { renderExplanation } from './views.js';
+import { highlightSql } from '../sql-tools.js';
+import { numericTotal, numericPayout, numericBreakdown } from './numeric-formula.js';
 import { createTabs } from './workflow.js';
 import { createProductPicker } from './catalog.js';
 import { createDashboard } from './dashboard.js';
@@ -24,7 +27,7 @@ import {
   RECONCILIATION_LABELS,
 } from '../calculation/reconciliation.js';
 
-function metricCell(metric) {
+function metricCell(metric, breakdown, key) {
   const cell = make('td');
   if (!metric) {
     cell.textContent = '—';
@@ -32,6 +35,12 @@ function metricCell(metric) {
   }
   cell.className = metric.match === false ? 'asis-difference' : '';
   cell.append(make('strong', metric.calculated || '—'));
+  if (breakdown?.steps && metric.calculated !== '')
+    cell.append(
+      key === 'payout'
+        ? numericPayout(breakdown)
+        : numericTotal(breakdown.steps[key], breakdown[key], { compact: true }),
+    );
   if (metric.asis !== '')
     cell.append(
       make(
@@ -136,8 +145,75 @@ function createVerificationPanel(root, { aggregate }) {
         : needsAggregation(product)
           ? '각 행을 독립된 정산 단위로 계산해요. 거래 원장은 합산 검증을 사용하세요.'
           : '';
+    renderFormula();
     renderInputs();
     invalidate();
+  }
+
+  function renderFormula() {
+    const selected = selectedProduct();
+    const codes = $('asis-row-products').checked
+      ? [...new Set(rows.map((row) => row.productCode || selected?.code).filter(Boolean))]
+      : selected
+        ? [selected.code]
+        : [];
+    $('formula').hidden = !codes.length;
+    $('formula-products').replaceChildren(
+      ...codes.map((code) => {
+        const section = make('div', undefined, 'verification-formula-product');
+        const product = availableProducts.get(code);
+        section.append(make('h4', product ? `${product.name} · ${code}` : code));
+        if (!product) {
+          section.append(make('p', '상품코드를 찾을 수 없어요. 입력한 코드를 확인해 주세요.'));
+          return section;
+        }
+        const result = product.calculationResult ?? {
+          fields: Object.fromEntries(
+            Object.entries(product.expected).map(([key, value]) => [
+              key,
+              { value, status: value === null ? 'not-applicable' : 'known' },
+            ]),
+          ),
+          sql: product.sql,
+        };
+        section.append(
+          make(
+            'p',
+            product.source === 'draft'
+              ? '상품 만들기에서 전달한 현재 설정이에요.'
+              : `${PRODUCT_SNAPSHOT_DATE} DB 상품 설정 기준이에요.`,
+            'explanation-caption',
+          ),
+        );
+        if (product.engine !== 'COMMON')
+          section.append(
+            make('p', '특이 계산기 상품은 공통 설정만으로 계산할 수 없어요.', 'verification-hint'),
+          );
+        const explanation = make('div', undefined, 'calculation-prose');
+        renderExplanation(result, explanation);
+        section.append(explanation);
+        if (result.sql) {
+          const source = make('details', undefined, 'verification-formula-source');
+          source.append(
+            make('summary', '원문 공식 (SQL)'),
+            make(
+              'p',
+              '계산은 위 상품 설정 기준이에요. 원문과 설정은 다를 수 있어요.',
+              'explanation-caption',
+            ),
+          );
+          const pre = make('pre', undefined, 'verification-formula-code');
+          pre.tabIndex = 0;
+          pre.setAttribute('aria-label', `${product.name} 원문 공식`);
+          const sql = make('code');
+          sql.innerHTML = highlightSql(result.sql);
+          pre.append(sql);
+          source.append(pre);
+          section.append(source);
+        }
+        return section;
+      }),
+    );
   }
 
   function visibleFields() {
@@ -191,6 +267,7 @@ function createVerificationPanel(root, { aggregate }) {
             editedFields.get(row).add(key);
             if (key === 'productCode') {
               refreshProductFields([row]);
+              renderFormula();
               for (const field of ['feeValue', 'count']) {
                 const linked = tr.querySelector(`[data-field="${field}"]`);
                 if (linked) linked.value = row[field] ?? '';
@@ -449,6 +526,8 @@ function createVerificationPanel(root, { aggregate }) {
         (filter === 'uncompared' && ['partial', 'calculated'].includes(result.status)) ||
         result.status === filter,
     );
+    const single = filtered.length === 1;
+    $('asis-result-table').hidden = single;
     $('asis-result-rows').replaceChildren(
       ...filtered.map((result) => {
         const tr = make('tr');
@@ -468,7 +547,9 @@ function createVerificationPanel(root, { aggregate }) {
         else state.title = result.reasons.join(' ');
         tr.append(
           identity,
-          ...['fee', 'vat', 'payout'].map((key) => metricCell(result.metrics?.[key])),
+          ...['fee', 'vat', 'payout'].map((key) =>
+            metricCell(result.metrics?.[key], result.breakdown, key),
+          ),
         );
         if (showVerdict) tr.append(state);
         return tr;
@@ -482,29 +563,44 @@ function createVerificationPanel(root, { aggregate }) {
       $('asis-result-rows').append(tr);
     }
     $('asis-calculation-rows').replaceChildren(
-      ...filtered.map((result) => {
-        const detail = make('details');
-        detail.append(make('summary', `${result.key} · 입력 ${result.count}행`));
-        const b = result.breakdown;
-        if (b) {
-          detail.append(
-            make('p', `거래금액 합계 ${b.amount} · 계산대상금액 합계 ${b.targetAmount}`),
-            make(
-              'p',
-              `수수료: 부호·단수 처리 전 합계 ${b.rawFee} → 결과 ${b.fee} · ${b.feeCalculationCount}개 단위로 계산`,
-            ),
-            make(
-              'p',
-              `VAT: 부호·단수 처리 전 합계 ${b.rawVat} → 결과 ${b.vat}${b.vatCalculationCount ? ` · ${b.vatCalculationCount}개 단위로 계산` : ' · 면세'}`,
-            ),
+      ...filtered.flatMap((result) => {
+        const reasons = result.reasons
+          .filter(
+            (reason) =>
+              comparing || reason !== '미입력·NULL인 AS-IS 금액은 일치로 판정하지 않아요.',
+          )
+          .map((reason) =>
+            reason === '미입력·NULL인 AS-IS 금액은 일치로 판정하지 않아요.'
+              ? '기존 금액이 없는 항목은 비교에서 제외했어요.'
+              : reason,
           );
-          if (result.metrics.payout.calculated !== '')
-            detail.append(make('p', `지급액: ${b.amount} − (${b.fee}) − (${b.vat}) = ${b.payout}`));
+        if (!single && !reasons.length) return [];
+        const detail = make('section', undefined, 'calculation-result');
+        detail.dataset.status = result.status;
+        const heading = make('div', undefined, 'calculation-result-heading');
+        heading.append(
+          make('h3', single ? '계산 결과' : result.key),
+          make('span', `입력 ${result.count}건`, 'calculation-result-count'),
+        );
+        detail.append(heading);
+        const b = result.breakdown;
+        if (single && b) {
+          if (b.amount !== b.targetAmount)
+            detail.append(
+              make('p', `거래금액 ${b.amount} · 계산대상금액 ${b.targetAmount}`, 'formula-note'),
+            );
+          detail.append(
+            numericBreakdown(b, {
+              payout: result.metrics.payout.calculated !== '',
+              metrics: comparing ? result.metrics : null,
+            }),
+          );
         }
-        for (const reason of result.reasons) detail.append(make('p', reason));
-        return detail;
+        for (const reason of reasons) detail.append(make('p', reason, 'calculation-result-notice'));
+        return [detail];
       }),
     );
+    $('asis-calculation-rows').hidden = !$('asis-calculation-rows').childElementCount;
     $('asis-results').hidden = false;
   }
   $('asis-run').onclick = () => {

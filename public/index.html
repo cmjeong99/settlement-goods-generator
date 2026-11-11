@@ -641,6 +641,10 @@
               >
             </div>
             <p data-verification="asis-scope-help" class="verification-hint"></p>
+            <details data-verification="formula" class="review-explanation" hidden>
+              <summary>상품 설정·원문 공식</summary>
+              <div data-verification="formula-products"></div>
+            </details>
             <div data-verification="asis-input-container" class="table-scroll verification-inputs">
               <table>
                 <caption class="sr-only">
@@ -664,7 +668,7 @@
                 aria-live="polite"
                 hidden
               ></p>
-              <div class="table-scroll">
+              <div data-verification="asis-result-table" class="table-scroll">
                 <table class="asis-result-table">
                   <thead>
                     <tr>
@@ -678,10 +682,7 @@
                   <tbody data-verification="asis-result-rows"></tbody>
                 </table>
               </div>
-              <details class="asis-options calculation-breakdown">
-                <summary>계산 과정·확인사항</summary>
-                <div data-verification="asis-calculation-rows"></div>
-              </details>
+              <div data-verification="asis-calculation-rows" class="calculation-results"></div>
             </div>
             <div data-verification="dashboard"></div>
             <details data-verification="asis-import-panel" class="asis-options">
